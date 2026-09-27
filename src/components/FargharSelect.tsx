@@ -55,7 +55,7 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
     : options;
 
   // Check if search query is a custom value (not in options)
-  const isCustomValue = allowCustom && searchQuery && !options.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
+  const isCustomValue = allowCustom && searchQuery && searchQuery.trim() && !options.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -88,12 +88,17 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
   }, [disabled]);
 
   const handleCustomAdd = useCallback(() => {
-    if (searchQuery) {
+    if (searchQuery && searchQuery.trim()) {
+      // Add to options if not already exists
+      const exists = options.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
+      if (!exists) {
+        options.push({ value: searchQuery, label: searchQuery });
+      }
       onChange(searchQuery);
       setIsOpen(false);
       setSearchQuery('');
     }
-  }, [searchQuery, onChange]);
+  }, [searchQuery, onChange, options]);
 
   return (
     <div ref={containerRef} className="relative">
