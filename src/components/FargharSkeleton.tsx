@@ -1,31 +1,19 @@
-/**
- * TagTune - Online MP3 Tag Editor
- * Designed & Architected by Farghar
- * Namespace: Farghar
- */
-
+// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React from 'react';
 
 export const FargharSkeletonRow: React.FC = () => {
   return (
     <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 animate-pulse">
-      {/* Cover skeleton */}
       <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg farghar-skeleton flex-shrink-0" />
-
-      {/* File info skeleton */}
       <div className="flex-1 min-w-0 space-y-2">
         <div className="h-4 w-3/4 farghar-skeleton rounded" />
         <div className="h-3 w-1/2 farghar-skeleton rounded" />
       </div>
-
-      {/* Tags skeleton */}
       <div className="hidden md:flex gap-3 flex-1">
         <div className="h-4 w-24 farghar-skeleton rounded" />
         <div className="h-4 w-20 farghar-skeleton rounded" />
         <div className="h-4 w-16 farghar-skeleton rounded" />
       </div>
-
-      {/* Actions skeleton */}
       <div className="flex gap-2">
         <div className="w-8 h-8 farghar-skeleton rounded-lg" />
         <div className="w-8 h-8 farghar-skeleton rounded-lg" />
@@ -37,9 +25,7 @@ export const FargharSkeletonRow: React.FC = () => {
 export const FargharSkeletonLoader: React.FC<{ rows?: number }> = ({ rows = 5 }) => {
   return (
     <div className="space-y-3">
-      {Array.from({ length: rows }).map((_, i) => (
-        <FargharSkeletonRow key={i} />
-      ))}
+      {Array.from({ length: rows }).map((_, i) => <FargharSkeletonRow key={i} />)}
     </div>
   );
 };

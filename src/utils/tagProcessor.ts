@@ -1,9 +1,4 @@
-/**
- * TagTune - Online MP3 Tag Editor
- * Designed & Architected by Farghar
- * Namespace: Farghar
- */
-
+// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import { Farghar } from '../types';
 import * as mm from 'music-metadata-browser';
 

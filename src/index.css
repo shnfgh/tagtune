@@ -1,217 +1,47 @@
-/**
- * TagTune - Online MP3 Tag Editor
- * Designed & Architected by Farghar
- * Namespace: Farghar
- */
-
+/* TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar */
 @import "tailwindcss";
 
 @layer base {
-  * {
-    font-family: 'Vazirmatn', system-ui, sans-serif;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    background-color: #030712;
-    color: #ffffff;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    min-height: 100vh;
-  }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background-color: #111827;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #374151;
-    border-radius: 9999px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #4b5563;
-  }
+  * { font-family: 'Vazirmatn', system-ui, sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background-color: #030712; color: #ffffff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; min-height: 100vh; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background-color: #111827; }
+  ::-webkit-scrollbar-thumb { background-color: #374151; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background-color: #4b5563; }
 }
 
 @layer components {
-  .farghar-glass {
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .farghar-glass-hover:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-  }
-
-  .farghar-gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-
-  .farghar-gradient-text {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .farghar-skeleton {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    background-color: #1f2937;
-    border-radius: 0.375rem;
-  }
-
-  .farghar-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.75rem;
-    color: #ffffff;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-    outline: none;
-  }
-
-  .farghar-input::placeholder {
-    color: #6b7280;
-  }
-
-  .farghar-input:focus {
-    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5);
-    border-color: rgba(168, 85, 247, 0.5);
-  }
-
-  .farghar-input:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .farghar-btn-primary {
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    font-weight: 500;
-    border-radius: 0.75rem;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.25);
-    transition: all 0.2s ease;
-  }
-
-  .farghar-btn-primary:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
-  }
-
-  .farghar-btn-primary:active {
-    transform: scale(0.98);
-  }
-
-  .farghar-btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .farghar-btn-secondary {
-    padding: 0.75rem 1.5rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    font-weight: 500;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .farghar-btn-secondary:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .farghar-btn-secondary:active {
-    transform: scale(0.98);
-  }
-
-  .farghar-btn-danger {
-    padding: 0.75rem 1.5rem;
-    background-color: rgba(239, 68, 68, 0.2);
-    color: #f87171;
-    font-weight: 500;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .farghar-btn-danger:hover {
-    background-color: rgba(239, 68, 68, 0.3);
-  }
-
-  .farghar-btn-danger:active {
-    transform: scale(0.98);
-  }
-
-  .farghar-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
-    padding: 1.5rem;
-  }
-
-  .farghar-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
+  .farghar-glass { background-color: rgba(255, 255, 255, 0.05); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); }
+  .farghar-glass-hover:hover { background-color: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); transition: all 0.3s ease; }
+  .farghar-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+  .farghar-gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .farghar-skeleton { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; background-color: #1f2937; border-radius: 0.375rem; }
+  .farghar-input { width: 100%; padding: 0.75rem 1rem; background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; color: #ffffff; font-size: 0.875rem; transition: all 0.3s ease; outline: none; }
+  .farghar-input::placeholder { color: #6b7280; }
+  .farghar-input:focus { box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5); border-color: rgba(168, 85, 247, 0.5); }
+  .farghar-input:disabled { opacity: 0.5; cursor: not-allowed; }
+  .farghar-btn-primary { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; font-weight: 500; border-radius: 0.75rem; border: none; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.25); transition: all 0.2s ease; }
+  .farghar-btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .farghar-btn-primary:active { transform: scale(0.98); }
+  .farghar-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .farghar-btn-secondary { padding: 0.75rem 1.5rem; background-color: rgba(255, 255, 255, 0.1); color: #ffffff; font-weight: 500; border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.2s ease; }
+  .farghar-btn-secondary:hover { background-color: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.2); }
+  .farghar-btn-secondary:active { transform: scale(0.98); }
+  .farghar-btn-danger { padding: 0.75rem 1.5rem; background-color: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 500; border-radius: 0.75rem; border: 1px solid rgba(239, 68, 68, 0.3); cursor: pointer; transition: all 0.2s ease; }
+  .farghar-btn-danger:hover { background-color: rgba(239, 68, 68, 0.3); }
+  .farghar-btn-danger:active { transform: scale(0.98); }
+  .farghar-card { background-color: rgba(255, 255, 255, 0.05); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 1.5rem; }
+  .farghar-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
 }
 
 @layer utilities {
-  .farghar-fade-in {
-    animation: farghar-fadeIn 0.5s ease-out forwards;
-  }
-
-  .farghar-slide-up {
-    animation: farghar-slideUp 0.5s ease-out forwards;
-  }
-
-  .farghar-pulse-glow {
-    animation: farghar-pulseGlow 2s ease-in-out infinite;
-  }
+  .farghar-fade-in { animation: farghar-fadeIn 0.5s ease-out forwards; }
+  .farghar-slide-up { animation: farghar-slideUp 0.5s ease-out forwards; }
+  .farghar-pulse-glow { animation: farghar-pulseGlow 2s ease-in-out infinite; }
 }
 
-@keyframes farghar-fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes farghar-slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes farghar-pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
+@keyframes farghar-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes farghar-slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes farghar-pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); } 50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
