@@ -149,7 +149,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-white/10 flex items-center justify-center text-gray-500 flex-shrink-0">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)', color: 'var(--farghar-text-muted)' }}>
             {covers.length > 0 ? (
               <img src={FargharTagProcessor.coverToDataUrl(covers[0])} alt="Cover" className="w-full h-full object-cover" />
             ) : (
@@ -157,25 +157,25 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             )}
           </div>
           <div>
-            <h3 className="text-sm sm:text-base font-semibold text-white truncate max-w-[200px] sm:max-w-[300px]">{file.name}</h3>
+            <h3 className="text-sm sm:text-base font-semibold truncate max-w-[200px] sm:max-w-[300px]" style={{ color: 'var(--farghar-text)' }}>{file.name}</h3>
             <div className="flex items-center gap-2 mt-1">
               <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
-              <span className="text-xs text-gray-500">{FargharTagProcessor.formatFileSize(file.size)}</span>
-              <span className="text-xs text-gray-500">{FargharTagProcessor.formatDuration(file.duration)}</span>
+              <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatFileSize(file.size)}</span>
+              <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
               {covers.length > 0 && (
                 <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{covers.length} artwork(s)</span>
               )}
             </div>
           </div>
         </div>
-        <button onClick={() => onRemove(file.id)} className="p-2 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors farghar-native-touch" title="Remove file">
+        <button onClick={() => onRemove(file.id)} className="p-2 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Remove file">
           <FargharCloseIcon />
         </button>
       </div>
 
       {/* Artwork/Covers Section */}
       <button onClick={() => setShowCovers(!showCovers)} className="w-full flex items-center justify-between mb-4 farghar-native-touch">
-        <span className="text-sm font-medium text-white flex items-center gap-2">
+        <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--farghar-text)' }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
             <circle cx="8.5" cy="8.5" r="1.5" />
@@ -189,7 +189,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {showCovers && (
         <div className="space-y-3 mb-6 farghar-fade-in">
           {/* Add new cover */}
-          <div className="flex items-center gap-2 p-3 bg-white/5 rounded-xl border border-white/10">
+          <div className="flex items-center gap-2 p-3 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
             <FargharSelect
               value={newCoverType}
               onChange={(v) => setNewCoverType(v as Farghar.CoverType)}
@@ -208,20 +208,20 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             const coverUrl = FargharTagProcessor.coverToDataUrl(cover);
             const coverTypeInfo = Farghar.COVER_TYPES.find(ct => ct.value === cover.coverType);
             return (
-              <div key={index} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10">
+              <div key={index} className="flex items-center gap-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
                 {/* Cover preview */}
-                <div className="w-14 h-14 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
+                <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
                   {coverUrl ? (
                     <img src={coverUrl} alt={cover.description} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-500"><FargharImagePlaceholderIcon /></div>
+                    <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--farghar-text-muted)' }}><FargharImagePlaceholderIcon /></div>
                   )}
                 </div>
 
                 {/* Cover info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-white truncate">{coverTypeInfo?.label || 'Other'}</p>
-                  <p className="text-xs text-gray-400">{cover.mimeType}</p>
+                  <p className="text-sm truncate" style={{ color: 'var(--farghar-text)' }}>{coverTypeInfo?.label || 'Other'}</p>
+                  <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{cover.mimeType}</p>
                 </div>
 
                 {/* Cover type selector */}
@@ -236,19 +236,19 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
 
                 {/* Actions */}
                 <div className="flex items-center gap-1">
-                  <label className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer farghar-native-touch" title="Replace">
+                  <label className="p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Replace">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
                     </svg>
                     <input type="file" accept="image/*" onChange={(e) => handleReplaceCover(index, e)} className="hidden" />
                   </label>
-                  <button onClick={() => handleMoveCover(index, 'up')} disabled={index === 0} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" title="Move up">
+                  <button onClick={() => handleMoveCover(index, 'up')} disabled={index === 0} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move up">
                     <FargharArrowUpIcon />
                   </button>
-                  <button onClick={() => handleMoveCover(index, 'down')} disabled={index === covers.length - 1} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" title="Move down">
+                  <button onClick={() => handleMoveCover(index, 'down')} disabled={index === covers.length - 1} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move down">
                     <FargharArrowDownIcon />
                   </button>
-                  <button onClick={() => handleDeleteCover(index)} className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors farghar-native-touch" title="Delete">
+                  <button onClick={() => handleDeleteCover(index)} className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Delete">
                     <FargharTrashIcon />
                   </button>
                 </div>
@@ -257,7 +257,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
           })}
 
           {covers.length === 0 && (
-            <div className="text-center py-6 text-sm text-gray-500">
+            <div className="text-center py-6 text-sm" style={{ color: 'var(--farghar-text-muted)' }}>
               No artwork added yet. Click "Add" to add artwork.
             </div>
           )}
@@ -267,31 +267,31 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {/* Main Tag Fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Title</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Title</label>
           <input type="text" value={tags.title} onChange={(e) => handleTagChange('title', e.target.value)} className="farghar-input text-sm" placeholder="Song title..." />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Artist</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Artist</label>
           <input type="text" value={tags.artist} onChange={(e) => handleTagChange('artist', e.target.value)} className="farghar-input text-sm" placeholder="Artist name..." />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Album</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Album</label>
           <input type="text" value={tags.album} onChange={(e) => handleTagChange('album', e.target.value)} className="farghar-input text-sm" placeholder="Album name..." />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Album Artist</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Album Artist</label>
           <input type="text" value={tags.albumArtist} onChange={(e) => handleTagChange('albumArtist', e.target.value)} className="farghar-input text-sm" placeholder="Album artist..." />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Track Number</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Track Number</label>
           <input type="text" value={tags.trackNumber} onChange={(e) => handleTagChange('trackNumber', e.target.value)} className="farghar-input text-sm" placeholder="1" />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Disc Number</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Disc Number</label>
           <input type="text" value={tags.discNumber} onChange={(e) => handleTagChange('discNumber', e.target.value)} className="farghar-input text-sm" placeholder="1" />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Genre</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Genre</label>
           <FargharSelect
             value={tags.genre}
             onChange={(value) => handleTagChange('genre', value)}
@@ -302,17 +302,17 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Year / Date</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Year / Date</label>
           <input type="text" value={tags.year} onChange={(e) => handleTagChange('year', e.target.value)} className="farghar-input text-sm" placeholder="2024" />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">Composer</label>
+          <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Composer</label>
           <input type="text" value={tags.composer} onChange={(e) => handleTagChange('composer', e.target.value)} className="farghar-input text-sm" placeholder="Composer name..." />
         </div>
       </div>
 
       {/* Advanced Fields Toggle */}
-      <button onClick={() => setShowAdvanced(!showAdvanced)} className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1 farghar-native-touch">
+      <button onClick={() => setShowAdvanced(!showAdvanced)} className="mt-4 text-sm transition-colors flex items-center gap-1 farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }}>
         <FargharChevronIcon open={showAdvanced} />
         Advanced Fields (Lyricist, Arranger, Producer, Copyright, Publisher, ISRC, BPM, Key)
       </button>
@@ -320,35 +320,35 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {showAdvanced && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 farghar-fade-in">
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Lyricist</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Lyricist</label>
             <input type="text" value={tags.lyricist} onChange={(e) => handleTagChange('lyricist', e.target.value)} className="farghar-input text-sm" placeholder="Lyricist name..." />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Arranger</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Arranger</label>
             <input type="text" value={tags.arranger} onChange={(e) => handleTagChange('arranger', e.target.value)} className="farghar-input text-sm" placeholder="Arranger name..." />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Producer</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Producer</label>
             <input type="text" value={tags.producer} onChange={(e) => handleTagChange('producer', e.target.value)} className="farghar-input text-sm" placeholder="Producer name..." />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Copyright</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Copyright</label>
             <input type="text" value={tags.copyright} onChange={(e) => handleTagChange('copyright', e.target.value)} className="farghar-input text-sm" placeholder="Copyright notice..." />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Publisher</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Publisher</label>
             <input type="text" value={tags.publisher} onChange={(e) => handleTagChange('publisher', e.target.value)} className="farghar-input text-sm" placeholder="Publisher name..." />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">ISRC</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>ISRC</label>
             <input type="text" value={tags.isrc} onChange={(e) => handleTagChange('isrc', e.target.value)} className="farghar-input text-sm" placeholder="US-XXX-XX-XXXXX" />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">BPM</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>BPM</label>
             <input type="text" value={tags.bpm} onChange={(e) => handleTagChange('bpm', e.target.value)} className="farghar-input text-sm" placeholder="120" />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Key</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Key</label>
             <FargharSelect
               value={tags.key}
               onChange={(value) => handleTagChange('key', value)}
@@ -362,7 +362,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       )}
 
       {/* Lyrics & Comment Toggle */}
-      <button onClick={() => setShowLyrics(!showLyrics)} className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1 farghar-native-touch">
+      <button onClick={() => setShowLyrics(!showLyrics)} className="mt-4 text-sm transition-colors flex items-center gap-1 farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }}>
         <FargharChevronIcon open={showLyrics} />
         Lyrics & Comments
       </button>
@@ -370,11 +370,11 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {showLyrics && (
         <div className="grid grid-cols-1 gap-4 mt-4 farghar-fade-in">
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Lyrics</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Lyrics</label>
             <textarea value={tags.lyrics} onChange={(e) => handleTagChange('lyrics', e.target.value)} className="farghar-input text-sm resize-none h-32" placeholder="Enter lyrics here..." />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Comment</label>
+            <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Comment</label>
             <textarea value={tags.comment} onChange={(e) => handleTagChange('comment', e.target.value)} className="farghar-input text-sm resize-none h-20" placeholder="Comments..." />
           </div>
         </div>

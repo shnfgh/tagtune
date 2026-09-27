@@ -43,7 +43,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
   return (
     <div className="farghar-card overflow-hidden">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+        <h2 className="text-lg font-semibold flex items-center gap-2" style={{ color: 'var(--farghar-text)' }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
@@ -52,14 +52,14 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
           </svg>
           File List
         </h2>
-        <span className="farghar-badge bg-white/10 text-gray-300">{files.length} files</span>
+        <span className="farghar-badge" style={{ backgroundColor: 'var(--farghar-glass-bg)', color: 'var(--farghar-text-secondary)' }}>{files.length} files</span>
       </div>
 
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="text-xs text-gray-400 border-b border-white/10">
+            <tr className="text-xs" style={{ color: 'var(--farghar-text-muted)', borderBottom: '1px solid var(--farghar-glass-border)' }}>
               <th className="text-right py-3 px-2 w-10">#</th>
               <th className="text-right py-3 px-2">Cover</th>
               <th className="text-right py-3 px-2">Title</th>
@@ -81,44 +81,46 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                 <tr
                   key={file.id}
                   onClick={() => onSelectFile(file.id)}
-                  className={`border-b border-white/5 cursor-pointer transition-all duration-200 farghar-native-touch ${isSelected ? 'bg-purple-500/10' : 'hover:bg-white/5'}`}
+                  className={`cursor-pointer transition-all duration-200 farghar-native-touch ${isSelected ? 'bg-purple-500/10' : ''}`}
+                  style={{ borderBottom: '1px solid var(--farghar-glass-border)' }}
                 >
-                  <td className="py-3 px-2 text-sm text-gray-500">{index + 1}</td>
+                  <td className="py-3 px-2 text-sm" style={{ color: 'var(--farghar-text-muted)' }}>{index + 1}</td>
                   <td className="py-3 px-2">
-                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/10">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
                       {coverUrl ? (
                         <img src={coverUrl} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-500"><FargharMusicSmallIcon /></div>
+                        <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--farghar-text-muted)' }}><FargharMusicSmallIcon /></div>
                       )}
                     </div>
                   </td>
                   <td className="py-3 px-2">
-                    <span className="text-sm text-white truncate block max-w-[200px]">{file.tags.title || file.name}</span>
+                    <span className="text-sm truncate block max-w-[200px]" style={{ color: 'var(--farghar-text)' }}>{file.tags.title || file.name}</span>
                   </td>
                   <td className="py-3 px-2">
-                    <span className="text-sm text-gray-300 truncate block max-w-[150px]">{file.tags.artist || '-'}</span>
+                    <span className="text-sm truncate block max-w-[150px]" style={{ color: 'var(--farghar-text-secondary)' }}>{file.tags.artist || '-'}</span>
                   </td>
                   <td className="py-3 px-2">
-                    <span className="text-sm text-gray-300 truncate block max-w-[150px]">{file.tags.album || '-'}</span>
+                    <span className="text-sm truncate block max-w-[150px]" style={{ color: 'var(--farghar-text-secondary)' }}>{file.tags.album || '-'}</span>
                   </td>
                   <td className="py-3 px-2">
-                    <span className="text-sm text-gray-300 truncate block max-w-[150px]">{file.tags.albumArtist || '-'}</span>
+                    <span className="text-sm truncate block max-w-[150px]" style={{ color: 'var(--farghar-text-secondary)' }}>{file.tags.albumArtist || '-'}</span>
                   </td>
                   <td className="py-3 px-2">
-                    <span className="text-sm text-gray-300 truncate block max-w-[100px]">{file.tags.trackNumber || '-'}</span>
+                    <span className="text-sm truncate block max-w-[100px]" style={{ color: 'var(--farghar-text-secondary)' }}>{file.tags.trackNumber || '-'}</span>
                   </td>
                   <td className="py-3 px-2">
                     <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
                   </td>
                   <td className="py-3 px-2">
-                    <span className="text-sm text-gray-400">{FargharTagProcessor.formatDuration(file.duration)}</span>
+                    <span className="text-sm" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
                   </td>
                   <td className="py-3 px-2"><FargharStatusBadge status={file.status} modified={file.modified} /></td>
                   <td className="py-3 px-2">
                     <button
                       onClick={(e) => { e.stopPropagation(); onRemoveFile(file.id); }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-500 hover:text-red-400 transition-colors farghar-native-touch"
+                      className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch"
+                      style={{ color: 'var(--farghar-text-muted)' }}
                     >
                       <FargharCloseIcon />
                     </button>
@@ -141,20 +143,21 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
               onClick={() => onSelectFile(file.id)}
               className={`
                 flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 farghar-native-touch
-                ${isSelected ? 'bg-purple-500/10 border border-purple-500/30' : 'bg-white/5 hover:bg-white/10'}
+                ${isSelected ? 'bg-purple-500/10 border border-purple-500/30' : ''}
               `}
+              style={!isSelected ? { backgroundColor: 'var(--farghar-glass-bg)' } : undefined}
             >
-              <span className="text-xs text-gray-500 w-5">{index + 1}</span>
-              <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
+              <span className="text-xs w-5" style={{ color: 'var(--farghar-text-muted)' }}>{index + 1}</span>
+              <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
                 {coverUrl ? (
                   <img src={coverUrl} alt="" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-500"><FargharMusicSmallIcon /></div>
+                  <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--farghar-text-muted)' }}><FargharMusicSmallIcon /></div>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-white truncate">{file.tags.title || file.name}</p>
-                <p className="text-xs text-gray-400 truncate">{file.tags.artist || '-'}</p>
+                <p className="text-sm truncate" style={{ color: 'var(--farghar-text)' }}>{file.tags.title || file.name}</p>
+                <p className="text-xs truncate" style={{ color: 'var(--farghar-text-muted)' }}>{file.tags.artist || '-'}</p>
               </div>
               <FargharStatusBadge status={file.status} modified={file.modified} />
             </div>

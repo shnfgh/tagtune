@@ -184,7 +184,10 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-full bg-gray-900 border border-white/10 rounded-xl shadow-2xl shadow-black/50 overflow-hidden farghar-fade-in">
+        <div 
+          className="absolute z-50 mt-2 w-full rounded-xl shadow-2xl overflow-hidden farghar-fade-in"
+          style={{ backgroundColor: 'var(--farghar-bg-secondary)', border: '1px solid var(--farghar-glass-border)' }}
+        >
           <div className="max-h-60 overflow-y-auto py-1">
             {/* Clear option */}
             {value && (
@@ -201,7 +204,7 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
             )}
 
             {filteredOptions.length === 0 && !isCustomValue ? (
-              <div className="px-4 py-3 text-sm text-gray-500 text-center">No results found</div>
+              <div className="px-4 py-3 text-sm text-center" style={{ color: 'var(--farghar-text-muted)' }}>No results found</div>
             ) : (
               <>
                 {filteredOptions.map((option, index) => (
@@ -216,11 +219,10 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                       w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right
                       ${option.value === value
                         ? 'bg-purple-500/20 text-purple-300'
-                        : highlightedIndex === index
-                          ? 'bg-white/10 text-white'
-                          : 'text-gray-300 hover:bg-white/5'
+                        : ''
                       }
                     `}
+                    style={option.value !== value ? { color: highlightedIndex === index ? 'var(--farghar-text)' : 'var(--farghar-text-secondary)' } : undefined}
                   >
                     <span className="truncate">{option.label}</span>
                     {option.value === value && (

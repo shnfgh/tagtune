@@ -104,11 +104,11 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
     <div className="farghar-card">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+          <h2 className="text-lg font-semibold flex items-center gap-2" style={{ color: 'var(--farghar-text)' }}>
             <FargharSaveIcon />
             Download Output
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm mt-1" style={{ color: 'var(--farghar-text-muted)' }}>
             {modifiedFiles.length > 0 ? `${modifiedFiles.length} modified file(s) ready for download` : 'No files have been modified'}
           </p>
         </div>
@@ -128,10 +128,10 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
       </div>
       {isDownloading && (
         <div className="mt-4">
-          <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+          <div className="w-full rounded-full h-2 overflow-hidden" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
             <div className="h-full farghar-gradient rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
           </div>
-          <p className="text-xs text-gray-400 mt-2 text-center">Processing {progress}% ...</p>
+          <p className="text-xs mt-2 text-center" style={{ color: 'var(--farghar-text-muted)' }}>Processing {progress}% ...</p>
         </div>
       )}
     </div>

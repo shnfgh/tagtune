@@ -3,7 +3,7 @@ import React from 'react';
 
 export const FargharSkeletonRow: React.FC = () => {
   return (
-    <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 animate-pulse">
+    <div className="flex items-center gap-4 p-4 rounded-xl animate-pulse" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
       <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg farghar-skeleton flex-shrink-0" />
       <div className="flex-1 min-w-0 space-y-2">
         <div className="h-4 w-3/4 farghar-skeleton rounded" />

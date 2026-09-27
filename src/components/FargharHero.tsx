@@ -68,8 +68,8 @@ export const FargharHero: React.FC<FargharHeroProps> = ({ hasFiles }) => {
           <FargharCheckIcon />
         </div>
       </div>
-      <h2 className="text-2xl sm:text-4xl font-bold text-white mb-3">Farghar Tag Editor</h2>
-      <p className="text-base sm:text-lg text-gray-400 mb-6 max-w-xl mx-auto">
+      <h2 className="text-2xl sm:text-4xl font-bold mb-3" style={{ color: 'var(--farghar-text)' }}>Farghar Tag Editor</h2>
+      <p className="text-base sm:text-lg mb-6 max-w-xl mx-auto" style={{ color: 'var(--farghar-text-secondary)' }}>
         Professional online music tag editor with native app experience.
         <br className="hidden sm:block" />
         Free, secure, and no software installation required.
@@ -77,15 +77,15 @@ export const FargharHero: React.FC<FargharHeroProps> = ({ hasFiles }) => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto mb-8">
         {features.map((feature, i) => (
           <div key={i} className="farghar-glass farghar-glass-hover rounded-xl p-3 text-center farghar-native-touch">
-            <span className="text-gray-300 flex justify-center mb-1"><feature.icon /></span>
-            <span className="text-xs sm:text-sm text-gray-300">{feature.label}</span>
+            <span className="flex justify-center mb-1" style={{ color: 'var(--farghar-text-secondary)' }}><feature.icon /></span>
+            <span className="text-xs sm:text-sm" style={{ color: 'var(--farghar-text-secondary)' }}>{feature.label}</span>
           </div>
         ))}
       </div>
       <div className="flex flex-wrap justify-center gap-2">
-        <span className="text-xs text-gray-500">Supported:</span>
+        <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Supported:</span>
         {['MP3', 'MP4', 'M4A', 'WAV', 'FLAC', 'OGG', 'MKV', 'MOV', 'FLV'].map(format => (
-          <span key={format} className="text-xs px-2 py-0.5 rounded bg-white/5 text-gray-400 border border-white/10">{format}</span>
+          <span key={format} className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: 'var(--farghar-glass-bg)', color: 'var(--farghar-text-muted)', border: '1px solid var(--farghar-glass-border)' }}>{format}</span>
         ))}
       </div>
     </div>

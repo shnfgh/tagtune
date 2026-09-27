@@ -58,12 +58,12 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* General Settings */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">General</h3>
+            <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--farghar-text)' }}>General</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-white">Auto-save changes</p>
-                  <p className="text-xs text-gray-400">Automatically save changes to localStorage</p>
+                  <p className="text-sm" style={{ color: 'var(--farghar-text)' }}>Auto-save changes</p>
+                  <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Automatically save changes to localStorage</p>
                 </div>
                 <button
                   onClick={() => setAutoSave(!autoSave)}
@@ -75,8 +75,8 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
 
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-white">Confirm before delete</p>
-                  <p className="text-xs text-gray-400">Show confirmation dialog before deleting files</p>
+                  <p className="text-sm" style={{ color: 'var(--farghar-text)' }}>Confirm before delete</p>
+                  <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Show confirmation dialog before deleting files</p>
                 </div>
                 <button
                   onClick={() => setConfirmDelete(!confirmDelete)}
@@ -94,7 +94,7 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
               onClick={() => setShowAdvanced(!showAdvanced)}
               className="flex items-center justify-between w-full text-right"
             >
-              <h3 className="text-sm font-semibold text-white">Advanced</h3>
+              <h3 className="text-sm font-semibold" style={{ color: 'var(--farghar-text)' }}>Advanced</h3>
               <svg
                 width="16"
                 height="16"
@@ -112,13 +112,13 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
 
             {showAdvanced && (
               <div className="mt-4 space-y-4 farghar-fade-in">
-                <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                  <p className="text-sm text-white mb-2">Storage Usage</p>
+                <div className="p-4 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
+                  <p className="text-sm mb-2" style={{ color: 'var(--farghar-text)' }}>Storage Usage</p>
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
                       <div className="h-full bg-purple-500 rounded-full" style={{ width: '35%' }} />
                     </div>
-                    <span className="text-xs text-gray-400">35% used</span>
+                    <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>35% used</span>
                   </div>
                 </div>
 
@@ -131,11 +131,11 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
 
           {/* About */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">About</h3>
-            <div className="p-4 bg-white/5 rounded-xl border border-white/10 space-y-2">
-              <p className="text-sm text-white">Farghar Tag Editor</p>
-              <p className="text-xs text-gray-400">Version 1.0.0</p>
-              <p className="text-xs text-gray-400">Designed & Architected by Farghar</p>
+            <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--farghar-text)' }}>About</h3>
+            <div className="p-4 rounded-xl space-y-2" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
+              <p className="text-sm" style={{ color: 'var(--farghar-text)' }}>Farghar Tag Editor</p>
+              <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Version 1.0.0</p>
+              <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Designed & Architected by Farghar</p>
             </div>
           </div>
         </div>
