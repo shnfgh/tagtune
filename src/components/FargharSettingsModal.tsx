@@ -122,7 +122,7 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
                   </div>
                 </div>
 
-                <button className="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 rounded-xl text-red-400 text-sm transition-colors farghar-native-touch">
+                <button className="w-full px-4 py-3 rounded-xl text-sm transition-colors farghar-native-touch" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}>
                   Clear All Data
                 </button>
               </div>

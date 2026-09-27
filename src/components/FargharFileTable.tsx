@@ -27,14 +27,14 @@ const FargharCloseIcon: React.FC = () => (
 
 const FargharStatusBadge: React.FC<{ status: Farghar.AudioFile['status']; modified: boolean }> = ({ status, modified }) => {
   const config = {
-    loading: { bg: 'bg-yellow-500/20', text: 'text-yellow-300', label: 'Loading' },
-    ready: { bg: 'bg-green-500/20', text: 'text-green-300', label: 'Ready' },
-    editing: { bg: 'bg-blue-500/20', text: 'text-blue-300', label: 'Editing' },
-    done: { bg: 'bg-emerald-500/20', text: 'text-emerald-300', label: 'Done' },
-    error: { bg: 'bg-red-500/20', text: 'text-red-300', label: 'Error' },
+    loading: { bg: 'rgba(234, 179, 8, 0.2)', text: '#fde047', label: 'Loading' },
+    ready: { bg: 'rgba(34, 197, 94, 0.2)', text: '#86efac', label: 'Ready' },
+    editing: { bg: 'rgba(59, 130, 246, 0.2)', text: '#93c5fd', label: 'Editing' },
+    done: { bg: 'rgba(16, 185, 129, 0.2)', text: '#6ee7b7', label: 'Done' },
+    error: { bg: 'rgba(239, 68, 68, 0.2)', text: '#fca5a5', label: 'Error' },
   };
-  const c = modified ? { bg: 'bg-orange-500/20', text: 'text-orange-300', label: 'Modified' } : config[status];
-  return <span className={`farghar-badge ${c.bg} ${c.text} text-[10px]`}>{c.label}</span>;
+  const c = modified ? { bg: 'rgba(249, 115, 22, 0.2)', text: '#fdba74', label: 'Modified' } : config[status];
+  return <span className="farghar-badge text-[10px]" style={{ backgroundColor: c.bg, color: c.text }}>{c.label}</span>;
 };
 
 export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selectedFileId, onSelectFile, onRemoveFile }) => {
@@ -81,8 +81,8 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                 <tr
                   key={file.id}
                   onClick={() => onSelectFile(file.id)}
-                  className={`cursor-pointer transition-all duration-200 farghar-native-touch ${isSelected ? 'bg-purple-500/10' : ''}`}
-                  style={{ borderBottom: '1px solid var(--farghar-glass-border)' }}
+                  className="cursor-pointer transition-all duration-200 farghar-native-touch"
+                  style={{ borderBottom: '1px solid var(--farghar-glass-border)', backgroundColor: isSelected ? 'rgba(168, 85, 247, 0.1)' : undefined }}
                 >
                   <td className="py-3 px-2 text-sm" style={{ color: 'var(--farghar-text-muted)' }}>{index + 1}</td>
                   <td className="py-3 px-2">
@@ -110,7 +110,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                     <span className="text-sm truncate block max-w-[100px]" style={{ color: 'var(--farghar-text-secondary)' }}>{file.tags.trackNumber || '-'}</span>
                   </td>
                   <td className="py-3 px-2">
-                    <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
+                    <span className="farghar-badge text-[10px]" style={{ backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#93c5fd' }}>{file.format.toUpperCase()}</span>
                   </td>
                   <td className="py-3 px-2">
                     <span className="text-sm" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
@@ -119,8 +119,10 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                   <td className="py-3 px-2">
                     <button
                       onClick={(e) => { e.stopPropagation(); onRemoveFile(file.id); }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch"
+                      className="p-1.5 rounded-lg transition-colors farghar-native-touch"
                       style={{ color: 'var(--farghar-text-muted)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
                       <FargharCloseIcon />
                     </button>
@@ -141,11 +143,11 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
             <div
               key={file.id}
               onClick={() => onSelectFile(file.id)}
-              className={`
-                flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 farghar-native-touch
-                ${isSelected ? 'bg-purple-500/10 border border-purple-500/30' : ''}
-              `}
-              style={!isSelected ? { backgroundColor: 'var(--farghar-glass-bg)' } : undefined}
+              className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 farghar-native-touch"
+              style={{
+                backgroundColor: isSelected ? 'rgba(168, 85, 247, 0.1)' : 'var(--farghar-glass-bg)',
+                border: isSelected ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid transparent'
+              }}
             >
               <span className="text-xs w-5" style={{ color: 'var(--farghar-text-muted)' }}>{index + 1}</span>
               <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>

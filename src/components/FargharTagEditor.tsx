@@ -159,16 +159,16 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
           <div>
             <h3 className="text-sm sm:text-base font-semibold truncate max-w-[200px] sm:max-w-[300px]" style={{ color: 'var(--farghar-text)' }}>{file.name}</h3>
             <div className="flex items-center gap-2 mt-1">
-              <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
+              <span className="farghar-badge text-[10px]" style={{ backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#93c5fd' }}>{file.format.toUpperCase()}</span>
               <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatFileSize(file.size)}</span>
               <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
               {covers.length > 0 && (
-                <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{covers.length} artwork(s)</span>
+                <span className="farghar-badge text-[10px]" style={{ backgroundColor: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe' }}>{covers.length} artwork(s)</span>
               )}
             </div>
           </div>
         </div>
-        <button onClick={() => onRemove(file.id)} className="p-2 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Remove file">
+        <button onClick={() => onRemove(file.id)} className="p-2 rounded-lg transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Remove file" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
           <FargharCloseIcon />
         </button>
       </div>
@@ -236,19 +236,19 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
 
                 {/* Actions */}
                 <div className="flex items-center gap-1">
-                  <label className="p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Replace">
+                  <label className="p-1.5 rounded-lg transition-colors cursor-pointer farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Replace" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--farghar-hover-bg)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
                     </svg>
                     <input type="file" accept="image/*" onChange={(e) => handleReplaceCover(index, e)} className="hidden" />
                   </label>
-                  <button onClick={() => handleMoveCover(index, 'up')} disabled={index === 0} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move up">
+                  <button onClick={() => handleMoveCover(index, 'up')} disabled={index === 0} className="p-1.5 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move up" onMouseEnter={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.backgroundColor = 'var(--farghar-hover-bg)'; }} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
                     <FargharArrowUpIcon />
                   </button>
-                  <button onClick={() => handleMoveCover(index, 'down')} disabled={index === covers.length - 1} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move down">
+                  <button onClick={() => handleMoveCover(index, 'down')} disabled={index === covers.length - 1} className="p-1.5 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move down" onMouseEnter={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.backgroundColor = 'var(--farghar-hover-bg)'; }} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
                     <FargharArrowDownIcon />
                   </button>
-                  <button onClick={() => handleDeleteCover(index)} className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Delete">
+                  <button onClick={() => handleDeleteCover(index)} className="p-1.5 rounded-lg transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Delete" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
                     <FargharTrashIcon />
                   </button>
                 </div>
@@ -383,8 +383,8 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {/* Status */}
       {file.modified && (
         <div className="mt-4 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-          <span className="text-xs text-yellow-400">Unsaved changes - Ready to download</span>
+          <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#facc15' }} />
+          <span className="text-xs" style={{ color: '#facc15' }}>Unsaved changes - Ready to download</span>
         </div>
       )}
 

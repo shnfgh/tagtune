@@ -56,13 +56,13 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
 
   const variantStyles = {
     danger: {
-      iconColor: 'text-red-400',
-      iconBg: 'bg-red-500/20',
+      iconColor: '#f87171',
+      iconBg: 'rgba(239, 68, 68, 0.2)',
       confirmBtn: 'farghar-btn-danger',
     },
     warning: {
-      iconColor: 'text-yellow-400',
-      iconBg: 'bg-yellow-500/20',
+      iconColor: '#facc15',
+      iconBg: 'rgba(234, 179, 8, 0.2)',
       confirmBtn: 'farghar-btn-primary',
     },
   };
@@ -78,11 +78,14 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-gray-900 border border-white/10 rounded-2xl shadow-2xl shadow-black/50 farghar-slide-up overflow-hidden">
+      <div className="relative w-full max-w-md rounded-2xl shadow-2xl farghar-slide-up overflow-hidden" style={{ backgroundColor: 'var(--farghar-bg-secondary)', border: '1px solid var(--farghar-glass-border)' }}>
         {/* Close button */}
         <button
           onClick={onCancel}
-          className="absolute top-4 left-4 p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors farghar-native-touch"
+          className="absolute top-4 left-4 p-1.5 rounded-lg transition-colors farghar-native-touch"
+          style={{ color: 'var(--farghar-text-muted)' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--farghar-hover-bg)'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
         >
           <FargharCloseIcon />
         </button>
@@ -90,7 +93,7 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
         {/* Content */}
         <div className="p-6">
           {/* Icon */}
-          <div className={`w-14 h-14 rounded-2xl ${styles.iconBg} flex items-center justify-center ${styles.iconColor} mx-auto mb-4`}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: styles.iconBg, color: styles.iconColor }}>
             <FargharAlertIcon />
           </div>
 

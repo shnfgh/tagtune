@@ -72,7 +72,7 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
         <div className="flex items-center gap-2">
           <FargharEditIcon />
           <span className="text-sm font-medium" style={{ color: 'var(--farghar-text)' }}>Batch Edit</span>
-          <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{files.length} files</span>
+          <span className="farghar-badge text-[10px]" style={{ backgroundColor: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe' }}>{files.length} files</span>
         </div>
         <span style={{ color: 'var(--farghar-text-muted)' }}><FargharChevronIcon open={isOpen} /></span>
       </button>

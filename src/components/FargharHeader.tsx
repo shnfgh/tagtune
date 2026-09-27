@@ -137,10 +137,8 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ fileCount, isFulls
                       setTheme(t.value);
                       setShowThemeMenu(false);
                     }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors text-right ${
-                      theme === t.value ? 'bg-purple-500/20 text-purple-300' : 'hover:bg-white/5'
-                    }`}
-                    style={{ color: theme === t.value ? undefined : 'var(--farghar-text)' }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors text-right"
+                    style={theme === t.value ? { backgroundColor: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe' } : { color: 'var(--farghar-text)' }}
                   >
                     {t.icon}
                     <span>{t.label}</span>
@@ -157,7 +155,7 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ fileCount, isFulls
 
           {/* Center: Logo & Title */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 farghar-gradient rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/20">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 farghar-gradient rounded-xl flex items-center justify-center shadow-lg" style={{ color: '#ffffff', boxShadow: '0 10px 15px -3px rgba(168, 85, 247, 0.2)' }}>
               <FargharLogoIcon />
             </div>
             <div className="text-center">
@@ -207,24 +205,24 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ fileCount, isFulls
                     <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--farghar-text)' }}>Status</h3>
                     <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
                       {fileCount > 0 && (
-                        <div className="farghar-badge bg-purple-500/20 text-purple-300">
+                        <div className="farghar-badge" style={{ backgroundColor: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe' }}>
                           <span className="mr-1 flex items-center"><FargharFolderIcon /></span>
                           {fileCount} files
                         </div>
                       )}
-                      <div className="farghar-badge bg-green-500/20 text-green-300">
+                      <div className="farghar-badge" style={{ backgroundColor: 'rgba(34, 197, 94, 0.2)', color: '#86efac' }}>
                         <span className="mr-1 flex items-center"><FargharLockIcon /></span>
                         Secure & Local
                       </div>
-                      <div className="farghar-badge bg-blue-500/20 text-blue-300">
+                      <div className="farghar-badge" style={{ backgroundColor: 'rgba(59, 130, 246, 0.2)', color: '#93c5fd' }}>
                         <span className="mr-1">🎵</span>
                         MP3, FLAC, WAV
                       </div>
-                      <div className="farghar-badge bg-yellow-500/20 text-yellow-300">
+                      <div className="farghar-badge" style={{ backgroundColor: 'rgba(234, 179, 8, 0.2)', color: '#fde047' }}>
                         <span className="mr-1">🏷️</span>
                         ID3v1 & ID3v2
                       </div>
-                      <div className="farghar-badge bg-pink-500/20 text-pink-300">
+                      <div className="farghar-badge" style={{ backgroundColor: 'rgba(236, 72, 153, 0.2)', color: '#f9a8d4' }}>
                         <span className="mr-1">🖼️</span>
                         Multi Artwork
                       </div>

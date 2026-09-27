@@ -215,14 +215,8 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                       e.preventDefault();
                       handleSelect(option.value);
                     }}
-                    className={`
-                      w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right
-                      ${option.value === value
-                        ? 'bg-purple-500/20 text-purple-300'
-                        : ''
-                      }
-                    `}
-                    style={option.value !== value ? { color: highlightedIndex === index ? 'var(--farghar-text)' : 'var(--farghar-text-secondary)' } : undefined}
+                    className="w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right"
+                    style={option.value === value ? { backgroundColor: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe' } : { color: highlightedIndex === index ? 'var(--farghar-text)' : 'var(--farghar-text-secondary)' }}
                   >
                     <span className="truncate">{option.label}</span>
                     {option.value === value && (
