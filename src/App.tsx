@@ -9,6 +9,7 @@ import { FargharFileTable } from './components/FargharFileTable';
 import { FargharHero } from './components/FargharHero';
 import { FargharFooter } from './components/FargharFooter';
 import { FargharSkeletonLoader, FargharSkeletonCard } from './components/FargharSkeleton';
+import { FargharConfirmModal } from './components/FargharConfirmModal';
 
 // Lazy loaded components for performance
 const FargharTagEditor = lazy(() => import('./components/FargharTagEditor').then(m => ({ default: m.FargharTagEditor })));
@@ -22,53 +23,152 @@ const FargharTrashIcon: React.FC = () => (
   </svg>
 );
 
+// LocalStorage keys
+const FARGHAR_STORAGE_KEY = 'farghar_tag_editor_data';
+
 function FargharApp() {
   const [files, setFiles] = useState<Farghar.AudioFile[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; fileId: string | null; fileName: string }>({ isOpen: false, fileId: null, fileName: '' });
+  const [clearAllModal, setClearAllModal] = useState(false);
+
+  // Save data to localStorage
+  const saveToStorage = useCallback((filesData: Farghar.AudioFile[]) => {
+    try {
+      const dataToSave = filesData.map(f => ({
+        id: f.id,
+        name: f.name,
+        size: f.size,
+        format: f.format,
+        tags: f.tags,
+        cover: f.cover ? { ...f.cover, pictureData: f.cover.pictureData ? Array.from(f.cover.pictureData) : null } : null,
+        duration: f.duration,
+        modified: f.modified,
+      }));
+      localStorage.setItem(FARGHAR_STORAGE_KEY, JSON.stringify(dataToSave));
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
+  }, []);
+
+  // Load data from localStorage
+  const loadFromStorage = useCallback((): any[] => {
+    try {
+      const data = localStorage.getItem(FARGHAR_STORAGE_KEY);
+      if (data) return JSON.parse(data);
+    } catch (error) {
+      console.error('Error loading from localStorage:', error);
+    }
+    return [];
+  }, []);
+
+  // Clear storage
+  const clearStorage = useCallback(() => {
+    localStorage.removeItem(FARGHAR_STORAGE_KEY);
+  }, []);
 
   // Process uploaded files
   const handleFilesSelected = useCallback(async (newFiles: File[]) => {
     setIsLoading(true);
+    const savedData = loadFromStorage();
+
     for (const file of newFiles) {
       const id = FargharTagProcessor.generateId();
       const format = FargharTagProcessor.getFormat(file.name);
+
+      // Check if this file was previously edited (match by name and size)
+      const savedFile = savedData.find(s => s.name === file.name && s.size === file.size);
+
       const audioFile: Farghar.AudioFile = {
         id, file, name: file.name, size: file.size, format,
-        tags: { ...Farghar.EMPTY_TAG }, cover: null, duration: 0, status: 'loading', modified: false,
+        tags: savedFile ? { ...savedFile.tags } : { ...Farghar.EMPTY_TAG },
+        cover: savedFile?.cover ? { ...savedFile.cover, pictureData: savedFile.cover.pictureData ? new Uint8Array(savedFile.cover.pictureData) : null } : null,
+        duration: savedFile?.duration || 0,
+        status: 'loading',
+        modified: !!savedFile?.modified,
       };
       setFiles(prev => [...prev, audioFile]);
+
       try {
         const { tags, cover, duration } = await FargharTagProcessor.readTags(file);
-        setFiles(prev => prev.map(f => f.id === id ? { ...f, tags, cover, duration, status: 'ready' as const } : f));
+
+        // If file was previously edited, keep the edited tags; otherwise use original tags
+        if (savedFile && savedFile.modified) {
+          setFiles(prev => prev.map(f => f.id === id ? {
+            ...f,
+            tags: savedFile.tags,
+            cover: savedFile.cover ? { ...savedFile.cover, pictureData: savedFile.cover.pictureData ? new Uint8Array(savedFile.cover.pictureData) : null } : cover,
+            duration: duration,
+            status: 'ready' as const,
+          } : f));
+        } else {
+          setFiles(prev => prev.map(f => f.id === id ? { ...f, tags, cover, duration, status: 'ready' as const } : f));
+        }
       } catch (error) {
         console.error('Error processing file:', file.name, error);
         setFiles(prev => prev.map(f => f.id === id ? { ...f, status: 'error' as const } : f));
       }
     }
     setIsLoading(false);
-  }, []);
+  }, [loadFromStorage]);
 
   // Update single file
   const handleFileUpdate = useCallback((updatedFile: Farghar.AudioFile) => {
-    setFiles(prev => prev.map(f => f.id === updatedFile.id ? updatedFile : f));
-  }, []);
+    setFiles(prev => {
+      const newFiles = prev.map(f => f.id === updatedFile.id ? updatedFile : f);
+      saveToStorage(newFiles);
+      return newFiles;
+    });
+  }, [saveToStorage]);
 
-  // Remove file
-  const handleFileRemove = useCallback((id: string) => {
-    setFiles(prev => prev.filter(f => f.id !== id));
-    if (selectedFileId === id) setSelectedFileId(null);
-  }, [selectedFileId]);
+  // Request file removal (show confirm modal)
+  const handleFileRemoveRequest = useCallback((id: string) => {
+    const file = files.find(f => f.id === id);
+    if (file) {
+      setDeleteModal({ isOpen: true, fileId: id, fileName: file.name });
+    }
+  }, [files]);
+
+  // Confirm file removal
+  const handleFileRemoveConfirm = useCallback(() => {
+    if (deleteModal.fileId) {
+      setFiles(prev => {
+        const newFiles = prev.filter(f => f.id !== deleteModal.fileId);
+        saveToStorage(newFiles);
+        return newFiles;
+      });
+      if (selectedFileId === deleteModal.fileId) setSelectedFileId(null);
+    }
+    setDeleteModal({ isOpen: false, fileId: null, fileName: '' });
+  }, [deleteModal.fileId, selectedFileId, saveToStorage]);
+
+  // Cancel file removal
+  const handleFileRemoveCancel = useCallback(() => {
+    setDeleteModal({ isOpen: false, fileId: null, fileName: '' });
+  }, []);
 
   // Batch update
   const handleBatchUpdate = useCallback((updates: Partial<Farghar.AudioTag>) => {
     setFiles(prev => prev.map(f => ({ ...f, tags: { ...f.tags, ...updates }, modified: true, status: 'editing' as const })));
   }, []);
 
-  // Clear all files
-  const handleClearAll = useCallback(() => {
+  // Request clear all (show confirm modal)
+  const handleClearAllRequest = useCallback(() => {
+    setClearAllModal(true);
+  }, []);
+
+  // Confirm clear all
+  const handleClearAllConfirm = useCallback(() => {
     setFiles([]);
     setSelectedFileId(null);
+    clearStorage();
+    setClearAllModal(false);
+  }, [clearStorage]);
+
+  // Cancel clear all
+  const handleClearAllCancel = useCallback(() => {
+    setClearAllModal(false);
   }, []);
 
   // Select first file if none selected
@@ -95,20 +195,20 @@ function FargharApp() {
           {isLoading && <div className="mb-6"><FargharSkeletonLoader rows={3} /></div>}
           {files.length > 0 && (
             <div className="space-y-6">
-              <FargharFileTable files={files} selectedFileId={selectedFileId} onSelectFile={setSelectedFileId} onRemoveFile={handleFileRemove} />
+              <FargharFileTable files={files} selectedFileId={selectedFileId} onSelectFile={setSelectedFileId} onRemoveFile={handleFileRemoveRequest} />
               <Suspense fallback={<FargharSkeletonCard />}>
                 <FargharBatchEditor files={files} onBatchUpdate={handleBatchUpdate} />
               </Suspense>
               {selectedFile && (
                 <Suspense fallback={<FargharSkeletonCard />}>
-                  <FargharTagEditor file={selectedFile} onUpdate={handleFileUpdate} onRemove={handleFileRemove} />
+                  <FargharTagEditor file={selectedFile} onUpdate={handleFileUpdate} onRemove={handleFileRemoveRequest} />
                 </Suspense>
               )}
               <Suspense fallback={<FargharSkeletonCard />}>
                 <FargharDownloadSection files={files} />
               </Suspense>
               <div className="text-center">
-                <button onClick={handleClearAll} className="farghar-btn-danger text-sm flex items-center gap-2 mx-auto farghar-native-touch">
+                <button onClick={handleClearAllRequest} className="farghar-btn-danger text-sm flex items-center gap-2 mx-auto farghar-native-touch">
                   <FargharTrashIcon />
                   Clear All Files
                 </button>
@@ -118,6 +218,30 @@ function FargharApp() {
         </main>
         <FargharFooter />
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <FargharConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Remove File"
+        message={`Are you sure you want to remove "${deleteModal.fileName}"? This action cannot be undone.`}
+        confirmLabel="Remove"
+        cancelLabel="Cancel"
+        onConfirm={handleFileRemoveConfirm}
+        onCancel={handleFileRemoveCancel}
+        variant="danger"
+      />
+
+      {/* Clear All Confirmation Modal */}
+      <FargharConfirmModal
+        isOpen={clearAllModal}
+        title="Clear All Files"
+        message="Are you sure you want to remove all files? This action cannot be undone and all edited data will be lost."
+        confirmLabel="Clear All"
+        cancelLabel="Cancel"
+        onConfirm={handleClearAllConfirm}
+        onCancel={handleClearAllCancel}
+        variant="danger"
+      />
     </div>
   );
 }
