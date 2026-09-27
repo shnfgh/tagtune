@@ -1,6 +1,6 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 // Professional Music Tag Editor with Native App Experience
-import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { Farghar } from './types';
 import { FargharTagProcessor } from './utils/tagProcessor';
 import { FargharHeader } from './components/FargharHeader';
@@ -32,6 +32,9 @@ function FargharApp() {
   const [isLoading, setIsLoading] = useState(false);
   const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; fileId: string | null; fileName: string }>({ isOpen: false, fileId: null, fileName: '' });
   const [clearAllModal, setClearAllModal] = useState(false);
+  
+  // Keep File objects in memory (cannot be stored in localStorage)
+  const fileObjectsMap = useRef<Map<string, File>>(new Map());
 
   // Save data to localStorage
   const saveToStorage = useCallback((filesData: Farghar.AudioFile[]) => {
@@ -89,6 +92,9 @@ function FargharApp() {
         modified: !!savedFile?.modified,
       };
       setFiles(prev => [...prev, audioFile]);
+      
+      // Store File object in memory for later download
+      fileObjectsMap.current.set(id, file);
 
       try {
         const { tags, covers, duration } = await FargharTagProcessor.readTags(file);
@@ -139,6 +145,8 @@ function FargharApp() {
         return newFiles;
       });
       if (selectedFileId === deleteModal.fileId) setSelectedFileId(null);
+      // Remove File object from memory
+      fileObjectsMap.current.delete(deleteModal.fileId);
     }
     setDeleteModal({ isOpen: false, fileId: null, fileName: '' });
   }, [deleteModal.fileId, selectedFileId, saveToStorage]);
@@ -163,6 +171,7 @@ function FargharApp() {
     setFiles([]);
     setSelectedFileId(null);
     clearStorage();
+    fileObjectsMap.current.clear();
     setClearAllModal(false);
   }, [clearStorage]);
 
@@ -205,7 +214,7 @@ function FargharApp() {
                 </Suspense>
               )}
               <Suspense fallback={<FargharSkeletonCard />}>
-                <FargharDownloadSection files={files} />
+                <FargharDownloadSection files={files} fileObjectsMap={fileObjectsMap} />
               </Suspense>
               <div className="text-center">
                 <button onClick={handleClearAllRequest} className="farghar-btn-danger text-sm flex items-center gap-2 mx-auto farghar-native-touch">

@@ -73,7 +73,10 @@ export namespace FargharTagProcessor {
     }
   }
 
-  export async function writeTags(file: File, tags: Farghar.AudioTag, covers: Farghar.CoverArt[]): Promise<Blob> {
+  export async function writeTags(file: File | undefined, tags: Farghar.AudioTag, covers: Farghar.CoverArt[]): Promise<Blob> {
+    if (!file) {
+      throw new Error('File object is required for writing tags');
+    }
     const arrayBuffer = await file.arrayBuffer();
     const WriterClass = await getID3Writer();
     const writer = new WriterClass(arrayBuffer);

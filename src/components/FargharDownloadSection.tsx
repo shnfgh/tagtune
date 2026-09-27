@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 
 interface FargharDownloadSectionProps {
   files: Farghar.AudioFile[];
+  fileObjectsMap?: React.MutableRefObject<Map<string, File>>;
 }
 
 const FargharDownloadIcon: React.FC = () => (
@@ -41,15 +42,28 @@ const FargharGearIcon: React.FC = () => (
   </svg>
 );
 
-export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ files }) => {
+export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ files, fileObjectsMap }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
   const modifiedFiles = files.filter(f => f.modified);
 
-  const handleDownloadSingle = async (file: Farghar.AudioFile) => {
+  // Get the original File object from memory map or from the audio file
+  const getOriginalFile = (audioFile: Farghar.AudioFile): File | null => {
+    if (fileObjectsMap?.current.has(audioFile.id)) {
+      return fileObjectsMap.current.get(audioFile.id)!;
+    }
+    return audioFile.file || null;
+  };
+
+  const handleDownloadSingle = async (audioFile: Farghar.AudioFile) => {
     try {
-      const blob = await FargharTagProcessor.writeTags(file.file, file.tags, file.covers);
-      const fileName = file.name.endsWith('.mp3') ? file.name : file.name.replace(/\.[^.]+$/, '.mp3');
+      const originalFile = getOriginalFile(audioFile);
+      if (!originalFile) {
+        console.error('Original file not found for:', audioFile.name);
+        return;
+      }
+      const blob = await FargharTagProcessor.writeTags(originalFile, audioFile.tags, audioFile.covers);
+      const fileName = audioFile.name.endsWith('.mp3') ? audioFile.name : audioFile.name.replace(/\.[^.]+$/, '.mp3');
       saveAs(blob, fileName);
     } catch (error) {
       console.error('Download error:', error);
@@ -63,9 +77,14 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
     try {
       const zip = new JSZip();
       for (let i = 0; i < modifiedFiles.length; i++) {
-        const file = modifiedFiles[i];
-        const blob = await FargharTagProcessor.writeTags(file.file, file.tags, file.covers);
-        const fileName = file.name.endsWith('.mp3') ? file.name : file.name.replace(/\.[^.]+$/, '.mp3');
+        const audioFile = modifiedFiles[i];
+        const originalFile = getOriginalFile(audioFile);
+        if (!originalFile) {
+          console.error('Original file not found for:', audioFile.name);
+          continue;
+        }
+        const blob = await FargharTagProcessor.writeTags(originalFile, audioFile.tags, audioFile.covers);
+        const fileName = audioFile.name.endsWith('.mp3') ? audioFile.name : audioFile.name.replace(/\.[^.]+$/, '.mp3');
         zip.file(fileName, blob);
         setProgress(Math.round(((i + 1) / modifiedFiles.length) * 100));
       }
