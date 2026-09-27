@@ -1,5 +1,5 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
 import { FargharSelect } from './FargharSelect';
@@ -58,25 +58,42 @@ const FargharArrowDownIcon: React.FC = () => (
   </svg>
 );
 
+const FargharReplaceIcon: React.FC = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
+  </svg>
+);
+
+const FargharImageIcon: React.FC = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <polyline points="21 15 16 10 5 21" />
+  </svg>
+);
+
 export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpdate, onRemove }) => {
-  const [tags, setTags] = useState<Farghar.AudioTag>({ ...file.tags });
-  const [covers, setCovers] = useState<Farghar.CoverArt[]>([...file.covers]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showLyrics, setShowLyrics] = useState(false);
   const [showCovers, setShowCovers] = useState(true);
   const [deleteCoverModal, setDeleteCoverModal] = useState<{ isOpen: boolean; index: number }>({ isOpen: false, index: -1 });
-  const coverInputRef = useRef<HTMLInputElement>(null);
   const [newCoverType, setNewCoverType] = useState<Farghar.CoverType>('front');
+  const coverInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { setTags({ ...file.tags }); }, [file.tags, file.id]);
-  useEffect(() => { setCovers([...file.covers]); }, [file.covers, file.id]);
+  const tags = file.tags;
+  const covers = file.covers;
 
+  // Update a single tag field directly on parent
   const handleTagChange = useCallback((field: keyof Farghar.AudioTag, value: string) => {
-    setTags(prev => ({ ...prev, [field]: value }));
-    const updatedFile = { ...file, tags: { ...file.tags, [field]: value }, modified: true, status: 'editing' as const };
-    onUpdate(updatedFile);
+    onUpdate({
+      ...file,
+      tags: { ...file.tags, [field]: value },
+      modified: true,
+      status: 'editing',
+    });
   }, [file, onUpdate]);
 
+  // Add a new cover to the file
   const handleAddCover = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const coverFile = e.target.files?.[0];
     if (!coverFile) return;
@@ -92,14 +109,13 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
         type: coverTypeInfo.id3Type,
         coverType: newCoverType,
       };
-      const newCovers = [...covers, newCover];
-      setCovers(newCovers);
-      onUpdate({ ...file, covers: newCovers, modified: true, status: 'editing' });
+      onUpdate({ ...file, covers: [...file.covers, newCover], modified: true, status: 'editing' });
     };
     reader.readAsArrayBuffer(coverFile);
     e.target.value = '';
-  }, [file, onUpdate, covers, newCoverType]);
+  }, [file, onUpdate, newCoverType]);
 
+  // Replace an existing cover
   const handleReplaceCover = useCallback((index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const coverFile = e.target.files?.[0];
     if (!coverFile) return;
@@ -107,42 +123,37 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
     reader.onload = () => {
       const arrayBuffer = reader.result as ArrayBuffer;
       const uint8Array = new Uint8Array(arrayBuffer);
-      const newCovers = [...covers];
+      const newCovers = [...file.covers];
       newCovers[index] = { ...newCovers[index], pictureData: uint8Array, mimeType: coverFile.type || 'image/jpeg' };
-      setCovers(newCovers);
       onUpdate({ ...file, covers: newCovers, modified: true, status: 'editing' });
     };
     reader.readAsArrayBuffer(coverFile);
     e.target.value = '';
-  }, [file, onUpdate, covers]);
+  }, [file, onUpdate]);
 
-  const handleDeleteCover = useCallback((index: number) => {
-    setDeleteCoverModal({ isOpen: true, index });
-  }, []);
-
+  // Confirm cover deletion
   const confirmDeleteCover = useCallback(() => {
-    const newCovers = covers.filter((_, i) => i !== deleteCoverModal.index);
-    setCovers(newCovers);
+    const newCovers = file.covers.filter((_, i) => i !== deleteCoverModal.index);
     onUpdate({ ...file, covers: newCovers, modified: true, status: 'editing' });
     setDeleteCoverModal({ isOpen: false, index: -1 });
-  }, [covers, deleteCoverModal.index, file, onUpdate]);
+  }, [file, deleteCoverModal.index, onUpdate]);
 
+  // Move cover up or down
   const handleMoveCover = useCallback((index: number, direction: 'up' | 'down') => {
-    const newCovers = [...covers];
+    const newCovers = [...file.covers];
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= newCovers.length) return;
     [newCovers[index], newCovers[targetIndex]] = [newCovers[targetIndex], newCovers[index]];
-    setCovers(newCovers);
     onUpdate({ ...file, covers: newCovers, modified: true, status: 'editing' });
-  }, [covers, file, onUpdate]);
+  }, [file, onUpdate]);
 
+  // Change cover type
   const handleCoverTypeChange = useCallback((index: number, coverType: Farghar.CoverType) => {
     const coverTypeInfo = Farghar.COVER_TYPES.find(ct => ct.value === coverType) || Farghar.COVER_TYPES[Farghar.COVER_TYPES.length - 1];
-    const newCovers = [...covers];
+    const newCovers = [...file.covers];
     newCovers[index] = { ...newCovers[index], coverType, type: coverTypeInfo.id3Type, description: coverTypeInfo.label };
-    setCovers(newCovers);
     onUpdate({ ...file, covers: newCovers, modified: true, status: 'editing' });
-  }, [covers, file, onUpdate]);
+  }, [file, onUpdate]);
 
   return (
     <div className="farghar-card farghar-slide-up">
@@ -168,7 +179,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             </div>
           </div>
         </div>
-        <button onClick={() => onRemove(file.id)} className="p-2 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Remove file">
+        <button onClick={() => onRemove(file.id)} className="p-2 farghar-icon-btn farghar-native-touch" title="Remove file">
           <FargharCloseIcon />
         </button>
       </div>
@@ -176,14 +187,10 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {/* Artwork/Covers Section */}
       <button onClick={() => setShowCovers(!showCovers)} className="w-full flex items-center justify-between mb-4 farghar-native-touch">
         <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--farghar-text)' }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-            <circle cx="8.5" cy="8.5" r="1.5" />
-            <polyline points="21 15 16 10 5 21" />
-          </svg>
+          <FargharImageIcon />
           Artwork / Covers ({covers.length})
         </span>
-        <FargharChevronIcon open={showCovers} />
+        <span style={{ color: 'var(--farghar-text-muted)' }}><FargharChevronIcon open={showCovers} /></span>
       </button>
 
       {showCovers && (
@@ -209,7 +216,6 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             const coverTypeInfo = Farghar.COVER_TYPES.find(ct => ct.value === cover.coverType);
             return (
               <div key={index} className="flex items-center gap-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
-                {/* Cover preview */}
                 <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
                   {coverUrl ? (
                     <img src={coverUrl} alt={cover.description} className="w-full h-full object-cover" />
@@ -218,13 +224,11 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
                   )}
                 </div>
 
-                {/* Cover info */}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm truncate" style={{ color: 'var(--farghar-text)' }}>{coverTypeInfo?.label || 'Other'}</p>
                   <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{cover.mimeType}</p>
                 </div>
 
-                {/* Cover type selector */}
                 <div className="hidden sm:block w-40">
                   <FargharSelect
                     value={cover.coverType}
@@ -234,21 +238,18 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
                   />
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center gap-1">
-                  <label className="p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Replace">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
-                    </svg>
+                  <label className="p-1.5 rounded-lg cursor-pointer farghar-icon-btn farghar-native-touch" title="Replace">
+                    <FargharReplaceIcon />
                     <input type="file" accept="image/*" onChange={(e) => handleReplaceCover(index, e)} className="hidden" />
                   </label>
-                  <button onClick={() => handleMoveCover(index, 'up')} disabled={index === 0} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move up">
+                  <button onClick={() => handleMoveCover(index, 'up')} disabled={index === 0} className="p-1.5 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed" title="Move up">
                     <FargharArrowUpIcon />
                   </button>
-                  <button onClick={() => handleMoveCover(index, 'down')} disabled={index === covers.length - 1} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Move down">
+                  <button onClick={() => handleMoveCover(index, 'down')} disabled={index === covers.length - 1} className="p-1.5 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed" title="Move down">
                     <FargharArrowDownIcon />
                   </button>
-                  <button onClick={() => handleDeleteCover(index)} className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch" style={{ color: 'var(--farghar-text-muted)' }} title="Delete">
+                  <button onClick={() => setDeleteCoverModal({ isOpen: true, index })} className="p-1.5 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors farghar-native-touch" title="Delete">
                     <FargharTrashIcon />
                   </button>
                 </div>
@@ -292,14 +293,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
         </div>
         <div>
           <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Genre</label>
-          <FargharSelect
-            value={tags.genre}
-            onChange={(value) => handleTagChange('genre', value)}
-            options={Farghar.GENRES.map(g => ({ value: g, label: g }))}
-            placeholder="Select genre..."
-            searchable={true}
-            allowCustom={true}
-          />
+          <FargharSelect value={tags.genre} onChange={(value) => handleTagChange('genre', value)} options={Farghar.GENRES.map(g => ({ value: g, label: g }))} placeholder="Select genre..." searchable={true} allowCustom={true} />
         </div>
         <div>
           <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Year / Date</label>
@@ -349,14 +343,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
           </div>
           <div>
             <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>Key</label>
-            <FargharSelect
-              value={tags.key}
-              onChange={(value) => handleTagChange('key', value)}
-              options={Farghar.MUSICAL_KEYS.map(k => ({ value: k, label: k }))}
-              placeholder="Select key..."
-              allowCustom={true}
-              searchable={true}
-            />
+            <FargharSelect value={tags.key} onChange={(value) => handleTagChange('key', value)} options={Farghar.MUSICAL_KEYS.map(k => ({ value: k, label: k }))} placeholder="Select key..." allowCustom={true} searchable={true} />
           </div>
         </div>
       )}
