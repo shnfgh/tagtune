@@ -34,7 +34,13 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm farghar-fade-in" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl bg-gray-900 border border-white/10 rounded-2xl shadow-2xl shadow-black/50 farghar-slide-up overflow-hidden max-h-[90vh] flex flex-col">
+      <div 
+        className="relative w-full max-w-2xl border rounded-2xl shadow-2xl farghar-slide-up overflow-hidden max-h-[90vh] flex flex-col"
+        style={{
+          backgroundColor: 'var(--farghar-bg-secondary)',
+          borderColor: 'var(--farghar-glass-border)',
+        }}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div className="flex items-center gap-3">
