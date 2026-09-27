@@ -33,9 +33,20 @@ function FargharAppContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; fileId: string | null; fileName: string }>({ isOpen: false, fileId: null, fileName: '' });
   const [clearAllModal, setClearAllModal] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   // Keep File objects in memory (cannot be stored in localStorage)
   const fileObjectsMap = useRef<Map<string, File>>(new Map());
+
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  }, []);
 
   // Save data to localStorage
   const saveToStorage = useCallback((filesData: Farghar.AudioFile[]) => {
@@ -196,7 +207,7 @@ function FargharAppContent() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
       </div>
       <div className="relative z-10 flex flex-col min-h-screen min-h-[100dvh]">
-        <FargharHeader fileCount={files.length} />
+        <FargharHeader fileCount={files.length} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <FargharHero hasFiles={files.length > 0} />
           <div className="mb-6">
