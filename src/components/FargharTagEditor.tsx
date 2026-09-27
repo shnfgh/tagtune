@@ -156,30 +156,45 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
   }, [file, onUpdate]);
 
   return (
-    <div className="farghar-card farghar-slide-up">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)', color: 'var(--farghar-text-muted)' }}>
-            {covers.length > 0 ? (
-              <img src={FargharTagProcessor.coverToDataUrl(covers[0])} alt="Cover" className="w-full h-full object-cover" />
-            ) : (
-              <FargharImagePlaceholderIcon />
+    <div className="farghar-card farghar-slide-up p-4 sm:p-6">
+      {/* Header: responsive layout for mobile and desktop */}
+      <div className="flex items-start gap-3 sm:gap-4 mb-5 sm:mb-6">
+        {/* Cover preview - smaller on mobile */}
+        <div
+          className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: 'var(--farghar-glass-bg)', color: 'var(--farghar-text-muted)' }}
+        >
+          {covers.length > 0 ? (
+            <img src={FargharTagProcessor.coverToDataUrl(covers[0])} alt="Cover" className="w-full h-full object-cover" />
+          ) : (
+            <FargharImagePlaceholderIcon />
+          )}
+        </div>
+
+        {/* File info block */}
+        <div className="flex-1 min-w-0">
+          <h3
+            className="text-sm sm:text-base font-semibold truncate max-w-full sm:max-w-[300px]"
+            style={{ color: 'var(--farghar-text)' }}
+          >
+            {file.name}
+          </h3>
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1.5">
+            <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
+            <span className="text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatFileSize(file.size)}</span>
+            <span className="text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
+            {covers.length > 0 && (
+              <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{covers.length} artwork(s)</span>
             )}
           </div>
-          <div>
-            <h3 className="text-sm sm:text-base font-semibold truncate max-w-[200px] sm:max-w-[300px]" style={{ color: 'var(--farghar-text)' }}>{file.name}</h3>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
-              <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatFileSize(file.size)}</span>
-              <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
-              {covers.length > 0 && (
-                <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{covers.length} artwork(s)</span>
-              )}
-            </div>
-          </div>
         </div>
-        <button onClick={() => onRemove(file.id)} className="p-2 farghar-icon-btn farghar-native-touch" title="Remove file">
+
+        {/* Close button */}
+        <button
+          onClick={() => onRemove(file.id)}
+          className="p-2 farghar-icon-btn farghar-native-touch flex-shrink-0 min-h-[36px] min-w-[36px] flex items-center justify-center"
+          title="Remove file"
+        >
           <FargharCloseIcon />
         </button>
       </div>
@@ -195,41 +210,56 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
 
       {showCovers && (
         <div className="space-y-3 mb-6 farghar-fade-in">
-          {/* Add new cover */}
-          <div className="flex items-center gap-2 p-3 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
-            <FargharSelect
-              value={newCoverType}
-              onChange={(v) => setNewCoverType(v as Farghar.CoverType)}
-              options={Farghar.COVER_TYPES.map(ct => ({ value: ct.value, label: ct.label }))}
-              placeholder="Select type..."
-            />
-            <button onClick={() => coverInputRef.current?.click()} className="farghar-btn-primary text-sm flex items-center gap-2 flex-shrink-0 farghar-native-touch">
+          {/* Add new cover - stacked on mobile */}
+          <div
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-3 rounded-xl"
+            style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}
+          >
+            <div className="flex-1 min-w-0">
+              <FargharSelect
+                value={newCoverType}
+                onChange={(v) => setNewCoverType(v as Farghar.CoverType)}
+                options={Farghar.COVER_TYPES.map(ct => ({ value: ct.value, label: ct.label }))}
+                placeholder="Select type..."
+              />
+            </div>
+            <button
+              onClick={() => coverInputRef.current?.click()}
+              className="farghar-btn-primary text-sm flex items-center justify-center gap-2 flex-shrink-0 farghar-native-touch w-full sm:w-auto"
+            >
               <FargharPlusIcon />
               Add
             </button>
             <input ref={coverInputRef} type="file" accept="image/*" onChange={handleAddCover} className="hidden" />
           </div>
 
-          {/* Cover list */}
+          {/* Cover list - responsive card layout */}
           {covers.map((cover, index) => {
             const coverUrl = FargharTagProcessor.coverToDataUrl(cover);
             const coverTypeInfo = Farghar.COVER_TYPES.find(ct => ct.value === cover.coverType);
             return (
-              <div key={index} className="flex items-center gap-3 p-3 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
-                <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
-                  {coverUrl ? (
-                    <img src={coverUrl} alt={cover.description} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--farghar-text-muted)' }}><FargharImagePlaceholderIcon /></div>
-                  )}
+              <div
+                key={index}
+                className="p-3 rounded-xl space-y-2.5"
+                style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}
+              >
+                {/* Row 1: Preview + Info */}
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
+                    {coverUrl ? (
+                      <img src={coverUrl} alt={cover.description} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--farghar-text-muted)' }}><FargharImagePlaceholderIcon /></div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm truncate" style={{ color: 'var(--farghar-text)' }}>{coverTypeInfo?.label || 'Other'}</p>
+                    <p className="text-xs truncate" style={{ color: 'var(--farghar-text-muted)' }}>{cover.mimeType}</p>
+                  </div>
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm truncate" style={{ color: 'var(--farghar-text)' }}>{coverTypeInfo?.label || 'Other'}</p>
-                  <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{cover.mimeType}</p>
-                </div>
-
-                <div className="hidden sm:block w-40">
+                {/* Row 2: Type selector - full width */}
+                <div className="w-full">
                   <FargharSelect
                     value={cover.coverType}
                     onChange={(v) => handleCoverTypeChange(index, v as Farghar.CoverType)}
@@ -238,18 +268,36 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
                   />
                 </div>
 
-                <div className="flex items-center gap-1">
-                  <label className="p-1.5 rounded-lg cursor-pointer farghar-icon-btn farghar-native-touch" title="Replace">
+                {/* Row 3: Actions - touch-friendly */}
+                <div className="flex items-center justify-end gap-1.5">
+                  <label
+                    className="p-2 farghar-icon-btn farghar-native-touch cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                    title="Replace"
+                  >
                     <FargharReplaceIcon />
                     <input type="file" accept="image/*" onChange={(e) => handleReplaceCover(index, e)} className="hidden" />
                   </label>
-                  <button onClick={() => handleMoveCover(index, 'up')} disabled={index === 0} className="p-1.5 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed" title="Move up">
+                  <button
+                    onClick={() => handleMoveCover(index, 'up')}
+                    disabled={index === 0}
+                    className="p-2 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed min-h-[36px] min-w-[36px] flex items-center justify-center"
+                    title="Move up"
+                  >
                     <FargharArrowUpIcon />
                   </button>
-                  <button onClick={() => handleMoveCover(index, 'down')} disabled={index === covers.length - 1} className="p-1.5 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed" title="Move down">
+                  <button
+                    onClick={() => handleMoveCover(index, 'down')}
+                    disabled={index === covers.length - 1}
+                    className="p-2 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed min-h-[36px] min-w-[36px] flex items-center justify-center"
+                    title="Move down"
+                  >
                     <FargharArrowDownIcon />
                   </button>
-                  <button onClick={() => setDeleteCoverModal({ isOpen: true, index })} className="p-1.5 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors farghar-native-touch" title="Delete">
+                  <button
+                    onClick={() => setDeleteCoverModal({ isOpen: true, index })}
+                    className="p-2 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors farghar-native-touch min-h-[36px] min-w-[36px] flex items-center justify-center"
+                    title="Delete"
+                  >
                     <FargharTrashIcon />
                   </button>
                 </div>
