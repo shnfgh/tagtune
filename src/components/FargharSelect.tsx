@@ -190,7 +190,10 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
             {value && (
               <button
                 type="button"
-                onClick={() => handleSelect('')}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleSelect('');
+                }}
                 className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-right ${highlightedIndex === -2 ? 'bg-red-500/10' : ''}`}
               >
                 <span>Clear selection</span>
@@ -205,7 +208,10 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                   <button
                     key={option.value}
                     type="button"
-                    onClick={() => handleSelect(option.value)}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleSelect(option.value);
+                    }}
                     className={`
                       w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right
                       ${option.value === value
@@ -227,7 +233,8 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                 {isCustomValue && (
                   <button
                     type="button"
-                    onClick={() => {
+                    onMouseDown={(e) => {
+                      e.preventDefault();
                       onChange(inputValue);
                       if (!localOptions.some(opt => opt.value === inputValue)) {
                         setLocalOptions(prev => [...prev, { value: inputValue, label: inputValue }]);
