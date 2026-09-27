@@ -71,9 +71,10 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
       className={`
         relative cursor-pointer rounded-2xl border-2 border-dashed p-8 sm:p-12
         transition-all duration-300 text-center farghar-native-touch
-        ${isDragging ? 'border-purple-400 bg-purple-500/10 scale-[1.02]' : 'border-white/20 hover:border-purple-400/50 hover:bg-white/5'}
+        ${isDragging ? 'border-purple-400 bg-purple-500/10 scale-[1.02]' : ''}
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `}
+      style={!isDragging ? { borderColor: 'var(--farghar-glass-border)' } : undefined}
     >
       <input
         ref={fileInputRef}
@@ -93,13 +94,13 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
           {isDragging ? <FargharUploadIcon size={40} /> : <FargharMusicIcon size={40} />}
         </div>
         <div>
-          <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
+          <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'var(--farghar-text)' }}>
             {isDragging ? 'Drop files here!' : 'Drag & drop audio/video files'}
           </h3>
-          <p className="text-sm text-gray-400 mb-4">Or click to select files</p>
+          <p className="text-sm mb-4" style={{ color: 'var(--farghar-text-muted)' }}>Or click to select files</p>
           <div className="flex flex-wrap justify-center gap-2">
             {Farghar.SUPPORTED_FORMATS.map(format => (
-              <span key={format} className="farghar-badge bg-white/5 text-gray-400 border border-white/10">.{format}</span>
+              <span key={format} className="farghar-badge" style={{ backgroundColor: 'var(--farghar-glass-bg)', color: 'var(--farghar-text-muted)', border: '1px solid var(--farghar-glass-border)' }}>.{format}</span>
             ))}
           </div>
         </div>

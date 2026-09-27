@@ -95,10 +95,10 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-semibold text-white text-center mb-2">{title}</h3>
+          <h3 className="text-lg font-semibold text-center mb-2" style={{ color: 'var(--farghar-text)' }}>{title}</h3>
 
           {/* Message */}
-          <p className="text-sm text-gray-400 text-center mb-6 leading-relaxed">{message}</p>
+          <p className="text-sm text-center mb-6 leading-relaxed" style={{ color: 'var(--farghar-text-muted)' }}>{message}</p>
 
           {/* Actions */}
           <div className="flex gap-3">
