@@ -1,254 +1,372 @@
 /* Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar */
-@import "tailwindcss";
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overscroll-behavior-y: contain;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--farghar-bg);
+  color: var(--farghar-text);
+}
+
+input, select, textarea, button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-family: inherit;
+}
+
+button {
+  touch-action: manipulation;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--farghar-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--farghar-scrollbar-thumb);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--farghar-scrollbar-hover);
+}
 
 /* Theme Variables */
 :root {
-  /* Background Colors */
-  --farghar-bg: #030712 !important;
-  --farghar-bg-secondary: #111827 !important;
-  --farghar-bg-tertiary: #1f2937 !important;
-  
-  /* Text Colors */
-  --farghar-text: #ffffff !important;
-  --farghar-text-secondary: #9ca3af !important;
-  --farghar-text-muted: #6b7280 !important;
-  
-  /* Glass & Card */
-  --farghar-glass-bg: rgba(255, 255, 255, 0.05) !important;
-  --farghar-glass-border: rgba(255, 255, 255, 0.1) !important;
-  --farghar-card-bg: rgba(255, 255, 255, 0.05) !important;
-  --farghar-card-border: rgba(255, 255, 255, 0.1) !important;
-  
-  /* Input */
-  --farghar-input-bg: rgba(255, 255, 255, 0.05) !important;
-  --farghar-input-border: rgba(255, 255, 255, 0.1) !important;
-  --farghar-input-text: #ffffff !important;
-  --farghar-input-placeholder: #6b7280 !important;
-  
-  /* Button */
-  --farghar-btn-bg: rgba(255, 255, 255, 0.1) !important;
-  --farghar-btn-border: rgba(255, 255, 255, 0.1) !important;
-  --farghar-btn-text: #ffffff !important;
-  --farghar-btn-hover-bg: rgba(255, 255, 255, 0.2) !important;
-  
-  /* Header */
-  --farghar-header-bg: #111827 !important;
-  --farghar-header-border: rgba(255, 255, 255, 0.1) !important;
-  --farghar-header-shadow: rgba(0, 0, 0, 0.2) !important;
-  
-  /* Footer */
-  --farghar-footer-bg: #111827 !important;
-  --farghar-footer-border: rgba(255, 255, 255, 0.1) !important;
-  
-  /* Scrollbar */
-  --farghar-scrollbar-track: #111827 !important;
-  --farghar-scrollbar-thumb: #374151 !important;
-  --farghar-scrollbar-hover: #4b5563 !important;
-  
-  /* Hover States */
-  --farghar-hover-bg: rgba(255, 255, 255, 0.1) !important;
-  --farghar-hover-border: rgba(255, 255, 255, 0.2) !important;
+  --farghar-bg: #030712;
+  --farghar-bg-secondary: #111827;
+  --farghar-bg-tertiary: #1f2937;
+  --farghar-text: #ffffff;
+  --farghar-text-secondary: #9ca3af;
+  --farghar-text-muted: #6b7280;
+  --farghar-glass-bg: rgba(255, 255, 255, 0.05);
+  --farghar-glass-border: rgba(255, 255, 255, 0.1);
+  --farghar-card-bg: rgba(255, 255, 255, 0.05);
+  --farghar-card-border: rgba(255, 255, 255, 0.1);
+  --farghar-input-bg: rgba(255, 255, 255, 0.05);
+  --farghar-input-border: rgba(255, 255, 255, 0.1);
+  --farghar-input-text: #ffffff;
+  --farghar-input-placeholder: #6b7280;
+  --farghar-btn-bg: rgba(255, 255, 255, 0.1);
+  --farghar-btn-border: rgba(255, 255, 255, 0.1);
+  --farghar-btn-text: #ffffff;
+  --farghar-btn-hover-bg: rgba(255, 255, 255, 0.2);
+  --farghar-header-bg: #111827;
+  --farghar-header-border: rgba(255, 255, 255, 0.1);
+  --farghar-header-shadow: rgba(0, 0, 0, 0.2);
+  --farghar-footer-bg: #111827;
+  --farghar-footer-border: rgba(255, 255, 255, 0.1);
+  --farghar-scrollbar-track: #111827;
+  --farghar-scrollbar-thumb: #374151;
+  --farghar-scrollbar-hover: #4b5563;
+  --farghar-hover-bg: rgba(255, 255, 255, 0.1);
+  --farghar-hover-border: rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="light"] {
-  --farghar-bg: #ffffff !important;
-  --farghar-bg-secondary: #f9fafb !important;
-  --farghar-bg-tertiary: #f3f4f6 !important;
-  
-  --farghar-text: #111827 !important;
-  --farghar-text-secondary: #4b5563 !important;
-  --farghar-text-muted: #6b7280 !important;
-  
-  --farghar-glass-bg: rgba(0, 0, 0, 0.03) !important;
-  --farghar-glass-border: rgba(0, 0, 0, 0.1) !important;
-  --farghar-card-bg: rgba(0, 0, 0, 0.03) !important;
-  --farghar-card-border: rgba(0, 0, 0, 0.1) !important;
-  
-  --farghar-input-bg: rgba(0, 0, 0, 0.03) !important;
-  --farghar-input-border: rgba(0, 0, 0, 0.1) !important;
-  --farghar-input-text: #111827 !important;
-  --farghar-input-placeholder: #9ca3af !important;
-  
-  --farghar-btn-bg: rgba(0, 0, 0, 0.05) !important;
-  --farghar-btn-border: rgba(0, 0, 0, 0.1) !important;
-  --farghar-btn-text: #111827 !important;
-  --farghar-btn-hover-bg: rgba(0, 0, 0, 0.1) !important;
-  
-  --farghar-header-bg: #f9fafb !important;
-  --farghar-header-border: rgba(0, 0, 0, 0.1) !important;
-  --farghar-header-shadow: rgba(0, 0, 0, 0.05) !important;
-  
-  --farghar-footer-bg: #f9fafb !important;
-  --farghar-footer-border: rgba(0, 0, 0, 0.1) !important;
-  
-  --farghar-scrollbar-track: #f3f4f6 !important;
-  --farghar-scrollbar-thumb: #d1d5db !important;
-  --farghar-scrollbar-hover: #9ca3af !important;
-  
-  --farghar-hover-bg: rgba(0, 0, 0, 0.05) !important;
-  --farghar-hover-border: rgba(0, 0, 0, 0.15) !important;
+  --farghar-bg: #ffffff;
+  --farghar-bg-secondary: #f9fafb;
+  --farghar-bg-tertiary: #f3f4f6;
+  --farghar-text: #111827;
+  --farghar-text-secondary: #4b5563;
+  --farghar-text-muted: #6b7280;
+  --farghar-glass-bg: rgba(0, 0, 0, 0.03);
+  --farghar-glass-border: rgba(0, 0, 0, 0.1);
+  --farghar-card-bg: rgba(0, 0, 0, 0.03);
+  --farghar-card-border: rgba(0, 0, 0, 0.1);
+  --farghar-input-bg: rgba(0, 0, 0, 0.03);
+  --farghar-input-border: rgba(0, 0, 0, 0.1);
+  --farghar-input-text: #111827;
+  --farghar-input-placeholder: #9ca3af;
+  --farghar-btn-bg: rgba(0, 0, 0, 0.05);
+  --farghar-btn-border: rgba(0, 0, 0, 0.1);
+  --farghar-btn-text: #111827;
+  --farghar-btn-hover-bg: rgba(0, 0, 0, 0.1);
+  --farghar-header-bg: #f9fafb;
+  --farghar-header-border: rgba(0, 0, 0, 0.1);
+  --farghar-header-shadow: rgba(0, 0, 0, 0.05);
+  --farghar-footer-bg: #f9fafb;
+  --farghar-footer-border: rgba(0, 0, 0, 0.1);
+  --farghar-scrollbar-track: #f3f4f6;
+  --farghar-scrollbar-thumb: #d1d5db;
+  --farghar-scrollbar-hover: #9ca3af;
+  --farghar-hover-bg: rgba(0, 0, 0, 0.05);
+  --farghar-hover-border: rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="warm"] {
-  --farghar-bg: #1a1410 !important;
-  --farghar-bg-secondary: #292015 !important;
-  --farghar-bg-tertiary: #44361f !important;
-  
-  --farghar-text: #fef3c7 !important;
-  --farghar-text-secondary: #fbbf24 !important;
-  --farghar-text-muted: #d97706 !important;
-  
-  --farghar-glass-bg: rgba(254, 243, 199, 0.05) !important;
-  --farghar-glass-border: rgba(254, 243, 199, 0.1) !important;
-  --farghar-card-bg: rgba(254, 243, 199, 0.05) !important;
-  --farghar-card-border: rgba(254, 243, 199, 0.1) !important;
-  
-  --farghar-input-bg: rgba(254, 243, 199, 0.05) !important;
-  --farghar-input-border: rgba(254, 243, 199, 0.1) !important;
-  --farghar-input-text: #fef3c7 !important;
-  --farghar-input-placeholder: #d97706 !important;
-  
-  --farghar-btn-bg: rgba(254, 243, 199, 0.1) !important;
-  --farghar-btn-border: rgba(254, 243, 199, 0.1) !important;
-  --farghar-btn-text: #fef3c7 !important;
-  --farghar-btn-hover-bg: rgba(254, 243, 199, 0.2) !important;
-  
-  --farghar-header-bg: #292015 !important;
-  --farghar-header-border: rgba(254, 243, 199, 0.1) !important;
-  --farghar-header-shadow: rgba(0, 0, 0, 0.3) !important;
-  
-  --farghar-footer-bg: #292015 !important;
-  --farghar-footer-border: rgba(254, 243, 199, 0.1) !important;
-  
-  --farghar-scrollbar-track: #292015 !important;
-  --farghar-scrollbar-thumb: #44361f !important;
-  --farghar-scrollbar-hover: #5c4a2c !important;
-  
-  --farghar-hover-bg: rgba(254, 243, 199, 0.1) !important;
-  --farghar-hover-border: rgba(254, 243, 199, 0.2) !important;
+  --farghar-bg: #1a1410;
+  --farghar-bg-secondary: #292015;
+  --farghar-bg-tertiary: #44361f;
+  --farghar-text: #fef3c7;
+  --farghar-text-secondary: #fbbf24;
+  --farghar-text-muted: #d97706;
+  --farghar-glass-bg: rgba(254, 243, 199, 0.05);
+  --farghar-glass-border: rgba(254, 243, 199, 0.1);
+  --farghar-card-bg: rgba(254, 243, 199, 0.05);
+  --farghar-card-border: rgba(254, 243, 199, 0.1);
+  --farghar-input-bg: rgba(254, 243, 199, 0.05);
+  --farghar-input-border: rgba(254, 243, 199, 0.1);
+  --farghar-input-text: #fef3c7;
+  --farghar-input-placeholder: #d97706;
+  --farghar-btn-bg: rgba(254, 243, 199, 0.1);
+  --farghar-btn-border: rgba(254, 243, 199, 0.1);
+  --farghar-btn-text: #fef3c7;
+  --farghar-btn-hover-bg: rgba(254, 243, 199, 0.2);
+  --farghar-header-bg: #292015;
+  --farghar-header-border: rgba(254, 243, 199, 0.1);
+  --farghar-header-shadow: rgba(0, 0, 0, 0.3);
+  --farghar-footer-bg: #292015;
+  --farghar-footer-border: rgba(254, 243, 199, 0.1);
+  --farghar-scrollbar-track: #292015;
+  --farghar-scrollbar-thumb: #44361f;
+  --farghar-scrollbar-hover: #5c4a2c;
+  --farghar-hover-bg: rgba(254, 243, 199, 0.1);
+  --farghar-hover-border: rgba(254, 243, 199, 0.2);
 }
 
 [data-theme="cool"] {
-  --farghar-bg: #0c1929 !important;
-  --farghar-bg-secondary: #152238 !important;
-  --farghar-bg-tertiary: #1e3a5f !important;
-  
-  --farghar-text: #dbeafe !important;
-  --farghar-text-secondary: #93c5fd !important;
-  --farghar-text-muted: #3b82f6 !important;
-  
-  --farghar-glass-bg: rgba(219, 234, 254, 0.05) !important;
-  --farghar-glass-border: rgba(219, 234, 254, 0.1) !important;
-  --farghar-card-bg: rgba(219, 234, 254, 0.05) !important;
-  --farghar-card-border: rgba(219, 234, 254, 0.1) !important;
-  
-  --farghar-input-bg: rgba(219, 234, 254, 0.05) !important;
-  --farghar-input-border: rgba(219, 234, 254, 0.1) !important;
-  --farghar-input-text: #dbeafe !important;
-  --farghar-input-placeholder: #3b82f6 !important;
-  
-  --farghar-btn-bg: rgba(219, 234, 254, 0.1) !important;
-  --farghar-btn-border: rgba(219, 234, 254, 0.1) !important;
-  --farghar-btn-text: #dbeafe !important;
-  --farghar-btn-hover-bg: rgba(219, 234, 254, 0.2) !important;
-  
-  --farghar-header-bg: #152238 !important;
-  --farghar-header-border: rgba(219, 234, 254, 0.1) !important;
-  --farghar-header-shadow: rgba(0, 0, 0, 0.3) !important;
-  
-  --farghar-footer-bg: #152238 !important;
-  --farghar-footer-border: rgba(219, 234, 254, 0.1) !important;
-  
-  --farghar-scrollbar-track: #152238 !important;
-  --farghar-scrollbar-thumb: #1e3a5f !important;
-  --farghar-scrollbar-hover: #2c5282 !important;
-  
-  --farghar-hover-bg: rgba(219, 234, 254, 0.1) !important;
-  --farghar-hover-border: rgba(219, 234, 254, 0.2) !important;
+  --farghar-bg: #0c1929;
+  --farghar-bg-secondary: #152238;
+  --farghar-bg-tertiary: #1e3a5f;
+  --farghar-text: #dbeafe;
+  --farghar-text-secondary: #93c5fd;
+  --farghar-text-muted: #3b82f6;
+  --farghar-glass-bg: rgba(219, 234, 254, 0.05);
+  --farghar-glass-border: rgba(219, 234, 254, 0.1);
+  --farghar-card-bg: rgba(219, 234, 254, 0.05);
+  --farghar-card-border: rgba(219, 234, 254, 0.1);
+  --farghar-input-bg: rgba(219, 234, 254, 0.05);
+  --farghar-input-border: rgba(219, 234, 254, 0.1);
+  --farghar-input-text: #dbeafe;
+  --farghar-input-placeholder: #3b82f6;
+  --farghar-btn-bg: rgba(219, 234, 254, 0.1);
+  --farghar-btn-border: rgba(219, 234, 254, 0.1);
+  --farghar-btn-text: #dbeafe;
+  --farghar-btn-hover-bg: rgba(219, 234, 254, 0.2);
+  --farghar-header-bg: #152238;
+  --farghar-header-border: rgba(219, 234, 254, 0.1);
+  --farghar-header-shadow: rgba(0, 0, 0, 0.3);
+  --farghar-footer-bg: #152238;
+  --farghar-footer-border: rgba(219, 234, 254, 0.1);
+  --farghar-scrollbar-track: #152238;
+  --farghar-scrollbar-thumb: #1e3a5f;
+  --farghar-scrollbar-hover: #2c5282;
+  --farghar-hover-bg: rgba(219, 234, 254, 0.1);
+  --farghar-hover-border: rgba(219, 234, 254, 0.2);
 }
 
-@layer base {
-  * { font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-  body { 
-    background-color: var(--farghar-bg) !important; 
-    color: var(--farghar-text) !important; 
-    -webkit-font-smoothing: antialiased; 
-    -moz-osx-font-smoothing: grayscale; 
-    min-height: 100vh; 
-    min-height: 100dvh; 
-    overscroll-behavior-y: contain; 
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); 
-    transition: background-color 0.3s ease, color 0.3s ease; 
-  }
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background-color: var(--farghar-scrollbar-track); }
-  ::-webkit-scrollbar-thumb { background-color: var(--farghar-scrollbar-thumb); border-radius: 9999px; }
-  ::-webkit-scrollbar-thumb:hover { background-color: var(--farghar-scrollbar-hover); }
-  input, select, textarea, button { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-  button { touch-action: manipulation; }
+/* Layout Classes */
+.farghar-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 1rem;
 }
 
-@layer components {
-  .farghar-glass { background-color: var(--farghar-glass-bg); border: 1px solid var(--farghar-glass-border); }
-  .farghar-glass-hover:hover { background-color: var(--farghar-hover-bg); border-color: var(--farghar-hover-border); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-  .farghar-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-  .farghar-gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .farghar-skeleton { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; background-color: var(--farghar-bg-tertiary); border-radius: 0.375rem; }
-  .farghar-input { 
-    width: 100%; 
-    padding: 0.75rem 1rem; 
-    background-color: var(--farghar-input-bg); 
-    border: 1px solid var(--farghar-input-border); 
-    border-radius: 0.75rem; 
-    color: var(--farghar-input-text); 
-    font-size: 0.875rem; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-    outline: none; 
+@media (min-width: 640px) {
+  .farghar-container {
+    padding: 0 1.5rem;
   }
-  .farghar-input::placeholder { color: var(--farghar-input-placeholder); }
-  .farghar-input:focus { box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5); border-color: rgba(168, 85, 247, 0.5); }
-  .farghar-input:disabled { opacity: 0.5; cursor: not-allowed; }
-  .farghar-btn-primary { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; font-weight: 500; border-radius: 0.75rem; border: none; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.25); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; -webkit-user-select: none; }
-  .farghar-btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
-  .farghar-btn-primary:active { transform: scale(0.96); transition: transform 0.1s; }
-  .farghar-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .farghar-btn-secondary { 
-    padding: 0.75rem 1.5rem; 
-    background-color: var(--farghar-btn-bg); 
-    color: var(--farghar-btn-text); 
-    font-weight: 500; 
-    border-radius: 0.75rem; 
-    border: 1px solid var(--farghar-btn-border); 
-    cursor: pointer; 
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-    user-select: none; 
-    -webkit-user-select: none; 
-  }
-  .farghar-btn-secondary:hover { background-color: var(--farghar-btn-hover-bg); border-color: var(--farghar-hover-border); }
-  .farghar-btn-secondary:active { transform: scale(0.96); transition: transform 0.1s; }
-  .farghar-btn-danger { padding: 0.75rem 1.5rem; background-color: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 500; border-radius: 0.75rem; border: 1px solid rgba(239, 68, 68, 0.3); cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); user-select: none; -webkit-user-select: none; }
-  .farghar-btn-danger:hover { background-color: rgba(239, 68, 68, 0.3); }
-  .farghar-btn-danger:active { transform: scale(0.96); transition: transform 0.1s; }
-  .farghar-card { 
-    background-color: var(--farghar-card-bg); 
-    border: 1px solid var(--farghar-card-border); 
-    border-radius: 1rem; 
-    padding: 1.5rem; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-  }
-  .farghar-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
 }
 
-@layer utilities {
-  .farghar-fade-in { animation: farghar-fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-  .farghar-slide-up { animation: farghar-slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-  .farghar-pulse-glow { animation: farghar-pulseGlow 2s ease-in-out infinite; }
-  .farghar-native-touch { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s; }
-  .farghar-native-touch:active { transform: scale(0.96); opacity: 0.8; }
+@media (min-width: 1024px) {
+  .farghar-container {
+    padding: 0 2rem;
+  }
 }
 
-@keyframes farghar-fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes farghar-slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes farghar-pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); } 50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); } }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+/* Component Classes */
+.farghar-card {
+  background-color: var(--farghar-card-bg);
+  border: 1px solid var(--farghar-card-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.farghar-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--farghar-input-bg);
+  border: 1px solid var(--farghar-input-border);
+  border-radius: 0.75rem;
+  color: var(--farghar-input-text);
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.farghar-input::placeholder {
+  color: var(--farghar-input-placeholder);
+}
+
+.farghar-input:focus {
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5);
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+.farghar-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.farghar-btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.farghar-btn-primary:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.farghar-btn-primary:active {
+  transform: scale(0.96);
+}
+
+.farghar-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.farghar-btn-secondary {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--farghar-btn-bg);
+  color: var(--farghar-btn-text);
+  font-weight: 500;
+  border-radius: 0.75rem;
+  border: 1px solid var(--farghar-btn-border);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.farghar-btn-secondary:hover {
+  background-color: var(--farghar-btn-hover-bg);
+}
+
+.farghar-btn-secondary:active {
+  transform: scale(0.96);
+}
+
+.farghar-btn-danger {
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.farghar-btn-danger:hover {
+  background-color: rgba(239, 68, 68, 0.3);
+}
+
+.farghar-btn-danger:active {
+  transform: scale(0.96);
+}
+
+.farghar-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.farghar-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.farghar-gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.farghar-skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: var(--farghar-bg-tertiary);
+  border-radius: 0.375rem;
+}
+
+/* Animations */
+.farghar-fade-in {
+  animation: farghar-fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.farghar-slide-up {
+  animation: farghar-slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.farghar-pulse-glow {
+  animation: farghar-pulseGlow 2s ease-in-out infinite;
+}
+
+.farghar-native-touch {
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s;
+}
+
+.farghar-native-touch:active {
+  transform: scale(0.96);
+  opacity: 0.8;
+}
+
+@keyframes farghar-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes farghar-slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes farghar-pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
