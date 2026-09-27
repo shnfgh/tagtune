@@ -113,23 +113,35 @@ function FargharAppContent() {
 
         // If file was previously edited, keep the edited tags; otherwise use original tags
         if (savedFile && savedFile.modified) {
-          setFiles(prev => prev.map(f => f.id === id ? {
-            ...f,
-            tags: savedFile.tags,
-            covers: savedFile.covers ? savedFile.covers.map((c: any) => ({ ...c, pictureData: c.pictureData ? new Uint8Array(c.pictureData) : null })) : covers,
-            duration: duration,
-            status: 'ready' as const,
-          } : f));
+          setFiles(prev => {
+            const newFiles = prev.map(f => f.id === id ? {
+              ...f,
+              tags: savedFile.tags,
+              covers: savedFile.covers ? savedFile.covers.map((c: any) => ({ ...c, pictureData: c.pictureData ? new Uint8Array(c.pictureData) : null })) : covers,
+              duration: duration,
+              status: 'ready' as const,
+            } : f);
+            saveToStorage(newFiles);
+            return newFiles;
+          });
         } else {
-          setFiles(prev => prev.map(f => f.id === id ? { ...f, tags, covers, duration, status: 'ready' as const } : f));
+          setFiles(prev => {
+            const newFiles = prev.map(f => f.id === id ? { ...f, tags, covers, duration, status: 'ready' as const } : f);
+            saveToStorage(newFiles);
+            return newFiles;
+          });
         }
       } catch (error) {
         console.error('Error processing file:', file.name, error);
-        setFiles(prev => prev.map(f => f.id === id ? { ...f, status: 'error' as const } : f));
+        setFiles(prev => {
+          const newFiles = prev.map(f => f.id === id ? { ...f, status: 'error' as const } : f);
+          saveToStorage(newFiles);
+          return newFiles;
+        });
       }
     }
     setIsLoading(false);
-  }, [loadFromStorage]);
+  }, [loadFromStorage, saveToStorage]);
 
   // Update single file
   const handleFileUpdate = useCallback((updatedFile: Farghar.AudioFile) => {
@@ -170,8 +182,12 @@ function FargharAppContent() {
 
   // Batch update
   const handleBatchUpdate = useCallback((updates: Partial<Farghar.AudioTag>) => {
-    setFiles(prev => prev.map(f => ({ ...f, tags: { ...f.tags, ...updates }, modified: true, status: 'editing' as const })));
-  }, []);
+    setFiles(prev => {
+      const newFiles = prev.map(f => ({ ...f, tags: { ...f.tags, ...updates }, modified: true, status: 'editing' as const }));
+      saveToStorage(newFiles);
+      return newFiles;
+    });
+  }, [saveToStorage]);
 
   // Request clear all (show confirm modal)
   const handleClearAllRequest = useCallback(() => {
