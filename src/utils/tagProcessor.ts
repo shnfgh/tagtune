@@ -1,8 +1,7 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import { Farghar } from '../types';
 import * as mm from 'music-metadata-browser';
 
-// Dynamic import for browser-id3-writer to avoid type issues
 let ID3WriterClass: any = null;
 
 async function getID3Writer(): Promise<any> {
@@ -46,25 +45,17 @@ export namespace FargharTagProcessor {
       if (common.picture && common.picture.length > 0) {
         const pic = common.picture[0];
         cover = {
-          data: pic.data,
+          pictureData: pic.data,
           mimeType: pic.format || 'image/jpeg',
           description: 'Cover',
-          type: 3, // Front Cover
+          type: 3,
         };
       }
 
-      return {
-        tags,
-        cover,
-        duration: format.duration || 0,
-      };
+      return { tags, cover, duration: format.duration || 0 };
     } catch (error) {
       console.error('Error reading tags:', error);
-      return {
-        tags: { ...Farghar.EMPTY_TAG },
-        cover: null,
-        duration: 0,
-      };
+      return { tags: { ...Farghar.EMPTY_TAG }, cover: null, duration: 0 };
     }
   }
 
@@ -73,7 +64,6 @@ export namespace FargharTagProcessor {
     const WriterClass = await getID3Writer();
     const writer = new WriterClass(arrayBuffer);
 
-    // Set tags
     if (tags.title) writer.setFrame('TIT2', tags.title);
     if (tags.artist) writer.setFrame('TPE1', [tags.artist]);
     if (tags.album) writer.setFrame('TALB', tags.album);
@@ -94,11 +84,10 @@ export namespace FargharTagProcessor {
     if (tags.bpm) writer.setFrame('TBPM', tags.bpm);
     if (tags.key) writer.setFrame('TKEY', tags.key);
 
-    // Set cover art
-    if (cover && cover.data) {
+    if (cover && cover.pictureData) {
       writer.setFrame('APIC', {
         type: cover.type || 3,
-        data: cover.data,
+         cover.pictureData,
         description: cover.description || 'Cover',
       });
     }

@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 export namespace Farghar {
   export interface AudioTag {
     title: string;
@@ -29,7 +29,7 @@ export namespace Farghar {
   };
 
   export interface CoverArt {
-    data: Uint8Array | null;
+    pictureData: Uint8Array | null;
     mimeType: string;
     description: string;
     type: number;
