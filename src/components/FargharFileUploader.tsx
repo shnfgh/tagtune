@@ -1,9 +1,4 @@
-/**
- * TagTune - Online MP3 Tag Editor
- * Designed & Architected by Farghar
- * Namespace: Farghar
- */
-
+// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React, { useCallback, useRef, useState } from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
@@ -12,6 +7,22 @@ interface FargharFileUploaderProps {
   onFilesSelected: (files: File[]) => void;
   disabled?: boolean;
 }
+
+const FargharUploadIcon: React.FC<{ size?: number }> = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="17 8 12 3 7 8" />
+    <line x1="12" y1="3" x2="12" y2="15" />
+  </svg>
+);
+
+const FargharMusicIcon: React.FC<{ size?: number }> = ({ size = 40 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 18V5l12-2v13" />
+    <circle cx="6" cy="18" r="3" />
+    <circle cx="18" cy="16" r="3" />
+  </svg>
+);
 
 export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFilesSelected, disabled }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -34,12 +45,9 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
     e.stopPropagation();
     setIsDragging(false);
     if (disabled) return;
-
     const files = Array.from(e.dataTransfer.files);
     const validFiles = files.filter(f => FargharTagProcessor.isSupportedFormat(f.name));
-    if (validFiles.length > 0) {
-      onFilesSelected(validFiles);
-    }
+    if (validFiles.length > 0) onFilesSelected(validFiles);
   }, [onFilesSelected, disabled]);
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,10 +71,7 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
       className={`
         relative cursor-pointer rounded-2xl border-2 border-dashed p-8 sm:p-12
         transition-all duration-300 text-center
-        ${isDragging
-          ? 'border-purple-400 bg-purple-500/10 scale-[1.02]'
-          : 'border-white/20 hover:border-purple-400/50 hover:bg-white/5'
-        }
+        ${isDragging ? 'border-purple-400 bg-purple-500/10 scale-[1.02]' : 'border-white/20 hover:border-purple-400/50 hover:bg-white/5'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `}
     >
@@ -79,37 +84,26 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
         className="hidden"
         disabled={disabled}
       />
-
       <div className="flex flex-col items-center gap-4">
         <div className={`
-          w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center
+          w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white
           transition-all duration-300
           ${isDragging ? 'farghar-gradient scale-110' : 'bg-white/10'}
         `}>
-          <span className="text-3xl sm:text-4xl">{isDragging ? '📥' : '🎶'}</span>
+          {isDragging ? <FargharUploadIcon size={40} /> : <FargharMusicIcon size={40} />}
         </div>
-
         <div>
           <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
-            {isDragging ? 'فایل‌ها را رها کنید!' : 'فایل‌های صوتی و ویدیویی را بکشید و رها کنید'}
+            {isDragging ? 'Drop files here!' : 'Drag & drop audio/video files'}
           </h3>
-          <p className="text-sm text-gray-400 mb-4">
-            یا کلیک کنید برای انتخاب فایل
-          </p>
+          <p className="text-sm text-gray-400 mb-4">Or click to select files</p>
           <div className="flex flex-wrap justify-center gap-2">
             {Farghar.SUPPORTED_FORMATS.map(format => (
-              <span
-                key={format}
-                className="farghar-badge bg-white/5 text-gray-400 border border-white/10"
-              >
-                .{format}
-              </span>
+              <span key={format} className="farghar-badge bg-white/5 text-gray-400 border border-white/10">.{format}</span>
             ))}
           </div>
         </div>
       </div>
-
-      {/* Decorative elements */}
       <div className="absolute top-4 left-4 w-2 h-2 rounded-full bg-purple-400/50 animate-pulse" />
       <div className="absolute bottom-4 right-4 w-2 h-2 rounded-full bg-blue-400/50 animate-pulse" />
       <div className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-pink-400/50 animate-pulse" />

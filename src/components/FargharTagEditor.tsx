@@ -1,9 +1,4 @@
-/**
- * TagTune - Online MP3 Tag Editor
- * Designed & Architected by Farghar
- * Namespace: Farghar
- */
-
+// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
@@ -14,6 +9,27 @@ interface FargharTagEditorProps {
   onRemove: (id: string) => void;
 }
 
+const FargharImagePlaceholderIcon: React.FC = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <polyline points="21 15 16 10 5 21" />
+  </svg>
+);
+
+const FargharCloseIcon: React.FC = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const FargharChevronIcon: React.FC<{ open: boolean }> = ({ open }) => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.2s' }}>
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
 export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpdate, onRemove }) => {
   const [tags, setTags] = useState<Farghar.AudioTag>({ ...file.tags });
   const [cover, setCover] = useState<Farghar.CoverArt | null>(file.cover);
@@ -21,42 +37,25 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
   const [showLyrics, setShowLyrics] = useState(false);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
-  // Sync local state with file props when tags/cover are loaded or file changes
-  useEffect(() => {
-    setTags({ ...file.tags });
-  }, [file.tags, file.id]);
-
-  useEffect(() => {
-    setCover(file.cover);
-  }, [file.cover, file.id]);
+  useEffect(() => { setTags({ ...file.tags }); }, [file.tags, file.id]);
+  useEffect(() => { setCover(file.cover); }, [file.cover, file.id]);
 
   const coverUrl = FargharTagProcessor.coverToDataUrl(cover);
 
   const handleTagChange = useCallback((field: keyof Farghar.AudioTag, value: string) => {
     setTags(prev => ({ ...prev, [field]: value }));
-    const updatedFile = {
-      ...file,
-      tags: { ...file.tags, [field]: value },
-      modified: true,
-      status: 'editing' as const,
-    };
+    const updatedFile = { ...file, tags: { ...file.tags, [field]: value }, modified: true, status: 'editing' as const };
     onUpdate(updatedFile);
   }, [file, onUpdate]);
 
   const handleCoverUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const coverFile = e.target.files?.[0];
     if (!coverFile) return;
-
     const reader = new FileReader();
     reader.onload = () => {
       const arrayBuffer = reader.result as ArrayBuffer;
       const uint8Array = new Uint8Array(arrayBuffer);
-      const newCover: Farghar.CoverArt = {
-        data: uint8Array,
-        mimeType: coverFile.type || 'image/jpeg',
-        description: 'Cover',
-        type: 3,
-      };
+      const newCover: Farghar.CoverArt = { data: uint8Array, mimeType: coverFile.type || 'image/jpeg', description: 'Cover', type: 3 };
       setCover(newCover);
       onUpdate({ ...file, cover: newCover, modified: true, status: 'editing' });
     };
@@ -74,335 +73,147 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-4">
-          {/* Cover */}
-          <div
-            onClick={() => coverInputRef.current?.click()}
-            className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden cursor-pointer group flex-shrink-0"
-          >
+          <div onClick={() => coverInputRef.current?.click()} className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden cursor-pointer group flex-shrink-0">
             {coverUrl ? (
               <>
                 <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-white text-xs">تغییر</span>
+                  <span className="text-white text-xs">Change</span>
                 </div>
               </>
             ) : (
-              <div className="w-full h-full bg-white/10 flex items-center justify-center border-2 border-dashed border-white/20 group-hover:border-purple-400/50 transition-colors">
-                <span className="text-2xl">🖼️</span>
+              <div className="w-full h-full bg-white/10 flex items-center justify-center border-2 border-dashed border-white/20 group-hover:border-purple-400/50 transition-colors text-gray-500">
+                <FargharImagePlaceholderIcon />
               </div>
             )}
           </div>
-          <input
-            ref={coverInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleCoverUpload}
-            className="hidden"
-          />
-
-          {/* File info */}
+          <input ref={coverInputRef} type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" />
           <div>
-            <h3 className="text-sm sm:text-base font-semibold text-white truncate max-w-[200px] sm:max-w-[300px]">
-              {file.name}
-            </h3>
+            <h3 className="text-sm sm:text-base font-semibold text-white truncate max-w-[200px] sm:max-w-[300px]">{file.name}</h3>
             <div className="flex items-center gap-2 mt-1">
-              <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">
-                {file.format.toUpperCase()}
-              </span>
-              <span className="text-xs text-gray-500">
-                {FargharTagProcessor.formatFileSize(file.size)}
-              </span>
-              <span className="text-xs text-gray-500">
-                {FargharTagProcessor.formatDuration(file.duration)}
-              </span>
+              <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
+              <span className="text-xs text-gray-500">{FargharTagProcessor.formatFileSize(file.size)}</span>
+              <span className="text-xs text-gray-500">{FargharTagProcessor.formatDuration(file.duration)}</span>
             </div>
           </div>
         </div>
-
-        <button
-          onClick={() => onRemove(file.id)}
-          className="p-2 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
-          title="حذف فایل"
-        >
-          ✕
+        <button onClick={() => onRemove(file.id)} className="p-2 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors" title="Remove file">
+          <FargharCloseIcon />
         </button>
       </div>
 
       {/* Cover actions */}
       {coverUrl && (
         <div className="flex gap-2 mb-4">
-          <button
-            onClick={() => coverInputRef.current?.click()}
-            className="text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 transition-colors"
-          >
-            🔄 جایگزینی کاور
-          </button>
-          <button
-            onClick={handleCoverRemove}
-            className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-300 transition-colors"
-          >
-            🗑️ حذف کاور
-          </button>
+          <button onClick={() => coverInputRef.current?.click()} className="text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 transition-colors">Replace Cover</button>
+          <button onClick={handleCoverRemove} className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-300 transition-colors">Remove Cover</button>
         </div>
       )}
 
       {/* Main Tag Fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* 1. Title */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">🎵 عنوان (Title)</label>
-          <input
-            type="text"
-            value={tags.title}
-            onChange={(e) => handleTagChange('title', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="نام آهنگ..."
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Title</label>
+          <input type="text" value={tags.title} onChange={(e) => handleTagChange('title', e.target.value)} className="farghar-input text-sm" placeholder="Song title..." />
         </div>
-
-        {/* 2. Artist */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">🎤 هنرمند (Artist)</label>
-          <input
-            type="text"
-            value={tags.artist}
-            onChange={(e) => handleTagChange('artist', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="نام هنرمند..."
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Artist</label>
+          <input type="text" value={tags.artist} onChange={(e) => handleTagChange('artist', e.target.value)} className="farghar-input text-sm" placeholder="Artist name..." />
         </div>
-
-        {/* 3. Album */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">💿 آلبوم (Album)</label>
-          <input
-            type="text"
-            value={tags.album}
-            onChange={(e) => handleTagChange('album', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="نام آلبوم..."
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Album</label>
+          <input type="text" value={tags.album} onChange={(e) => handleTagChange('album', e.target.value)} className="farghar-input text-sm" placeholder="Album name..." />
         </div>
-
-        {/* 4. Album Artist */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">👤 هنرمند آلبوم (Album Artist)</label>
-          <input
-            type="text"
-            value={tags.albumArtist}
-            onChange={(e) => handleTagChange('albumArtist', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="هنرمند آلبوم..."
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Album Artist</label>
+          <input type="text" value={tags.albumArtist} onChange={(e) => handleTagChange('albumArtist', e.target.value)} className="farghar-input text-sm" placeholder="Album artist..." />
         </div>
-
-        {/* 5. Track Number */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">🔢 شماره ترک (Track Number)</label>
-          <input
-            type="text"
-            value={tags.trackNumber}
-            onChange={(e) => handleTagChange('trackNumber', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="1"
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Track Number</label>
+          <input type="text" value={tags.trackNumber} onChange={(e) => handleTagChange('trackNumber', e.target.value)} className="farghar-input text-sm" placeholder="1" />
         </div>
-
-        {/* 6. Disc Number */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">💽 شماره دیسک (Disc Number)</label>
-          <input
-            type="text"
-            value={tags.discNumber}
-            onChange={(e) => handleTagChange('discNumber', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="1"
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Disc Number</label>
+          <input type="text" value={tags.discNumber} onChange={(e) => handleTagChange('discNumber', e.target.value)} className="farghar-input text-sm" placeholder="1" />
         </div>
-
-        {/* 7. Genre */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">🎸 ژانر (Genre)</label>
-          <select
-            value={tags.genre}
-            onChange={(e) => handleTagChange('genre', e.target.value)}
-            className="farghar-input text-sm"
-          >
-            <option value="">انتخاب ژانر...</option>
-            {Farghar.GENRES.map(g => (
-              <option key={g} value={g}>{g}</option>
-            ))}
+          <label className="block text-xs text-gray-400 mb-1.5">Genre</label>
+          <select value={tags.genre} onChange={(e) => handleTagChange('genre', e.target.value)} className="farghar-input text-sm">
+            <option value="">Select genre...</option>
+            {Farghar.GENRES.map(g => <option key={g} value={g}>{g}</option>)}
           </select>
         </div>
-
-        {/* 8. Year / Date */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">📅 سال / تاریخ (Year / Date)</label>
-          <input
-            type="text"
-            value={tags.year}
-            onChange={(e) => handleTagChange('year', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="2024"
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Year / Date</label>
+          <input type="text" value={tags.year} onChange={(e) => handleTagChange('year', e.target.value)} className="farghar-input text-sm" placeholder="2024" />
         </div>
-
-        {/* 9. Composer */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">🎼 آهنگساز (Composer)</label>
-          <input
-            type="text"
-            value={tags.composer}
-            onChange={(e) => handleTagChange('composer', e.target.value)}
-            className="farghar-input text-sm"
-            placeholder="نام آهنگساز..."
-          />
+          <label className="block text-xs text-gray-400 mb-1.5">Composer</label>
+          <input type="text" value={tags.composer} onChange={(e) => handleTagChange('composer', e.target.value)} className="farghar-input text-sm" placeholder="Composer name..." />
         </div>
       </div>
 
       {/* Advanced Fields Toggle */}
-      <button
-        onClick={() => setShowAdvanced(!showAdvanced)}
-        className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1"
-      >
-        <span>{showAdvanced ? '▼' : '▶'}</span>
-        فیلدهای پیشرفته (Lyricist, Arranger, Producer, Copyright, Publisher, ISRC, BPM, Key)
+      <button onClick={() => setShowAdvanced(!showAdvanced)} className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1">
+        <FargharChevronIcon open={showAdvanced} />
+        Advanced Fields (Lyricist, Arranger, Producer, Copyright, Publisher, ISRC, BPM, Key)
       </button>
 
       {showAdvanced && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 farghar-fade-in">
-          {/* 10. Lyricist */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">✍️ ترانه‌سرا (Lyricist)</label>
-            <input
-              type="text"
-              value={tags.lyricist}
-              onChange={(e) => handleTagChange('lyricist', e.target.value)}
-              className="farghar-input text-sm"
-              placeholder="نام ترانه‌سرا..."
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">Lyricist</label>
+            <input type="text" value={tags.lyricist} onChange={(e) => handleTagChange('lyricist', e.target.value)} className="farghar-input text-sm" placeholder="Lyricist name..." />
           </div>
-
-          {/* 11. Arranger */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">🎹 تنظیم‌کننده (Arranger)</label>
-            <input
-              type="text"
-              value={tags.arranger}
-              onChange={(e) => handleTagChange('arranger', e.target.value)}
-              className="farghar-input text-sm"
-              placeholder="نام تنظیم‌کننده..."
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">Arranger</label>
+            <input type="text" value={tags.arranger} onChange={(e) => handleTagChange('arranger', e.target.value)} className="farghar-input text-sm" placeholder="Arranger name..." />
           </div>
-
-          {/* 12. Producer */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">🎧 تهیه‌کننده (Producer)</label>
-            <input
-              type="text"
-              value={tags.producer}
-              onChange={(e) => handleTagChange('producer', e.target.value)}
-              className="farghar-input text-sm"
-              placeholder="نام تهیه‌کننده..."
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">Producer</label>
+            <input type="text" value={tags.producer} onChange={(e) => handleTagChange('producer', e.target.value)} className="farghar-input text-sm" placeholder="Producer name..." />
           </div>
-
-          {/* 13. Copyright */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">© کپی‌رایت (Copyright)</label>
-            <input
-              type="text"
-              value={tags.copyright}
-              onChange={(e) => handleTagChange('copyright', e.target.value)}
-              className="farghar-input text-sm"
-              placeholder="© 2024 ..."
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">Copyright</label>
+            <input type="text" value={tags.copyright} onChange={(e) => handleTagChange('copyright', e.target.value)} className="farghar-input text-sm" placeholder="Copyright notice..." />
           </div>
-
-          {/* 14. Publisher */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">🏢 ناشر (Publisher)</label>
-            <input
-              type="text"
-              value={tags.publisher}
-              onChange={(e) => handleTagChange('publisher', e.target.value)}
-              className="farghar-input text-sm"
-              placeholder="نام ناشر..."
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">Publisher</label>
+            <input type="text" value={tags.publisher} onChange={(e) => handleTagChange('publisher', e.target.value)} className="farghar-input text-sm" placeholder="Publisher name..." />
           </div>
-
-          {/* 15. ISRC */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">🔑 ISRC</label>
-            <input
-              type="text"
-              value={tags.isrc}
-              onChange={(e) => handleTagChange('isrc', e.target.value)}
-              className="farghar-input text-sm"
-              placeholder="US-XXX-XX-XXXXX"
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">ISRC</label>
+            <input type="text" value={tags.isrc} onChange={(e) => handleTagChange('isrc', e.target.value)} className="farghar-input text-sm" placeholder="US-XXX-XX-XXXXX" />
           </div>
-
-          {/* 16. BPM */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">💓 BPM</label>
-            <input
-              type="text"
-              value={tags.bpm}
-              onChange={(e) => handleTagChange('bpm', e.target.value)}
-              className="farghar-input text-sm"
-              placeholder="120"
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">BPM</label>
+            <input type="text" value={tags.bpm} onChange={(e) => handleTagChange('bpm', e.target.value)} className="farghar-input text-sm" placeholder="120" />
           </div>
-
-          {/* 17. Key */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">🎹 کلید (Key)</label>
-            <select
-              value={tags.key}
-              onChange={(e) => handleTagChange('key', e.target.value)}
-              className="farghar-input text-sm"
-            >
-              <option value="">انتخاب کلید...</option>
-              {Farghar.MUSICAL_KEYS.map(k => (
-                <option key={k} value={k}>{k}</option>
-              ))}
+            <label className="block text-xs text-gray-400 mb-1.5">Key</label>
+            <select value={tags.key} onChange={(e) => handleTagChange('key', e.target.value)} className="farghar-input text-sm">
+              <option value="">Select key...</option>
+              {Farghar.MUSICAL_KEYS.map(k => <option key={k} value={k}>{k}</option>)}
             </select>
           </div>
         </div>
       )}
 
       {/* Lyrics & Comment Toggle */}
-      <button
-        onClick={() => setShowLyrics(!showLyrics)}
-        className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1"
-      >
-        <span>{showLyrics ? '▼' : '▶'}</span>
-        متن آهنگ و توضیحات (Lyrics & Comment)
+      <button onClick={() => setShowLyrics(!showLyrics)} className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1">
+        <FargharChevronIcon open={showLyrics} />
+        Lyrics & Comments
       </button>
 
       {showLyrics && (
         <div className="grid grid-cols-1 gap-4 mt-4 farghar-fade-in">
-          {/* 18. Lyrics */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">📝 متن آهنگ (Lyrics)</label>
-            <textarea
-              value={tags.lyrics}
-              onChange={(e) => handleTagChange('lyrics', e.target.value)}
-              className="farghar-input text-sm resize-none h-32"
-              placeholder="متن آهنگ را اینجا وارد کنید..."
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">Lyrics</label>
+            <textarea value={tags.lyrics} onChange={(e) => handleTagChange('lyrics', e.target.value)} className="farghar-input text-sm resize-none h-32" placeholder="Enter lyrics here..." />
           </div>
-
-          {/* 19. Comment */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">💬 توضیحات (Comment)</label>
-            <textarea
-              value={tags.comment}
-              onChange={(e) => handleTagChange('comment', e.target.value)}
-              className="farghar-input text-sm resize-none h-20"
-              placeholder="توضیحات..."
-            />
+            <label className="block text-xs text-gray-400 mb-1.5">Comment</label>
+            <textarea value={tags.comment} onChange={(e) => handleTagChange('comment', e.target.value)} className="farghar-input text-sm resize-none h-20" placeholder="Comments..." />
           </div>
         </div>
       )}
@@ -411,7 +222,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {file.modified && (
         <div className="mt-4 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-          <span className="text-xs text-yellow-400">تغییرات ذخیره نشده — آماده دانلود</span>
+          <span className="text-xs text-yellow-400">Unsaved changes - Ready to download</span>
         </div>
       )}
     </div>
