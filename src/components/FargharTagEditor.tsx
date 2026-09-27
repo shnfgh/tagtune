@@ -259,7 +259,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
                   </div>
                 </div>
 
-                {/* Row 2: Type selector */}
+                {/* Row 2: Type selector - full width */}
                 <div className="w-full">
                   <FargharSelect
                     value={cover.coverType}
@@ -269,10 +269,10 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
                   />
                 </div>
 
-                {/* Row 3: Actions - compact on smartwatch */}
-                <div className="flex items-center justify-end gap-1 min-[360px]:gap-1.5">
+                {/* Row 3: Actions - 2x2 grid on smartwatch, horizontal row on larger screens */}
+                <div className="grid grid-cols-2 min-[360px]:flex min-[360px]:items-center min-[360px]:justify-end gap-1 min-[360px]:gap-1.5">
                   <label
-                    className="p-1 min-[360px]:p-2 farghar-icon-btn farghar-native-touch cursor-pointer min-h-[28px] min-[360px]:min-h-[36px] min-w-[28px] min-[360px]:min-w-[36px] flex items-center justify-center"
+                    className="p-1 min-[360px]:p-2 farghar-icon-btn farghar-native-touch cursor-pointer min-h-[32px] min-[360px]:min-h-[36px] w-full min-[360px]:w-auto min-[360px]:min-w-[36px] flex items-center justify-center"
                     title="Replace"
                   >
                     <FargharReplaceIcon />
@@ -281,7 +281,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
                   <button
                     onClick={() => handleMoveCover(index, 'up')}
                     disabled={index === 0}
-                    className="p-1 min-[360px]:p-2 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed min-h-[28px] min-[360px]:min-h-[36px] min-w-[28px] min-[360px]:min-w-[36px] flex items-center justify-center"
+                    className="p-1 min-[360px]:p-2 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed min-h-[32px] min-[360px]:min-h-[36px] w-full min-[360px]:w-auto min-[360px]:min-w-[36px] flex items-center justify-center"
                     title="Move up"
                   >
                     <FargharArrowUpIcon />
@@ -289,14 +289,14 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
                   <button
                     onClick={() => handleMoveCover(index, 'down')}
                     disabled={index === covers.length - 1}
-                    className="p-1 min-[360px]:p-2 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed min-h-[28px] min-[360px]:min-h-[36px] min-w-[28px] min-[360px]:min-w-[36px] flex items-center justify-center"
+                    className="p-1 min-[360px]:p-2 farghar-icon-btn farghar-native-touch disabled:opacity-30 disabled:cursor-not-allowed min-h-[32px] min-[360px]:min-h-[36px] w-full min-[360px]:w-auto min-[360px]:min-w-[36px] flex items-center justify-center"
                     title="Move down"
                   >
                     <FargharArrowDownIcon />
                   </button>
                   <button
                     onClick={() => setDeleteCoverModal({ isOpen: true, index })}
-                    className="p-1 min-[360px]:p-2 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors farghar-native-touch min-h-[28px] min-[360px]:min-h-[36px] min-w-[28px] min-[360px]:min-w-[36px] flex items-center justify-center"
+                    className="p-1 min-[360px]:p-2 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors farghar-native-touch min-h-[32px] min-[360px]:min-h-[36px] w-full min-[360px]:w-auto min-[360px]:min-w-[36px] flex items-center justify-center"
                     title="Delete"
                   >
                     <FargharTrashIcon />
