@@ -42,10 +42,7 @@ function FargharApp() {
         name: file.name,
         size: file.size,
         format,
-        tags: {
-          title: '', artist: '', album: '', year: '',
-          genre: '', track: '', composer: '', comment: '', bpm: ''
-        },
+        tags: { ...Farghar.EMPTY_TAG },
         cover: null,
         duration: 0,
         status: 'loading',

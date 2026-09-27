@@ -12,13 +12,13 @@ interface FargharTagEditorProps {
   file: Farghar.AudioFile;
   onUpdate: (file: Farghar.AudioFile) => void;
   onRemove: (id: string) => void;
-  isBatchMode?: boolean;
 }
 
-export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpdate, onRemove, isBatchMode }) => {
+export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpdate, onRemove }) => {
   const [tags, setTags] = useState<Farghar.AudioTag>({ ...file.tags });
   const [cover, setCover] = useState<Farghar.CoverArt | null>(file.cover);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showLyrics, setShowLyrics] = useState(false);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   // Sync local state with file props when tags/cover are loaded or file changes
@@ -135,7 +135,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             onClick={() => coverInputRef.current?.click()}
             className="text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 transition-colors"
           >
-            🔄 جایگزینی
+            🔄 جایگزینی کاور
           </button>
           <button
             onClick={handleCoverRemove}
@@ -146,10 +146,11 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
         </div>
       )}
 
-      {/* Tag fields */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Main Tag Fields */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* 1. Title */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">عنوان (Title)</label>
+          <label className="block text-xs text-gray-400 mb-1.5">🎵 عنوان (Title)</label>
           <input
             type="text"
             value={tags.title}
@@ -158,8 +159,10 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             placeholder="نام آهنگ..."
           />
         </div>
+
+        {/* 2. Artist */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">هنرمند (Artist)</label>
+          <label className="block text-xs text-gray-400 mb-1.5">🎤 هنرمند (Artist)</label>
           <input
             type="text"
             value={tags.artist}
@@ -168,8 +171,10 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             placeholder="نام هنرمند..."
           />
         </div>
+
+        {/* 3. Album */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">آلبوم (Album)</label>
+          <label className="block text-xs text-gray-400 mb-1.5">💿 آلبوم (Album)</label>
           <input
             type="text"
             value={tags.album}
@@ -178,18 +183,46 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             placeholder="نام آلبوم..."
           />
         </div>
+
+        {/* 4. Album Artist */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">سال (Year)</label>
+          <label className="block text-xs text-gray-400 mb-1.5">👤 هنرمند آلبوم (Album Artist)</label>
           <input
             type="text"
-            value={tags.year}
-            onChange={(e) => handleTagChange('year', e.target.value)}
+            value={tags.albumArtist}
+            onChange={(e) => handleTagChange('albumArtist', e.target.value)}
             className="farghar-input text-sm"
-            placeholder="1403"
+            placeholder="هنرمند آلبوم..."
           />
         </div>
+
+        {/* 5. Track Number */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">ژانر (Genre)</label>
+          <label className="block text-xs text-gray-400 mb-1.5">🔢 شماره ترک (Track Number)</label>
+          <input
+            type="text"
+            value={tags.trackNumber}
+            onChange={(e) => handleTagChange('trackNumber', e.target.value)}
+            className="farghar-input text-sm"
+            placeholder="1"
+          />
+        </div>
+
+        {/* 6. Disc Number */}
+        <div>
+          <label className="block text-xs text-gray-400 mb-1.5">💽 شماره دیسک (Disc Number)</label>
+          <input
+            type="text"
+            value={tags.discNumber}
+            onChange={(e) => handleTagChange('discNumber', e.target.value)}
+            className="farghar-input text-sm"
+            placeholder="1"
+          />
+        </div>
+
+        {/* 7. Genre */}
+        <div>
+          <label className="block text-xs text-gray-400 mb-1.5">🎸 ژانر (Genre)</label>
           <select
             value={tags.genre}
             onChange={(e) => handleTagChange('genre', e.target.value)}
@@ -201,41 +234,118 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
             ))}
           </select>
         </div>
+
+        {/* 8. Year / Date */}
         <div>
-          <label className="block text-xs text-gray-400 mb-1.5">شماره ترک (Track)</label>
+          <label className="block text-xs text-gray-400 mb-1.5">📅 سال / تاریخ (Year / Date)</label>
           <input
             type="text"
-            value={tags.track}
-            onChange={(e) => handleTagChange('track', e.target.value)}
+            value={tags.year}
+            onChange={(e) => handleTagChange('year', e.target.value)}
             className="farghar-input text-sm"
-            placeholder="1"
+            placeholder="2024"
+          />
+        </div>
+
+        {/* 9. Composer */}
+        <div>
+          <label className="block text-xs text-gray-400 mb-1.5">🎼 آهنگساز (Composer)</label>
+          <input
+            type="text"
+            value={tags.composer}
+            onChange={(e) => handleTagChange('composer', e.target.value)}
+            className="farghar-input text-sm"
+            placeholder="نام آهنگساز..."
           />
         </div>
       </div>
 
-      {/* Advanced fields */}
+      {/* Advanced Fields Toggle */}
       <button
         onClick={() => setShowAdvanced(!showAdvanced)}
         className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1"
       >
         <span>{showAdvanced ? '▼' : '▶'}</span>
-        فیلدهای پیشرفته
+        فیلدهای پیشرفته (Lyricist, Arranger, Producer, Copyright, Publisher, ISRC, BPM, Key)
       </button>
 
       {showAdvanced && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 farghar-fade-in">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 farghar-fade-in">
+          {/* 10. Lyricist */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">آهنگساز (Composer)</label>
+            <label className="block text-xs text-gray-400 mb-1.5">✍️ ترانه‌سرا (Lyricist)</label>
             <input
               type="text"
-              value={tags.composer}
-              onChange={(e) => handleTagChange('composer', e.target.value)}
+              value={tags.lyricist}
+              onChange={(e) => handleTagChange('lyricist', e.target.value)}
               className="farghar-input text-sm"
-              placeholder="نام آهنگساز..."
+              placeholder="نام ترانه‌سرا..."
             />
           </div>
+
+          {/* 11. Arranger */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">BPM</label>
+            <label className="block text-xs text-gray-400 mb-1.5">🎹 تنظیم‌کننده (Arranger)</label>
+            <input
+              type="text"
+              value={tags.arranger}
+              onChange={(e) => handleTagChange('arranger', e.target.value)}
+              className="farghar-input text-sm"
+              placeholder="نام تنظیم‌کننده..."
+            />
+          </div>
+
+          {/* 12. Producer */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">🎧 تهیه‌کننده (Producer)</label>
+            <input
+              type="text"
+              value={tags.producer}
+              onChange={(e) => handleTagChange('producer', e.target.value)}
+              className="farghar-input text-sm"
+              placeholder="نام تهیه‌کننده..."
+            />
+          </div>
+
+          {/* 13. Copyright */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">© کپی‌رایت (Copyright)</label>
+            <input
+              type="text"
+              value={tags.copyright}
+              onChange={(e) => handleTagChange('copyright', e.target.value)}
+              className="farghar-input text-sm"
+              placeholder="© 2024 ..."
+            />
+          </div>
+
+          {/* 14. Publisher */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">🏢 ناشر (Publisher)</label>
+            <input
+              type="text"
+              value={tags.publisher}
+              onChange={(e) => handleTagChange('publisher', e.target.value)}
+              className="farghar-input text-sm"
+              placeholder="نام ناشر..."
+            />
+          </div>
+
+          {/* 15. ISRC */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">🔑 ISRC</label>
+            <input
+              type="text"
+              value={tags.isrc}
+              onChange={(e) => handleTagChange('isrc', e.target.value)}
+              className="farghar-input text-sm"
+              placeholder="US-XXX-XX-XXXXX"
+            />
+          </div>
+
+          {/* 16. BPM */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">💓 BPM</label>
             <input
               type="text"
               value={tags.bpm}
@@ -244,8 +354,49 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
               placeholder="120"
             />
           </div>
-          <div className="sm:col-span-2">
-            <label className="block text-xs text-gray-400 mb-1.5">توضیحات (Comment)</label>
+
+          {/* 17. Key */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">🎹 کلید (Key)</label>
+            <select
+              value={tags.key}
+              onChange={(e) => handleTagChange('key', e.target.value)}
+              className="farghar-input text-sm"
+            >
+              <option value="">انتخاب کلید...</option>
+              {Farghar.MUSICAL_KEYS.map(k => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* Lyrics & Comment Toggle */}
+      <button
+        onClick={() => setShowLyrics(!showLyrics)}
+        className="mt-4 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1"
+      >
+        <span>{showLyrics ? '▼' : '▶'}</span>
+        متن آهنگ و توضیحات (Lyrics & Comment)
+      </button>
+
+      {showLyrics && (
+        <div className="grid grid-cols-1 gap-4 mt-4 farghar-fade-in">
+          {/* 18. Lyrics */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">📝 متن آهنگ (Lyrics)</label>
+            <textarea
+              value={tags.lyrics}
+              onChange={(e) => handleTagChange('lyrics', e.target.value)}
+              className="farghar-input text-sm resize-none h-32"
+              placeholder="متن آهنگ را اینجا وارد کنید..."
+            />
+          </div>
+
+          {/* 19. Comment */}
+          <div>
+            <label className="block text-xs text-gray-400 mb-1.5">💬 توضیحات (Comment)</label>
             <textarea
               value={tags.comment}
               onChange={(e) => handleTagChange('comment', e.target.value)}
@@ -260,7 +411,7 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
       {file.modified && (
         <div className="mt-4 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-          <span className="text-xs text-yellow-400">تغییرات ذخیره نشده</span>
+          <span className="text-xs text-yellow-400">تغییرات ذخیره نشده — آماده دانلود</span>
         </div>
       )}
     </div>

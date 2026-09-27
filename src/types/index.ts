@@ -9,13 +9,45 @@ export namespace Farghar {
     title: string;
     artist: string;
     album: string;
-    year: string;
+    albumArtist: string;
+    trackNumber: string;
+    discNumber: string;
     genre: string;
-    track: string;
+    year: string;
     composer: string;
+    lyricist: string;
+    arranger: string;
+    producer: string;
+    copyright: string;
+    publisher: string;
     comment: string;
+    lyrics: string;
+    isrc: string;
     bpm: string;
+    key: string;
   }
+
+  export const EMPTY_TAG: AudioTag = {
+    title: '',
+    artist: '',
+    album: '',
+    albumArtist: '',
+    trackNumber: '',
+    discNumber: '',
+    genre: '',
+    year: '',
+    composer: '',
+    lyricist: '',
+    arranger: '',
+    producer: '',
+    copyright: '',
+    publisher: '',
+    comment: '',
+    lyrics: '',
+    isrc: '',
+    bpm: '',
+    key: '',
+  };
 
   export interface CoverArt {
     data: Uint8Array | null;
@@ -51,13 +83,6 @@ export namespace Farghar {
     'mp3', 'mp4', 'm4a', 'wav', 'flac', 'ogg', 'mkv', 'mov', 'flv'
   ];
 
-  export const ACCEPTED_MIME_TYPES = [
-    'audio/mpeg', 'audio/mp3', 'audio/mp4', 'audio/m4a', 'audio/x-m4a',
-    'audio/wav', 'audio/wave', 'audio/x-wav', 'audio/flac', 'audio/x-flac',
-    'audio/ogg', 'video/mp4', 'video/x-matroska', 'video/quicktime',
-    'video/x-flv', 'video/webm'
-  ];
-
   export const GENRES = [
     'Blues', 'Classic Rock', 'Country', 'Dance', 'Disco', 'Funk', 'Grunge',
     'Hip-Hop', 'Jazz', 'Metal', 'New Age', 'Oldies', 'Other', 'Pop', 'R&B',
@@ -73,5 +98,12 @@ export namespace Farghar {
     'New Wave', 'Psychedelic', 'Rave', 'Showtunes', 'Trailer', 'Lo-Fi',
     'Tribal', 'Acid Punk', 'Acid Jazz', 'Polka', 'Retro', 'Musical',
     'Rock & Roll', 'Hard Rock'
+  ];
+
+  export const MUSICAL_KEYS = [
+    'C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb',
+    'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B',
+    'Cm', 'C#m', 'Dbm', 'Dm', 'D#m', 'Ebm', 'Em', 'Fm', 'F#m', 'Gbm',
+    'Gm', 'G#m', 'Abm', 'Am', 'A#m', 'Bbm', 'Bm'
   ];
 }
