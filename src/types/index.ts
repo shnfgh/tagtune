@@ -28,12 +28,23 @@ export namespace Farghar {
     copyright: '', publisher: '', comment: '', lyrics: '', isrc: '', bpm: '', key: '',
   };
 
+  export type CoverType = 'front' | 'back' | 'booklet' | 'artist' | 'other';
+
   export interface CoverArt {
     pictureData: Uint8Array | null;
     mimeType: string;
     description: string;
     type: number;
+    coverType: CoverType;
   }
+
+  export const COVER_TYPES: { value: CoverType; label: string; id3Type: number }[] = [
+    { value: 'front', label: 'Main / Front Cover', id3Type: 3 },
+    { value: 'back', label: 'Back Cover', id3Type: 4 },
+    { value: 'booklet', label: 'Booklet / Inside', id3Type: 5 },
+    { value: 'artist', label: 'Artist', id3Type: 6 },
+    { value: 'other', label: 'Other', id3Type: 0 },
+  ];
 
   export interface AudioFile {
     id: string;
@@ -42,7 +53,7 @@ export namespace Farghar {
     size: number;
     format: string;
     tags: AudioTag;
-    cover: CoverArt | null;
+    covers: CoverArt[];
     duration: number;
     status: 'loading' | 'ready' | 'editing' | 'done' | 'error';
     modified: boolean;

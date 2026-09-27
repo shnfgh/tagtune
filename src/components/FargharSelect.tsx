@@ -13,6 +13,7 @@ interface FargharSelectProps {
   placeholder?: string;
   disabled?: boolean;
   searchable?: boolean;
+  allowCustom?: boolean;
 }
 
 const FargharChevronDownIcon: React.FC = () => (
@@ -34,7 +35,14 @@ const FargharCheckIcon: React.FC = () => (
   </svg>
 );
 
-export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, options, placeholder = 'Select...', disabled = false, searchable = false }) => {
+const FargharPlusIcon: React.FC = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, options, placeholder = 'Select...', disabled = false, searchable = false, allowCustom = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,6 +53,9 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
   const filteredOptions = searchable && searchQuery
     ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : options;
+
+  // Check if search query is a custom value (not in options)
+  const isCustomValue = allowCustom && searchQuery && !options.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -75,6 +86,14 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
   const handleToggle = useCallback(() => {
     if (!disabled) setIsOpen(prev => !prev);
   }, [disabled]);
+
+  const handleCustomAdd = useCallback(() => {
+    if (searchQuery) {
+      onChange(searchQuery);
+      setIsOpen(false);
+      setSearchQuery('');
+    }
+  }, [searchQuery, onChange]);
 
   return (
     <div ref={containerRef} className="relative">
@@ -111,7 +130,13 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && isCustomValue) {
+                      e.preventDefault();
+                      handleCustomAdd();
+                    }
+                  }}
+                  placeholder="Search or type custom value..."
                   className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 outline-none"
                 />
               </div>
@@ -131,28 +156,42 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
               </button>
             )}
 
-            {filteredOptions.length === 0 ? (
+            {filteredOptions.length === 0 && !isCustomValue ? (
               <div className="px-4 py-3 text-sm text-gray-500 text-center">No results found</div>
             ) : (
-              filteredOptions.map(option => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => handleSelect(option.value)}
-                  className={`
-                    w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right
-                    ${option.value === value
-                      ? 'bg-purple-500/20 text-purple-300'
-                      : 'text-gray-300 hover:bg-white/5'
-                    }
-                  `}
-                >
-                  <span className="truncate">{option.label}</span>
-                  {option.value === value && (
-                    <span className="flex-shrink-0 mr-2 text-purple-400"><FargharCheckIcon /></span>
-                  )}
-                </button>
-              ))
+              <>
+                {filteredOptions.map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => handleSelect(option.value)}
+                    className={`
+                      w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right
+                      ${option.value === value
+                        ? 'bg-purple-500/20 text-purple-300'
+                        : 'text-gray-300 hover:bg-white/5'
+                      }
+                    `}
+                  >
+                    <span className="truncate">{option.label}</span>
+                    {option.value === value && (
+                      <span className="flex-shrink-0 mr-2 text-purple-400"><FargharCheckIcon /></span>
+                    )}
+                  </button>
+                ))}
+
+                {/* Custom value option */}
+                {isCustomValue && (
+                  <button
+                    type="button"
+                    onClick={handleCustomAdd}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-green-400 hover:bg-green-500/10 transition-colors text-right border-t border-white/10 mt-1 pt-3"
+                  >
+                    <FargharPlusIcon />
+                    <span>Add custom: "{searchQuery}"</span>
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>

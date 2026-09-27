@@ -12,8 +12,19 @@ async function getID3Writer(): Promise<any> {
   return ID3WriterClass;
 }
 
+// Map ID3 picture type to our CoverType
+function mapId3TypeToCoverType(id3Type: number): Farghar.CoverType {
+  switch (id3Type) {
+    case 3: return 'front';
+    case 4: return 'back';
+    case 5: return 'booklet';
+    case 6: return 'artist';
+    default: return 'other';
+  }
+}
+
 export namespace FargharTagProcessor {
-  export async function readTags(file: File): Promise<{ tags: Farghar.AudioTag; cover: Farghar.CoverArt | null; duration: number }> {
+  export async function readTags(file: File): Promise<{ tags: Farghar.AudioTag; covers: Farghar.CoverArt[]; duration: number }> {
     try {
       const metadata = await mm.parseBlob(file);
       const common = metadata.common;
@@ -41,25 +52,28 @@ export namespace FargharTagProcessor {
         key: (common as any).key || '',
       };
 
-      let cover: Farghar.CoverArt | null = null;
+      const covers: Farghar.CoverArt[] = [];
       if (common.picture && common.picture.length > 0) {
-        const pic = common.picture[0];
-        cover = {
-          pictureData: pic.data,
-          mimeType: pic.format || 'image/jpeg',
-          description: 'Cover',
-          type: 3,
-        };
+        common.picture.forEach((pic, index) => {
+          const id3Type = (pic as any).type || (index === 0 ? 3 : 0);
+          covers.push({
+            pictureData: pic.data,
+            mimeType: pic.format || 'image/jpeg',
+            description: (pic as any).description || `Cover ${index + 1}`,
+            type: id3Type,
+            coverType: mapId3TypeToCoverType(id3Type),
+          });
+        });
       }
 
-      return { tags, cover, duration: format.duration || 0 };
+      return { tags, covers, duration: format.duration || 0 };
     } catch (error) {
       console.error('Error reading tags:', error);
-      return { tags: { ...Farghar.EMPTY_TAG }, cover: null, duration: 0 };
+      return { tags: { ...Farghar.EMPTY_TAG }, covers: [], duration: 0 };
     }
   }
 
-  export async function writeTags(file: File, tags: Farghar.AudioTag, cover: Farghar.CoverArt | null): Promise<Blob> {
+  export async function writeTags(file: File, tags: Farghar.AudioTag, covers: Farghar.CoverArt[]): Promise<Blob> {
     const arrayBuffer = await file.arrayBuffer();
     const WriterClass = await getID3Writer();
     const writer = new WriterClass(arrayBuffer);
@@ -84,11 +98,16 @@ export namespace FargharTagProcessor {
     if (tags.bpm) writer.setFrame('TBPM', tags.bpm);
     if (tags.key) writer.setFrame('TKEY', tags.key);
 
-    if (cover && cover.pictureData) {
-      writer.setFrame('APIC', {
-        type: cover.type || 3,
-        pictureData: cover.pictureData,
-        description: cover.description || 'Cover',
+    // Write all covers
+    if (covers && covers.length > 0) {
+      covers.forEach(cover => {
+        if (cover.pictureData) {
+          writer.setFrame('APIC', {
+            type: cover.type || 3,
+            pictureData: cover.pictureData,
+            description: cover.description || 'Cover',
+          });
+        }
       });
     }
 
@@ -130,5 +149,9 @@ export namespace FargharTagProcessor {
     if (!cover || !cover.pictureData) return '';
     const blob = new Blob([cover.pictureData as any], { type: cover.mimeType });
     return URL.createObjectURL(blob);
+  }
+
+  export function coversToDataUrls(covers: Farghar.CoverArt[]): string[] {
+    return covers.map(cover => coverToDataUrl(cover));
   }
 }

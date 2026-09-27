@@ -48,7 +48,7 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
 
   const handleDownloadSingle = async (file: Farghar.AudioFile) => {
     try {
-      const blob = await FargharTagProcessor.writeTags(file.file, file.tags, file.cover);
+      const blob = await FargharTagProcessor.writeTags(file.file, file.tags, file.covers);
       const fileName = file.name.endsWith('.mp3') ? file.name : file.name.replace(/\.[^.]+$/, '.mp3');
       saveAs(blob, fileName);
     } catch (error) {
@@ -64,7 +64,7 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
       const zip = new JSZip();
       for (let i = 0; i < modifiedFiles.length; i++) {
         const file = modifiedFiles[i];
-        const blob = await FargharTagProcessor.writeTags(file.file, file.tags, file.cover);
+        const blob = await FargharTagProcessor.writeTags(file.file, file.tags, file.covers);
         const fileName = file.name.endsWith('.mp3') ? file.name : file.name.replace(/\.[^.]+$/, '.mp3');
         zip.file(fileName, blob);
         setProgress(Math.round(((i + 1) / modifiedFiles.length) * 100));

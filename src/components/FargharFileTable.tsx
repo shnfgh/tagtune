@@ -75,7 +75,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
           </thead>
           <tbody>
             {files.map((file, index) => {
-              const coverUrl = FargharTagProcessor.coverToDataUrl(file.cover);
+              const coverUrl = file.covers.length > 0 ? FargharTagProcessor.coverToDataUrl(file.covers[0]) : '';
               const isSelected = file.id === selectedFileId;
               return (
                 <tr
@@ -133,7 +133,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
       {/* Mobile List */}
       <div className="md:hidden space-y-2">
         {files.map((file, index) => {
-          const coverUrl = FargharTagProcessor.coverToDataUrl(file.cover);
+          const coverUrl = file.covers.length > 0 ? FargharTagProcessor.coverToDataUrl(file.covers[0]) : '';
           const isSelected = file.id === selectedFileId;
           return (
             <div
