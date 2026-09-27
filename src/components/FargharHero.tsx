@@ -72,7 +72,8 @@ export const FargharHero: React.FC<FargharHeroProps> = ({ hasFiles }) => {
       <p className="text-xs min-[360px]:text-sm sm:text-lg mb-3 min-[360px]:mb-5 sm:mb-6 max-w-xl mx-auto px-3" style={{ color: 'var(--farghar-text-secondary)' }}>
         Free, secure, and no installation required.
       </p>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 min-[360px]:gap-2 sm:gap-3 max-w-2xl mx-auto mb-4 min-[360px]:mb-6 sm:mb-8 px-3">
+      {/* Features grid: 1-col on smartwatch, 2-col from 240px, 4-col from sm */}
+      <div className="grid grid-cols-1 min-[240px]:grid-cols-2 sm:grid-cols-4 gap-1.5 min-[360px]:gap-2 sm:gap-3 max-w-2xl mx-auto mb-4 min-[360px]:mb-6 sm:mb-8 px-3">
         {features.map((feature, i) => (
           <div key={i} className="farghar-glass farghar-glass-hover rounded-lg min-[360px]:rounded-xl p-2 min-[360px]:p-2.5 sm:p-3 text-center farghar-native-touch">
             <span className="flex justify-center mb-0.5 min-[360px]:mb-1" style={{ color: 'var(--farghar-text-secondary)' }}><feature.icon /></span>
