@@ -70,9 +70,7 @@ export const FargharHero: React.FC<FargharHeroProps> = ({ hasFiles }) => {
       </div>
       <h2 className="text-xl sm:text-4xl font-bold mb-2 sm:mb-3" style={{ color: 'var(--farghar-text)' }}>Farghar Tag Editor</h2>
       <p className="text-sm sm:text-lg mb-5 sm:mb-6 max-w-xl mx-auto px-4" style={{ color: 'var(--farghar-text-secondary)' }}>
-        Professional online music tag editor with native app experience.
-        <br className="hidden sm:block" />
-        Free, secure, and no software installation required.
+        Free, secure, and no installation required.
       </p>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 max-w-2xl mx-auto mb-6 sm:mb-8">
         {features.map((feature, i) => (
