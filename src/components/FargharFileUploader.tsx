@@ -8,7 +8,7 @@ interface FargharFileUploaderProps {
   disabled?: boolean;
 }
 
-const FargharUploadIcon: React.FC<{ size?: number }> = ({ size = 40 }) => (
+const FargharUploadIcon: React.FC<{ size?: number }> = ({ size = 32 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
     <polyline points="17 8 12 3 7 8" />
@@ -16,7 +16,7 @@ const FargharUploadIcon: React.FC<{ size?: number }> = ({ size = 40 }) => (
   </svg>
 );
 
-const FargharMusicIcon: React.FC<{ size?: number }> = ({ size = 40 }) => (
+const FargharMusicIcon: React.FC<{ size?: number }> = ({ size = 32 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 18V5l12-2v13" />
     <circle cx="6" cy="18" r="3" />
@@ -69,7 +69,7 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`
-        relative cursor-pointer rounded-2xl border-2 border-dashed p-6 sm:p-12
+        relative cursor-pointer rounded-xl min-[360px]:rounded-2xl border-2 border-dashed p-4 min-[360px]:p-6 sm:p-12
         transition-all duration-300 text-center farghar-native-touch
         ${isDragging ? 'border-purple-400 bg-purple-500/10 scale-[1.02]' : ''}
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
@@ -85,10 +85,10 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
         className="hidden"
         disabled={disabled}
       />
-      <div className="flex flex-col items-center gap-3 sm:gap-4">
+      <div className="flex flex-col items-center gap-2 min-[360px]:gap-3 sm:gap-4">
         <div
           className={`
-            w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center
+            w-11 min-[360px]:w-14 sm:w-20 h-11 min-[360px]:h-14 sm:h-20 rounded-xl min-[360px]:rounded-2xl flex items-center justify-center
             transition-all duration-300
             ${isDragging ? 'farghar-gradient scale-110 text-white' : ''}
           `}
@@ -97,18 +97,19 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
             color: 'var(--farghar-text)',
           } : undefined}
         >
-          {isDragging ? <FargharUploadIcon size={32} /> : <FargharMusicIcon size={32} />}
+          {isDragging ? <FargharUploadIcon size={24} /> : <FargharMusicIcon size={24} />}
         </div>
         <div>
-          <h3 className="text-base sm:text-xl font-semibold mb-1.5 sm:mb-2" style={{ color: 'var(--farghar-text)' }}>
+          <h3 className="text-xs min-[360px]:text-base sm:text-xl font-semibold mb-1 min-[360px]:mb-1.5 sm:mb-2 px-2" style={{ color: 'var(--farghar-text)' }}>
             {isDragging ? 'Drop files here!' : 'Drag & drop audio/video files'}
           </h3>
-          <p className="text-xs sm:text-sm mb-3 sm:mb-4" style={{ color: 'var(--farghar-text-muted)' }}>Or click to select files</p>
-          <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
+          <p className="text-[10px] min-[360px]:text-xs sm:text-sm mb-2 min-[360px]:mb-3 sm:mb-4" style={{ color: 'var(--farghar-text-muted)' }}>Or click to select files</p>
+          {/* Format badges - hidden on ultra-small screens */}
+          <div className="hidden min-[360px]:flex flex-wrap justify-center gap-1 min-[360px]:gap-1.5 sm:gap-2">
             {Farghar.SUPPORTED_FORMATS.map(format => (
               <span
                 key={format}
-                className="farghar-badge text-[10px] sm:text-xs"
+                className="farghar-badge text-[9px] min-[360px]:text-[10px] sm:text-xs"
                 style={{
                   backgroundColor: 'var(--farghar-glass-bg)',
                   color: 'var(--farghar-text-muted)',
@@ -121,9 +122,9 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
           </div>
         </div>
       </div>
-      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-2 h-2 rounded-full bg-purple-400/50 animate-pulse" />
-      <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-2 h-2 rounded-full bg-blue-400/50 animate-pulse" />
-      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-1.5 h-1.5 rounded-full bg-pink-400/50 animate-pulse" />
+      <div className="absolute top-2 min-[360px]:top-3 sm:top-4 left-2 min-[360px]:left-3 sm:left-4 w-1.5 min-[360px]:w-2 h-1.5 min-[360px]:h-2 rounded-full bg-purple-400/50 animate-pulse" />
+      <div className="absolute bottom-2 min-[360px]:bottom-3 sm:bottom-4 right-2 min-[360px]:right-3 sm:right-4 w-1.5 min-[360px]:w-2 h-1.5 min-[360px]:h-2 rounded-full bg-blue-400/50 animate-pulse" />
+      <div className="absolute top-2 min-[360px]:top-3 sm:top-4 right-2 min-[360px]:right-3 sm:right-4 w-1 min-[360px]:w-1.5 h-1 min-[360px]:h-1.5 rounded-full bg-pink-400/50 animate-pulse" />
     </div>
   );
 };
