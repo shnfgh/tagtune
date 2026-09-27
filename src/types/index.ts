@@ -48,7 +48,7 @@ export namespace Farghar {
 
   export interface AudioFile {
     id: string;
-    file: File;
+    file?: File;
     name: string;
     size: number;
     format: string;
