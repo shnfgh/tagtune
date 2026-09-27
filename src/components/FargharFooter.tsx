@@ -10,7 +10,7 @@ interface FargharFooterProps {
 }
 
 const FargharPaletteIcon: React.FC = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor" />
     <circle cx="17.5" cy="10.5" r="0.5" fill="currentColor" />
     <circle cx="8.5" cy="7.5" r="0.5" fill="currentColor" />
@@ -20,7 +20,7 @@ const FargharPaletteIcon: React.FC = () => (
 );
 
 const FargharExpandIcon: React.FC = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="15 3 21 3 21 9" />
     <polyline points="9 21 3 21 3 15" />
     <line x1="21" y1="3" x2="14" y2="10" />
@@ -29,7 +29,7 @@ const FargharExpandIcon: React.FC = () => (
 );
 
 const FargharCompressIcon: React.FC = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="4 14 10 14 10 20" />
     <polyline points="20 10 14 10 14 4" />
     <line x1="14" y1="10" x2="21" y2="3" />
@@ -38,14 +38,14 @@ const FargharCompressIcon: React.FC = () => (
 );
 
 const FargharSettingsIcon: React.FC = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="3" />
     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
   </svg>
 );
 
 const FargharInfoIcon: React.FC = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="16" x2="12" y2="12" />
     <line x1="12" y1="8" x2="12.01" y2="8" />
@@ -76,44 +76,44 @@ export const FargharFooter: React.FC<FargharFooterProps> = ({ onClearAll, isFull
   return (
     <>
       <footer
-        className="border-t mt-12"
+        className="border-t mt-8 min-[360px]:mt-12"
         style={{
           backgroundColor: 'var(--farghar-footer-bg)',
           borderColor: 'var(--farghar-footer-border)',
           paddingBottom: 'env(safe-area-inset-bottom)',
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-          {/* Mobile layout: copyright + 4 action icons */}
-          <div className="flex flex-col sm:hidden items-center gap-4">
-            <p className="text-xs text-center" style={{ color: 'var(--farghar-text-muted)' }}>
+        <div className="max-w-7xl mx-auto px-3 min-[360px]:px-4 sm:px-6 lg:px-8 py-4 min-[360px]:py-5 sm:py-6">
+          {/* Mobile layout: copyright + 2x2 grid of action icons */}
+          <div className="flex flex-col sm:hidden items-center gap-3 min-[360px]:gap-4">
+            <p className="text-[10px] min-[360px]:text-xs text-center" style={{ color: 'var(--farghar-text-muted)' }}>
               © {currentYear} Farghar. All rights reserved.
             </p>
-            <div className="flex items-center justify-center gap-2">
+            <div className="grid grid-cols-2 min-[360px]:grid-cols-4 gap-1.5 min-[360px]:gap-2 w-full min-[360px]:w-auto">
               <button
                 onClick={handleCycleTheme}
-                className="p-2 farghar-icon-btn farghar-native-touch min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2 farghar-icon-btn farghar-native-touch min-h-[40px] min-[360px]:min-h-[44px] flex items-center justify-center"
                 title="Change theme"
               >
                 <FargharPaletteIcon />
               </button>
               <button
                 onClick={onToggleFullscreen}
-                className="p-2 farghar-icon-btn farghar-native-touch min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2 farghar-icon-btn farghar-native-touch min-h-[40px] min-[360px]:min-h-[44px] flex items-center justify-center"
                 title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
               >
                 {isFullscreen ? <FargharCompressIcon /> : <FargharExpandIcon />}
               </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="p-2 farghar-icon-btn farghar-native-touch min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2 farghar-icon-btn farghar-native-touch min-h-[40px] min-[360px]:min-h-[44px] flex items-center justify-center"
                 title="Settings"
               >
                 <FargharSettingsIcon />
               </button>
               <button
                 onClick={() => setShowAbout(true)}
-                className="p-2 farghar-icon-btn farghar-native-touch min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="p-2 farghar-icon-btn farghar-native-touch min-h-[40px] min-[360px]:min-h-[44px] flex items-center justify-center"
                 title="About"
               >
                 <FargharInfoIcon />
@@ -151,21 +151,18 @@ export const FargharFooter: React.FC<FargharFooterProps> = ({ onClearAll, isFull
 
       {/* About Modal */}
       {showAbout && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 min-[400px]:p-4">
           {/* Backdrop */}
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm farghar-fade-in" onClick={() => setShowAbout(false)} />
 
           {/* Modal */}
-          <div
-            className="relative w-full max-w-md rounded-2xl shadow-2xl farghar-slide-up overflow-hidden"
-            style={{
-              backgroundColor: 'var(--farghar-bg-secondary)',
-              border: '1px solid var(--farghar-glass-border)',
-            }}
-          >
+          <div className="relative w-full h-full min-[400px]:w-auto min-[400px]:h-auto min-[400px]:max-w-md farghar-modal-panel farghar-slide-up">
             {/* Header */}
-            <div className="flex items-center justify-between p-6" style={{ borderBottom: '1px solid var(--farghar-glass-border)' }}>
-              <h2 className="text-lg font-bold" style={{ color: 'var(--farghar-text)' }}>About</h2>
+            <div
+              className="flex items-center justify-between p-4 min-[400px]:p-6"
+              style={{ borderBottom: '1px solid var(--farghar-glass-border)' }}
+            >
+              <h2 className="text-base min-[400px]:text-lg font-bold" style={{ color: 'var(--farghar-text)' }}>About</h2>
               <button
                 onClick={() => setShowAbout(false)}
                 className="p-2 farghar-icon-btn farghar-native-touch"
@@ -175,13 +172,13 @@ export const FargharFooter: React.FC<FargharFooterProps> = ({ onClearAll, isFull
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-3">
-              <p className="text-base font-semibold" style={{ color: 'var(--farghar-text)' }}>Farghar Tag Editor</p>
-              <p className="text-sm" style={{ color: 'var(--farghar-text-muted)' }}>Version 1.0.0</p>
-              <p className="text-sm" style={{ color: 'var(--farghar-text-muted)' }}>
+            <div className="p-4 min-[400px]:p-6 space-y-3">
+              <p className="text-sm min-[400px]:text-base font-semibold" style={{ color: 'var(--farghar-text)' }}>Farghar Tag Editor</p>
+              <p className="text-xs min-[400px]:text-sm" style={{ color: 'var(--farghar-text-muted)' }}>Version 1.0.0</p>
+              <p className="text-xs min-[400px]:text-sm" style={{ color: 'var(--farghar-text-muted)' }}>
                 © {currentYear} Farghar. All rights reserved.
               </p>
-              <p className="text-xs pt-3" style={{ color: 'var(--farghar-text-muted)', borderTop: '1px solid var(--farghar-glass-border)' }}>
+              <p className="text-[10px] min-[400px]:text-xs pt-3" style={{ color: 'var(--farghar-text-muted)', borderTop: '1px solid var(--farghar-glass-border)' }}>
                 Designed & Architected by Farghar
               </p>
             </div>
