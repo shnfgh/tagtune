@@ -2,7 +2,11 @@
 import { Farghar } from '../types';
 import * as mm from 'music-metadata-browser';
 
+// Dynamic import for browser-id3-writer to avoid type issues
 let ID3WriterClass: any = null;
+
+// Cache object URLs to prevent memory leaks (keyed by Uint8Array reference)
+const coverUrlCache = new Map<Uint8Array, string>();
 
 async function getID3Writer(): Promise<any> {
   if (!ID3WriterClass) {
@@ -73,7 +77,7 @@ export namespace FargharTagProcessor {
     }
   }
 
-  export async function writeTags(file: File | undefined, tags: Farghar.AudioTag, covers: Farghar.CoverArt[]): Promise<Blob> {
+  export async function writeTags(file: File, tags: Farghar.AudioTag, covers: Farghar.CoverArt[]): Promise<Blob> {
     if (!file) {
       throw new Error('File object is required for writing tags');
     }
@@ -148,10 +152,32 @@ export namespace FargharTagProcessor {
     return Farghar.SUPPORTED_FORMATS.includes(ext as Farghar.SupportedFormat);
   }
 
+  // Return cached object URL for a cover (creates one if not cached)
   export function coverToDataUrl(cover: Farghar.CoverArt | null): string {
     if (!cover || !cover.pictureData) return '';
-    const blob = new Blob([cover.pictureData as any], { type: cover.mimeType });
-    return URL.createObjectURL(blob);
+    const data = cover.pictureData as Uint8Array;
+    const cached = coverUrlCache.get(data);
+    if (cached) return cached;
+    const blob = new Blob([data as any], { type: cover.mimeType });
+    const url = URL.createObjectURL(blob);
+    coverUrlCache.set(data, url);
+    return url;
+  }
+
+  // Revoke a single cover URL by data reference
+  export function revokeCoverUrl(data: Uint8Array | null): void {
+    if (!data) return;
+    const url = coverUrlCache.get(data);
+    if (url) {
+      URL.revokeObjectURL(url);
+      coverUrlCache.delete(data);
+    }
+  }
+
+  // Revoke all cached cover URLs (call on clear all)
+  export function revokeAllCoverUrls(): void {
+    coverUrlCache.forEach(url => URL.revokeObjectURL(url));
+    coverUrlCache.clear();
   }
 
   export function coversToDataUrls(covers: Farghar.CoverArt[]): string[] {

@@ -2,6 +2,10 @@
 import React, { useState } from 'react';
 import { FargharSettingsModal } from './FargharSettingsModal';
 
+interface FargharFooterProps {
+  onClearAll?: () => void;
+}
+
 const FargharSettingsIcon: React.FC = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="3" />
@@ -15,35 +19,24 @@ const FargharHeartIcon: React.FC = () => (
   </svg>
 );
 
-export const FargharFooter: React.FC = () => {
+export const FargharFooter: React.FC<FargharFooterProps> = ({ onClearAll }) => {
   const [showSettings, setShowSettings] = useState(false);
 
   return (
     <>
-      <footer 
-        className="border-t mt-12"
-        style={{
-          backgroundColor: 'var(--farghar-footer-bg)',
-          borderColor: 'var(--farghar-footer-border)',
-        }}
-      >
+      <footer className="border-t mt-12" style={{ backgroundColor: 'var(--farghar-footer-bg)', borderColor: 'var(--farghar-footer-border)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--farghar-text-secondary)' }}>
               <span>Made with</span>
-              <span className="text-red-400"><FargharHeartIcon /></span>
+              <span style={{ color: '#f87171' }}><FargharHeartIcon /></span>
               <span>by</span>
               <span className="font-semibold farghar-gradient-text">Farghar</span>
             </div>
 
             <button
               onClick={() => setShowSettings(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm farghar-native-touch"
-              style={{
-                backgroundColor: 'var(--farghar-btn-bg)',
-                border: '1px solid var(--farghar-btn-border)',
-                color: 'var(--farghar-btn-text)',
-              }}
+              className="farghar-icon-btn flex items-center gap-2 px-4 py-2 text-sm farghar-native-touch"
             >
               <FargharSettingsIcon />
               <span>Settings</span>
@@ -52,7 +45,7 @@ export const FargharFooter: React.FC = () => {
         </div>
       </footer>
 
-      <FargharSettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
+      <FargharSettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} onClearAll={onClearAll} />
     </>
   );
 };

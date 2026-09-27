@@ -72,21 +72,12 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm farghar-fade-in"
-        onClick={onCancel}
-      />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm farghar-fade-in" onClick={onCancel} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md rounded-2xl shadow-2xl farghar-slide-up overflow-hidden" style={{ backgroundColor: 'var(--farghar-bg-secondary)', border: '1px solid var(--farghar-glass-border)' }}>
+      <div className="farghar-menu-panel relative w-full max-w-md farghar-slide-up">
         {/* Close button */}
-        <button
-          onClick={onCancel}
-          className="absolute top-4 left-4 p-1.5 rounded-lg transition-colors farghar-native-touch"
-          style={{ color: 'var(--farghar-text-muted)' }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--farghar-hover-bg)'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-        >
+        <button onClick={onCancel} className="farghar-icon-btn absolute top-4 left-4 p-1.5 farghar-native-touch">
           <FargharCloseIcon />
         </button>
 
@@ -105,18 +96,8 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
 
           {/* Actions */}
           <div className="flex gap-3">
-            <button
-              onClick={onCancel}
-              className="farghar-btn-secondary flex-1 text-sm farghar-native-touch"
-            >
-              {cancelLabel}
-            </button>
-            <button
-              onClick={onConfirm}
-              className={`${styles.confirmBtn} flex-1 text-sm farghar-native-touch`}
-            >
-              {confirmLabel}
-            </button>
+            <button onClick={onCancel} className="farghar-btn-secondary flex-1 text-sm farghar-native-touch">{cancelLabel}</button>
+            <button onClick={onConfirm} className={`${styles.confirmBtn} flex-1 text-sm farghar-native-touch`}>{confirmLabel}</button>
           </div>
         </div>
       </div>

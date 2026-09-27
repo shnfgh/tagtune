@@ -21,19 +21,27 @@ const FargharChevronIcon: React.FC<{ open: boolean }> = ({ open }) => (
   </svg>
 );
 
-const BATCH_FIELDS: { key: keyof Farghar.AudioTag; label: string }[] = [
-  { key: 'title', label: 'Title' },
-  { key: 'artist', label: 'Artist' },
-  { key: 'album', label: 'Album' },
-  { key: 'albumArtist', label: 'Album Artist' },
-  { key: 'year', label: 'Year' },
-  { key: 'genre', label: 'Genre' },
-  { key: 'composer', label: 'Composer' },
-  { key: 'lyricist', label: 'Lyricist' },
-  { key: 'arranger', label: 'Arranger' },
-  { key: 'producer', label: 'Producer' },
-  { key: 'copyright', label: 'Copyright' },
-  { key: 'publisher', label: 'Publisher' },
+// All 19 tag fields for batch editing
+const BATCH_FIELDS: { key: keyof Farghar.AudioTag; label: string; type: 'text' | 'select' | 'textarea' }[] = [
+  { key: 'title', label: 'Title', type: 'text' },
+  { key: 'artist', label: 'Artist', type: 'text' },
+  { key: 'album', label: 'Album', type: 'text' },
+  { key: 'albumArtist', label: 'Album Artist', type: 'text' },
+  { key: 'trackNumber', label: 'Track Number', type: 'text' },
+  { key: 'discNumber', label: 'Disc Number', type: 'text' },
+  { key: 'genre', label: 'Genre', type: 'select' },
+  { key: 'year', label: 'Year', type: 'text' },
+  { key: 'composer', label: 'Composer', type: 'text' },
+  { key: 'lyricist', label: 'Lyricist', type: 'text' },
+  { key: 'arranger', label: 'Arranger', type: 'text' },
+  { key: 'producer', label: 'Producer', type: 'text' },
+  { key: 'copyright', label: 'Copyright', type: 'text' },
+  { key: 'publisher', label: 'Publisher', type: 'text' },
+  { key: 'isrc', label: 'ISRC', type: 'text' },
+  { key: 'bpm', label: 'BPM', type: 'text' },
+  { key: 'key', label: 'Key', type: 'select' },
+  { key: 'comment', label: 'Comment', type: 'textarea' },
+  { key: 'lyrics', label: 'Lyrics', type: 'textarea' },
 ];
 
 export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, onBatchUpdate }) => {
@@ -55,7 +63,10 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
     selectedFields.forEach(field => {
       const key = field as keyof Farghar.AudioTag;
       const value = batchTags[key];
-      if (value) updates[key] = value;
+      // Allow empty string to clear fields
+      if (value !== undefined) {
+        updates[key] = value;
+      }
     });
     if (Object.keys(updates).length > 0) {
       onBatchUpdate(updates);
@@ -81,12 +92,12 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
         <div className="mt-4 space-y-4 farghar-fade-in">
           <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Select fields to apply to all files:</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {BATCH_FIELDS.map(({ key, label }) => (
+            {BATCH_FIELDS.map(({ key, label, type }) => (
               <div key={key} className="flex items-start gap-2">
                 <input type="checkbox" checked={selectedFields.has(key)} onChange={() => toggleField(key)} className="mt-3 w-4 h-4 rounded accent-purple-500" />
                 <div className="flex-1">
                   <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>{label}</label>
-                  {key === 'genre' ? (
+                  {type === 'select' && key === 'genre' ? (
                     <FargharSelect
                       value={(batchTags as any)[key] || ''}
                       onChange={(value) => setBatchTags(prev => ({ ...prev, [key]: value }))}
@@ -95,6 +106,24 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
                       disabled={!selectedFields.has(key)}
                       searchable={true}
                       allowCustom={true}
+                    />
+                  ) : type === 'select' && key === 'key' ? (
+                    <FargharSelect
+                      value={(batchTags as any)[key] || ''}
+                      onChange={(value) => setBatchTags(prev => ({ ...prev, [key]: value }))}
+                      options={Farghar.MUSICAL_KEYS.map(k => ({ value: k, label: k }))}
+                      placeholder="Select..."
+                      disabled={!selectedFields.has(key)}
+                      allowCustom={true}
+                      searchable={true}
+                    />
+                  ) : type === 'textarea' ? (
+                    <textarea
+                      value={(batchTags as any)[key] || ''}
+                      onChange={(e) => setBatchTags(prev => ({ ...prev, [key]: e.target.value }))}
+                      disabled={!selectedFields.has(key)}
+                      className="farghar-input text-sm resize-none h-20 disabled:opacity-50"
+                      placeholder={`New value for ${label}...`}
                     />
                   ) : (
                     <input

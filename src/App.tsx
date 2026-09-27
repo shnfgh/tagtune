@@ -1,5 +1,4 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
-// Professional Music Tag Editor with Native App Experience
 import React, { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { Farghar } from './types';
 import { FargharTagProcessor } from './utils/tagProcessor';
@@ -11,6 +10,8 @@ import { FargharFooter } from './components/FargharFooter';
 import { FargharSkeletonLoader, FargharSkeletonCard } from './components/FargharSkeleton';
 import { FargharConfirmModal } from './components/FargharConfirmModal';
 import { FargharThemeProvider } from './context/FargharThemeContext';
+import { FargharSettingsProvider, useFargharSettings } from './context/FargharSettingsContext';
+import { FargharErrorBoundary } from './components/FargharErrorBoundary';
 
 // Lazy loaded components for performance
 const FargharTagEditor = lazy(() => import('./components/FargharTagEditor').then(m => ({ default: m.FargharTagEditor })));
@@ -34,6 +35,7 @@ function FargharAppContent() {
   const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; fileId: string | null; fileName: string }>({ isOpen: false, fileId: null, fileName: '' });
   const [clearAllModal, setClearAllModal] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const { settings } = useFargharSettings();
   
   // Keep File objects in memory (cannot be stored in localStorage)
   const fileObjectsMap = useRef<Map<string, File>>(new Map());
@@ -48,8 +50,9 @@ function FargharAppContent() {
     }
   }, []);
 
-  // Save data to localStorage
+  // Save data to localStorage (respects autoSave setting)
   const saveToStorage = useCallback((filesData: Farghar.AudioFile[]) => {
+    if (!settings.autoSave) return;
     try {
       const dataToSave = filesData.map(f => ({
         id: f.id,
@@ -65,7 +68,7 @@ function FargharAppContent() {
     } catch (error) {
       console.error('Error saving to localStorage:', error);
     }
-  }, []);
+  }, [settings.autoSave]);
 
   // Load data from localStorage
   const loadFromStorage = useCallback((): any[] => {
@@ -152,13 +155,24 @@ function FargharAppContent() {
     });
   }, [saveToStorage]);
 
-  // Request file removal (show confirm modal)
+  // Request file removal (show confirm modal if enabled)
   const handleFileRemoveRequest = useCallback((id: string) => {
     const file = files.find(f => f.id === id);
     if (file) {
-      setDeleteModal({ isOpen: true, fileId: id, fileName: file.name });
+      if (settings.confirmDelete) {
+        setDeleteModal({ isOpen: true, fileId: id, fileName: file.name });
+      } else {
+        // Delete without confirmation
+        setFiles(prev => {
+          const newFiles = prev.filter(f => f.id !== id);
+          saveToStorage(newFiles);
+          return newFiles;
+        });
+        if (selectedFileId === id) setSelectedFileId(null);
+        fileObjectsMap.current.delete(id);
+      }
     }
-  }, [files]);
+  }, [files, settings.confirmDelete, selectedFileId, saveToStorage]);
 
   // Confirm file removal
   const handleFileRemoveConfirm = useCallback(() => {
@@ -169,7 +183,6 @@ function FargharAppContent() {
         return newFiles;
       });
       if (selectedFileId === deleteModal.fileId) setSelectedFileId(null);
-      // Remove File object from memory
       fileObjectsMap.current.delete(deleteModal.fileId);
     }
     setDeleteModal({ isOpen: false, fileId: null, fileName: '' });
@@ -200,6 +213,7 @@ function FargharAppContent() {
     setSelectedFileId(null);
     clearStorage();
     fileObjectsMap.current.clear();
+    FargharTagProcessor.revokeAllCoverUrls();
     setClearAllModal(false);
   }, [clearStorage]);
 
@@ -216,7 +230,10 @@ function FargharAppContent() {
   const selectedFile = files.find(f => f.id === selectedFileId);
 
   return (
-    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
+    <div
+      className="min-h-screen min-h-[100dvh] flex flex-col transition-colors duration-300"
+      style={{ backgroundColor: 'var(--farghar-bg)' }}
+    >
       {/* Background gradient */}
       <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', top: 0, left: '25%', width: '24rem', height: '24rem', background: 'rgba(168, 85, 247, 0.05)', borderRadius: '9999px', filter: 'blur(60px)' }} />
@@ -233,17 +250,23 @@ function FargharAppContent() {
           {files.length > 0 && (
             <div className="space-y-6">
               <FargharFileTable files={files} selectedFileId={selectedFileId} onSelectFile={setSelectedFileId} onRemoveFile={handleFileRemoveRequest} />
-              <Suspense fallback={<FargharSkeletonCard />}>
-                <FargharBatchEditor files={files} onBatchUpdate={handleBatchUpdate} />
-              </Suspense>
-              {selectedFile && (
+              <FargharErrorBoundary fallbackTitle="Batch Editor Error">
                 <Suspense fallback={<FargharSkeletonCard />}>
-                  <FargharTagEditor file={selectedFile} onUpdate={handleFileUpdate} onRemove={handleFileRemoveRequest} />
+                  <FargharBatchEditor files={files} onBatchUpdate={handleBatchUpdate} />
                 </Suspense>
+              </FargharErrorBoundary>
+              {selectedFile && (
+                <FargharErrorBoundary fallbackTitle="Tag Editor Error">
+                  <Suspense fallback={<FargharSkeletonCard />}>
+                    <FargharTagEditor file={selectedFile} onUpdate={handleFileUpdate} onRemove={handleFileRemoveRequest} />
+                  </Suspense>
+                </FargharErrorBoundary>
               )}
-              <Suspense fallback={<FargharSkeletonCard />}>
-                <FargharDownloadSection files={files} fileObjectsMap={fileObjectsMap} />
-              </Suspense>
+              <FargharErrorBoundary fallbackTitle="Download Section Error">
+                <Suspense fallback={<FargharSkeletonCard />}>
+                  <FargharDownloadSection files={files} fileObjectsMap={fileObjectsMap} />
+                </Suspense>
+              </FargharErrorBoundary>
               <div className="text-center">
                 <button onClick={handleClearAllRequest} className="farghar-btn-danger text-sm flex items-center gap-2 mx-auto farghar-native-touch">
                   <FargharTrashIcon />
@@ -253,7 +276,7 @@ function FargharAppContent() {
             </div>
           )}
         </main>
-        <FargharFooter />
+        <FargharFooter onClearAll={handleClearAllRequest} />
       </div>
 
       {/* Delete Confirmation Modal */}
@@ -286,7 +309,9 @@ function FargharAppContent() {
 function FargharApp() {
   return (
     <FargharThemeProvider>
-      <FargharAppContent />
+      <FargharSettingsProvider>
+        <FargharAppContent />
+      </FargharSettingsProvider>
     </FargharThemeProvider>
   );
 }

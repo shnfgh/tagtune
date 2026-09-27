@@ -61,10 +61,10 @@ export const FargharHero: React.FC<FargharHeroProps> = ({ hasFiles }) => {
   return (
     <div className="text-center py-8 sm:py-12 farghar-fade-in">
       <div className="relative inline-block mb-6">
-        <div className="w-20 h-20 sm:w-24 sm:h-24 farghar-gradient rounded-3xl flex items-center justify-center text-white farghar-pulse-glow">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 farghar-gradient rounded-3xl flex items-center justify-center farghar-pulse-glow" style={{ color: '#ffffff' }}>
           <FargharMusicNoteIcon size={48} />
         </div>
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center text-white animate-bounce">
+        <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center animate-bounce" style={{ backgroundColor: '#4ade80', color: '#ffffff' }}>
           <FargharCheckIcon />
         </div>
       </div>

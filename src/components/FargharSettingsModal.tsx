@@ -1,10 +1,11 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
-import React, { useState } from 'react';
-import { FargharConfirmModal } from './FargharConfirmModal';
+import React, { useState, useEffect } from 'react';
+import { useFargharSettings } from '../context/FargharSettingsContext';
 
 interface FargharSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onClearAll?: () => void;
 }
 
 const FargharSettingsIcon: React.FC = () => (
@@ -21,12 +22,29 @@ const FargharCloseIcon: React.FC = () => (
   </svg>
 );
 
-export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOpen, onClose }) => {
-  const [autoSave, setAutoSave] = useState(true);
-  const [confirmDelete, setConfirmDelete] = useState(true);
+// Format bytes to human-readable string
+const formatBytes = (bytes: number): string => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+};
+
+export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOpen, onClose, onClearAll }) => {
+  const { settings, setAutoSave, setConfirmDelete, refreshStorageUsage } = useFargharSettings();
   const [showAdvanced, setShowAdvanced] = useState(false);
 
+  // Refresh storage usage when modal opens
+  useEffect(() => {
+    if (isOpen) refreshStorageUsage();
+  }, [isOpen, refreshStorageUsage]);
+
   if (!isOpen) return null;
+
+  // Calculate storage percentage (assume 5MB limit for localStorage)
+  const storageLimit = 5 * 1024 * 1024; // 5MB
+  const storagePercentage = Math.min((settings.storageUsage / storageLimit) * 100, 100);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -34,22 +52,16 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm farghar-fade-in" onClick={onClose} />
 
       {/* Modal */}
-      <div 
-        className="relative w-full max-w-2xl border rounded-2xl shadow-2xl farghar-slide-up overflow-hidden max-h-[90vh] flex flex-col"
-        style={{
-          backgroundColor: 'var(--farghar-bg-secondary)',
-          borderColor: 'var(--farghar-glass-border)',
-        }}
-      >
+      <div className="farghar-menu-panel relative w-full max-w-2xl farghar-slide-up overflow-hidden" style={{ maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <div className="flex items-center justify-between p-6" style={{ borderBottom: '1px solid var(--farghar-glass-border)' }}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 farghar-gradient rounded-xl flex items-center justify-center text-white">
+            <div className="w-10 h-10 farghar-gradient rounded-xl flex items-center justify-center" style={{ color: '#ffffff' }}>
               <FargharSettingsIcon />
             </div>
-            <h2 className="text-xl font-bold text-white">Settings</h2>
+            <h2 className="text-xl font-bold" style={{ color: 'var(--farghar-text)' }}>Settings</h2>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors farghar-native-touch">
+          <button onClick={onClose} className="farghar-icon-btn p-2 farghar-native-touch">
             <FargharCloseIcon />
           </button>
         </div>
@@ -66,10 +78,11 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
                   <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Automatically save changes to localStorage</p>
                 </div>
                 <button
-                  onClick={() => setAutoSave(!autoSave)}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${autoSave ? 'bg-purple-500' : 'bg-gray-600'}`}
+                  onClick={() => setAutoSave(!settings.autoSave)}
+                  className="relative w-12 h-6 rounded-full transition-colors"
+                  style={{ backgroundColor: settings.autoSave ? '#a855f7' : 'var(--farghar-bg-tertiary)' }}
                 >
-                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${autoSave ? 'translate-x-7' : 'translate-x-1'}`} />
+                  <div className="absolute top-1 w-4 h-4 rounded-full transition-transform" style={{ backgroundColor: '#ffffff', transform: settings.autoSave ? 'translateX(1.75rem)' : 'translateX(0.25rem)' }} />
                 </button>
               </div>
 
@@ -79,10 +92,11 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
                   <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Show confirmation dialog before deleting files</p>
                 </div>
                 <button
-                  onClick={() => setConfirmDelete(!confirmDelete)}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${confirmDelete ? 'bg-purple-500' : 'bg-gray-600'}`}
+                  onClick={() => setConfirmDelete(!settings.confirmDelete)}
+                  className="relative w-12 h-6 rounded-full transition-colors"
+                  style={{ backgroundColor: settings.confirmDelete ? '#a855f7' : 'var(--farghar-bg-tertiary)' }}
                 >
-                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${confirmDelete ? 'translate-x-7' : 'translate-x-1'}`} />
+                  <div className="absolute top-1 w-4 h-4 rounded-full transition-transform" style={{ backgroundColor: '#ffffff', transform: settings.confirmDelete ? 'translateX(1.75rem)' : 'translateX(0.25rem)' }} />
                 </button>
               </div>
             </div>
@@ -90,39 +104,32 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
 
           {/* Advanced Settings */}
           <div>
-            <button
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="flex items-center justify-between w-full text-right"
-            >
+            <button onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center justify-between w-full text-right">
               <h3 className="text-sm font-semibold" style={{ color: 'var(--farghar-text)' }}>Advanced</h3>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className={`transition-transform ${showAdvanced ? 'rotate-180' : ''}`}
-              >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform" style={{ transform: showAdvanced ? 'rotate(180deg)' : 'rotate(0deg)' }}>
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </button>
 
             {showAdvanced && (
               <div className="mt-4 space-y-4 farghar-fade-in">
-                <div className="p-4 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
+                <div className="farghar-card" style={{ padding: '1rem' }}>
                   <p className="text-sm mb-2" style={{ color: 'var(--farghar-text)' }}>Storage Usage</p>
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
-                      <div className="h-full bg-purple-500 rounded-full" style={{ width: '35%' }} />
+                    <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--farghar-bg-tertiary)' }}>
+                      <div className="h-full rounded-full transition-all duration-300" style={{ width: `${storagePercentage}%`, backgroundColor: '#a855f7' }} />
                     </div>
-                    <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>35% used</span>
+                    <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>{formatBytes(settings.storageUsage)} used</span>
                   </div>
                 </div>
 
-                <button className="w-full px-4 py-3 rounded-xl text-sm transition-colors farghar-native-touch" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}>
+                <button
+                  onClick={onClearAll}
+                  className="w-full px-4 py-3 rounded-xl text-sm transition-colors farghar-native-touch"
+                  style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
+                >
                   Clear All Data
                 </button>
               </div>
@@ -132,7 +139,7 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
           {/* About */}
           <div>
             <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--farghar-text)' }}>About</h3>
-            <div className="p-4 rounded-xl space-y-2" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
+            <div className="farghar-card space-y-2" style={{ padding: '1rem' }}>
               <p className="text-sm" style={{ color: 'var(--farghar-text)' }}>Farghar Tag Editor</p>
               <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Version 1.0.0</p>
               <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Designed & Architected by Farghar</p>
@@ -141,10 +148,8 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-white/10">
-          <button onClick={onClose} className="farghar-btn-secondary text-sm farghar-native-touch">
-            Close
-          </button>
+        <div className="flex items-center justify-end gap-3 p-6" style={{ borderTop: '1px solid var(--farghar-glass-border)' }}>
+          <button onClick={onClose} className="farghar-btn-secondary text-sm farghar-native-touch">Close</button>
         </div>
       </div>
     </div>

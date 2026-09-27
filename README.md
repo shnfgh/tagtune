@@ -7,7 +7,7 @@
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61dafb?style=flat-square)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178c6?style=flat-square)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Powered%20by-Vite-646cff?style=flat-square)](https://vitejs.dev/)
-[![Custom CSS](https://img.shields.io/badge/Styled%20with-Custom%20CSS-ff69b4?style=flat-square)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Tailwind CSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS%20v4-38bdf8?style=flat-square)](https://tailwindcss.com/)
 
 **Tag it. Tune it. Done.**
 
