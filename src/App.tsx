@@ -273,7 +273,7 @@ function FargharAppContent() {
             </div>
           )}
         </main>
-        <FargharFooter onClearAll={handleClearAllRequest} />
+        <FargharFooter onClearAll={handleClearAllRequest} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
       </div>
 
       {/* Delete Confirmation Modal */}
