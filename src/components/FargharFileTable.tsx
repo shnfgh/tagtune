@@ -2,6 +2,7 @@
 import React from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
+import { useFargharSettings } from '../context/FargharSettingsContext';
 
 interface FargharFileTableProps {
   files: Farghar.AudioFile[];
@@ -55,6 +56,8 @@ const FargharStatusIndicator: React.FC<{ status: Farghar.AudioFile['status']; mo
 };
 
 export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selectedFileId, onSelectFile, onRemoveFile }) => {
+  const { settings } = useFargharSettings();
+
   if (files.length === 0) return null;
 
   return (
@@ -80,7 +83,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
               <th className="text-right py-3 px-2">Album Artist</th>
               <th className="text-right py-3 px-2">Track</th>
               <th className="text-right py-3 px-2">Format</th>
-              <th className="text-right py-3 px-2">Duration</th>
+              {settings.showDuration && <th className="text-right py-3 px-2">Duration</th>}
               <th className="text-right py-3 px-2">Status</th>
               <th className="text-right py-3 px-2 w-10"></th>
             </tr>
@@ -124,9 +127,11 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                   <td className="py-3 px-2">
                     <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
                   </td>
-                  <td className="py-3 px-2">
-                    <span className="text-sm" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
-                  </td>
+                  {settings.showDuration && (
+                    <td className="py-3 px-2">
+                      <span className="text-sm" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
+                    </td>
+                  )}
                   <td className="py-3 px-2"><FargharStatusIndicator status={file.status} modified={file.modified} /></td>
                   <td className="py-3 px-2">
                     <button
@@ -187,7 +192,9 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
               <div className="hidden min-[360px]:flex items-center justify-between mt-2 pt-2" style={{ borderTop: '1px solid var(--farghar-glass-border)' }}>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
-                  <span className="text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
+                  {settings.showDuration && (
+                    <span className="text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
+                  )}
                   {file.covers.length > 0 && (
                     <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{file.covers.length} cover</span>
                   )}
