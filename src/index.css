@@ -4,13 +4,30 @@
 @layer base {
   * { font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-  body { background-color: #030712; color: #ffffff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; min-height: 100vh; min-height: 100dvh; overscroll-behavior-y: contain; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  body { background-color: #030712; color: #ffffff; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; min-height: 100vh; min-height: 100dvh; overscroll-behavior-y: contain; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); transition: background-color 0.3s ease, color 0.3s ease; }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background-color: #111827; }
   ::-webkit-scrollbar-thumb { background-color: #374151; border-radius: 9999px; }
   ::-webkit-scrollbar-thumb:hover { background-color: #4b5563; }
   input, select, textarea, button { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
   button { touch-action: manipulation; }
+
+  /* Theme: Light */
+  [data-theme="light"] body { background-color: #ffffff; color: #111827; }
+  [data-theme="light"] .farghar-glass { background-color: rgba(0, 0, 0, 0.05); border-color: rgba(0, 0, 0, 0.1); }
+  [data-theme="light"] .farghar-input { background-color: rgba(0, 0, 0, 0.05); border-color: rgba(0, 0, 0, 0.1); color: #111827; }
+  [data-theme="light"] ::-webkit-scrollbar-track { background-color: #f3f4f6; }
+  [data-theme="light"] ::-webkit-scrollbar-thumb { background-color: #d1d5db; }
+
+  /* Theme: Warm */
+  [data-theme="warm"] body { background-color: #1a1410; color: #fef3c7; }
+  [data-theme="warm"] .farghar-glass { background-color: rgba(254, 243, 199, 0.05); border-color: rgba(254, 243, 199, 0.1); }
+  [data-theme="warm"] .farghar-input { background-color: rgba(254, 243, 199, 0.05); border-color: rgba(254, 243, 199, 0.1); color: #fef3c7; }
+
+  /* Theme: Cool */
+  [data-theme="cool"] body { background-color: #0c1929; color: #dbeafe; }
+  [data-theme="cool"] .farghar-glass { background-color: rgba(219, 234, 254, 0.05); border-color: rgba(219, 234, 254, 0.1); }
+  [data-theme="cool"] .farghar-input { background-color: rgba(219, 234, 254, 0.05); border-color: rgba(219, 234, 254, 0.1); color: #dbeafe; }
 }
 
 @layer components {

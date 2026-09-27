@@ -1,0 +1,34 @@
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+export type FargharTheme = 'light' | 'dark' | 'warm' | 'cool';
+
+interface FargharThemeContextType {
+  theme: FargharTheme;
+  setTheme: (theme: FargharTheme) => void;
+}
+
+const FargharThemeContext = createContext<FargharThemeContextType>({
+  theme: 'dark',
+  setTheme: () => {},
+});
+
+export const FargharThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState<FargharTheme>(() => {
+    const saved = localStorage.getItem('farghar_theme');
+    return (saved as FargharTheme) || 'dark';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('farghar_theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  return (
+    <FargharThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </FargharThemeContext.Provider>
+  );
+};
+
+export const useFargharTheme = () => useContext(FargharThemeContext);

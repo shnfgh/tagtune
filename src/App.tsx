@@ -10,6 +10,7 @@ import { FargharHero } from './components/FargharHero';
 import { FargharFooter } from './components/FargharFooter';
 import { FargharSkeletonLoader, FargharSkeletonCard } from './components/FargharSkeleton';
 import { FargharConfirmModal } from './components/FargharConfirmModal';
+import { FargharThemeProvider } from './context/FargharThemeContext';
 
 // Lazy loaded components for performance
 const FargharTagEditor = lazy(() => import('./components/FargharTagEditor').then(m => ({ default: m.FargharTagEditor })));
@@ -26,7 +27,7 @@ const FargharTrashIcon: React.FC = () => (
 // LocalStorage keys
 const FARGHAR_STORAGE_KEY = 'farghar_tag_editor_data';
 
-function FargharApp() {
+function FargharAppContent() {
   const [files, setFiles] = useState<Farghar.AudioFile[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -252,6 +253,14 @@ function FargharApp() {
         variant="danger"
       />
     </div>
+  );
+}
+
+function FargharApp() {
+  return (
+    <FargharThemeProvider>
+      <FargharAppContent />
+    </FargharThemeProvider>
   );
 }
 
