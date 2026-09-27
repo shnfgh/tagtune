@@ -7,7 +7,7 @@
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61dafb?style=flat-square)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178c6?style=flat-square)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Powered%20by-Vite-646cff?style=flat-square)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Styled%20with-Tailwind-38bdf8?style=flat-square)](https://tailwindcss.com/)
+[![Custom CSS](https://img.shields.io/badge/Styled%20with-Custom%20CSS-ff69b4?style=flat-square)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
 **Tag it. Tune it. Done.**
 
@@ -115,7 +115,7 @@
   - استفاده کامل از CSS Variables برای تمام رنگ‌ها (30+ متغیر)
   - تغییر تم در تمام بخش‌ها و کامپوننت‌ها (هدر، فوتر، کارت‌ها، فرم‌ها، دکمه‌ها، متن‌ها)
   - هدر و فوتر با رنگ‌های solid (بدون backdrop-filter)
-  - تمام کلاس‌های Tailwind با inline style جایگزین شده‌اند
+  - سیستم استایل‌دهی سفارشی با CSS خالص (بدون Tailwind)
 - **هدر سه بخشی** با پس‌زمینه solid و shadow:
   - سمت راست: تغییر تم با dropdown
   - مرکز: لوگو و نام پروژه + subtitle ریز
@@ -136,7 +136,7 @@
 - **React 18** - کتابخانه UI
 - **TypeScript** - تایپ‌سیفتی
 - **Vite** - بیلد ابزار سریع
-- **Tailwind CSS v4** - استایل‌دهی
+- **Custom CSS** - سیستم استایل‌دهی سفارشی با CSS Variables
 - **Vazirmatn** - فونت فارسی
 
 ### پردازش فایل
