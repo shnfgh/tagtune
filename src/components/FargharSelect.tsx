@@ -22,146 +22,176 @@ const FargharChevronDownIcon: React.FC = () => (
   </svg>
 );
 
-const FargharSearchIcon: React.FC = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="11" cy="11" r="8" />
-    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
-);
-
 const FargharCheckIcon: React.FC = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12" />
   </svg>
 );
 
-const FargharPlusIcon: React.FC = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
-
 export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, options, placeholder = 'Select...', disabled = false, searchable = false, allowCustom = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [inputValue, setInputValue] = useState(value);
   const [localOptions, setLocalOptions] = useState<FargharSelectOption[]>(options);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sync value with inputValue
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   // Update localOptions when options prop changes
   useEffect(() => {
     setLocalOptions(options);
   }, [options]);
 
-  const selectedOption = localOptions.find(opt => opt.value === value);
-
-  const filteredOptions = searchable && searchQuery
-    ? localOptions.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
+  // Filtered options based on input
+  const filteredOptions = inputValue
+    ? localOptions.filter(opt => opt.label.toLowerCase().includes(inputValue.toLowerCase()))
     : localOptions;
 
-  // Check if search query is a custom value (not in options)
-  const isCustomValue = allowCustom && searchQuery && searchQuery.trim() && !localOptions.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
+  // Check if current input is a custom value
+  const isCustomValue = allowCustom && inputValue && inputValue.trim() && !localOptions.some(opt => opt.value.toLowerCase() === inputValue.toLowerCase());
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        // If there's a custom value and allowCustom is true, save it
+        if (isCustomValue && allowCustom) {
+          onChange(inputValue);
+          if (!localOptions.some(opt => opt.value === inputValue)) {
+            setLocalOptions(prev => [...prev, { value: inputValue, label: inputValue }]);
+          }
+        } else {
+          // Reset to current value
+          setInputValue(value);
+        }
         setIsOpen(false);
-        setSearchQuery('');
+        setHighlightedIndex(-1);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [inputValue, value, isCustomValue, allowCustom, onChange, localOptions]);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    setIsOpen(true);
+    setHighlightedIndex(-1);
   }, []);
 
-  // Focus search input when dropdown opens
-  useEffect(() => {
-    if (isOpen && searchable && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current?.focus(), 50);
-    }
-    if (!isOpen) setSearchQuery('');
-  }, [isOpen, searchable]);
-
   const handleSelect = useCallback((optionValue: string) => {
+    setInputValue(optionValue);
     onChange(optionValue);
     setIsOpen(false);
-    setSearchQuery('');
+    setHighlightedIndex(-1);
   }, [onChange]);
 
-  const handleToggle = useCallback(() => {
-    if (!disabled) setIsOpen(prev => !prev);
-  }, [disabled]);
+  const handleFocus = useCallback(() => {
+    setIsOpen(true);
+  }, []);
 
-  const handleCustomAdd = useCallback(() => {
-    if (searchQuery && searchQuery.trim()) {
-      // Add to localOptions if not already exists
-      const exists = localOptions.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
-      if (!exists) {
-        setLocalOptions(prev => [...prev, { value: searchQuery, label: searchQuery }]);
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') {
+        setIsOpen(true);
+        e.preventDefault();
       }
-      onChange(searchQuery);
-      setIsOpen(false);
-      setSearchQuery('');
+      return;
     }
-  }, [searchQuery, onChange, localOptions]);
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex(prev => {
+          const maxIndex = filteredOptions.length + (isCustomValue ? 1 : 0) - 1;
+          return prev < maxIndex ? prev + 1 : 0;
+        });
+        break;
+
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex(prev => {
+          const maxIndex = filteredOptions.length + (isCustomValue ? 1 : 0) - 1;
+          return prev > 0 ? prev - 1 : maxIndex;
+        });
+        break;
+
+      case 'Enter':
+        e.preventDefault();
+        if (highlightedIndex >= 0) {
+          if (highlightedIndex < filteredOptions.length) {
+            // Select from filtered options
+            handleSelect(filteredOptions[highlightedIndex].value);
+          } else if (isCustomValue && allowCustom) {
+            // Add custom value
+            onChange(inputValue);
+            if (!localOptions.some(opt => opt.value === inputValue)) {
+              setLocalOptions(prev => [...prev, { value: inputValue, label: inputValue }]);
+            }
+            setIsOpen(false);
+            setHighlightedIndex(-1);
+          }
+        } else if (isCustomValue && allowCustom) {
+          // Add custom value directly
+          onChange(inputValue);
+          if (!localOptions.some(opt => opt.value === inputValue)) {
+            setLocalOptions(prev => [...prev, { value: inputValue, label: inputValue }]);
+          }
+          setIsOpen(false);
+          setHighlightedIndex(-1);
+        } else if (filteredOptions.length > 0) {
+          // Select first option
+          handleSelect(filteredOptions[0].value);
+        }
+        break;
+
+      case 'Escape':
+        e.preventDefault();
+        setInputValue(value);
+        setIsOpen(false);
+        setHighlightedIndex(-1);
+        break;
+    }
+  }, [isOpen, filteredOptions, highlightedIndex, isCustomValue, allowCustom, inputValue, value, onChange, localOptions, handleSelect]);
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Trigger Button */}
-      <button
-        type="button"
-        onClick={handleToggle}
-        disabled={disabled}
-        className={`
-          w-full flex items-center justify-between px-4 py-3 text-sm rounded-xl border
-          transition-all duration-200 text-right
-          ${disabled ? 'opacity-50 cursor-not-allowed bg-white/5 border-white/10 text-gray-500' : 'bg-white/5 border-white/10 text-white hover:border-purple-400/50 cursor-pointer'}
-          ${isOpen ? 'border-purple-500/50 shadow-[0_0_0_2px_rgba(168,85,247,0.3)]' : ''}
-        `}
-      >
-        <span className={`truncate ${!selectedOption ? 'text-gray-500' : ''}`}>
-          {selectedOption ? selectedOption.label : placeholder}
-        </span>
-        <span className={`flex-shrink-0 mr-2 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+      {/* Input Field */}
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          placeholder={placeholder}
+          className={`
+            w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 text-right
+            ${disabled ? 'opacity-50 cursor-not-allowed bg-white/5 border-white/10 text-gray-500' : 'bg-white/5 border-white/10 text-white hover:border-purple-400/50'}
+            ${isOpen ? 'border-purple-500/50 shadow-[0_0_0_2px_rgba(168,85,247,0.3)]' : ''}
+          `}
+        />
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
           <FargharChevronDownIcon />
-        </span>
-      </button>
+        </div>
+      </div>
 
       {/* Dropdown */}
       {isOpen && (
         <div className="absolute z-50 mt-2 w-full bg-gray-900 border border-white/10 rounded-xl shadow-2xl shadow-black/50 overflow-hidden farghar-fade-in">
-          {/* Search Input */}
-          {searchable && (
-            <div className="p-2 border-b border-white/10">
-              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg">
-                <span className="text-gray-400"><FargharSearchIcon /></span>
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && isCustomValue) {
-                      e.preventDefault();
-                      handleCustomAdd();
-                    }
-                  }}
-                  placeholder="Search or type custom value..."
-                  className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 outline-none"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Options List */}
           <div className="max-h-60 overflow-y-auto py-1">
             {/* Clear option */}
             {value && (
               <button
                 type="button"
                 onClick={() => handleSelect('')}
-                className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-right"
+                className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-right ${highlightedIndex === -2 ? 'bg-red-500/10' : ''}`}
               >
                 <span>Clear selection</span>
               </button>
@@ -171,7 +201,7 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
               <div className="px-4 py-3 text-sm text-gray-500 text-center">No results found</div>
             ) : (
               <>
-                {filteredOptions.map(option => (
+                {filteredOptions.map((option, index) => (
                   <button
                     key={option.value}
                     type="button"
@@ -180,7 +210,9 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                       w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right
                       ${option.value === value
                         ? 'bg-purple-500/20 text-purple-300'
-                        : 'text-gray-300 hover:bg-white/5'
+                        : highlightedIndex === index
+                          ? 'bg-white/10 text-white'
+                          : 'text-gray-300 hover:bg-white/5'
                       }
                     `}
                   >
@@ -195,11 +227,24 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                 {isCustomValue && (
                   <button
                     type="button"
-                    onClick={handleCustomAdd}
-                    className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-green-400 hover:bg-green-500/10 transition-colors text-right border-t border-white/10 mt-1 pt-3"
+                    onClick={() => {
+                      onChange(inputValue);
+                      if (!localOptions.some(opt => opt.value === inputValue)) {
+                        setLocalOptions(prev => [...prev, { value: inputValue, label: inputValue }]);
+                      }
+                      setIsOpen(false);
+                      setHighlightedIndex(-1);
+                    }}
+                    className={`
+                      w-full flex items-center gap-2 px-4 py-2.5 text-sm text-green-400 hover:bg-green-500/10 transition-colors text-right border-t border-white/10 mt-1
+                      ${highlightedIndex === filteredOptions.length ? 'bg-green-500/10' : ''}
+                    `}
                   >
-                    <FargharPlusIcon />
-                    <span>Add custom: "{searchQuery}"</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span>Add "{inputValue}" as custom value</span>
                   </button>
                 )}
               </>
