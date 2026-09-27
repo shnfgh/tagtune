@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useFargharTheme, FargharTheme } from '../context/FargharThemeContext';
 
 interface FargharHeaderProps {
-  fileCount: number;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
 }
@@ -78,7 +77,7 @@ const FargharCheckIcon: React.FC = () => (
   </svg>
 );
 
-export const FargharHeader: React.FC<FargharHeaderProps> = ({ fileCount, isFullscreen, onToggleFullscreen }) => {
+export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onToggleFullscreen }) => {
   const { theme, setTheme } = useFargharTheme();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
 
