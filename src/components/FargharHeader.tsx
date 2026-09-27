@@ -7,9 +7,8 @@ interface FargharHeaderProps {
   onToggleFullscreen: () => void;
 }
 
-// Theme icons (each theme has a unique icon)
 const FargharSunIcon: React.FC = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="4" />
     <line x1="12" y1="2" x2="12" y2="4" />
     <line x1="12" y1="20" x2="12" y2="22" />
@@ -23,19 +22,19 @@ const FargharSunIcon: React.FC = () => (
 );
 
 const FargharMoonIcon: React.FC = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
   </svg>
 );
 
 const FargharFlameIcon: React.FC = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
   </svg>
 );
 
 const FargharSnowflakeIcon: React.FC = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="2" x2="12" y2="22" />
     <line x1="2" y1="12" x2="22" y2="12" />
     <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
@@ -48,7 +47,7 @@ const FargharSnowflakeIcon: React.FC = () => (
 );
 
 const FargharExpandIcon: React.FC = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="15 3 21 3 21 9" />
     <polyline points="9 21 3 21 3 15" />
     <line x1="21" y1="3" x2="14" y2="10" />
@@ -57,7 +56,7 @@ const FargharExpandIcon: React.FC = () => (
 );
 
 const FargharCompressIcon: React.FC = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="4 14 10 14 10 20" />
     <polyline points="20 10 14 10 14 4" />
     <line x1="14" y1="10" x2="21" y2="3" />
@@ -66,13 +65,13 @@ const FargharCompressIcon: React.FC = () => (
 );
 
 const FargharChevronDownIcon: React.FC = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="6 9 12 15 18 9" />
   </svg>
 );
 
 const FargharCheckIcon: React.FC = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12" />
   </svg>
 );
@@ -99,13 +98,13 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onTo
         boxShadow: `0 4px 6px -1px var(--farghar-header-shadow)`,
       }}
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[68px] sm:h-20 gap-2">
+      <div className="max-w-7xl mx-auto px-2 min-[360px]:px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 min-[360px]:h-[68px] sm:h-20 gap-1.5 min-[360px]:gap-2">
           {/* Right: Theme Switcher */}
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setShowThemeMenu(!showThemeMenu)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all farghar-native-touch"
+              className="flex items-center gap-1.5 min-[360px]:gap-2 px-2 min-[360px]:px-3 py-1.5 min-[360px]:py-2 rounded-lg transition-all farghar-native-touch"
               style={{
                 backgroundColor: 'var(--farghar-btn-bg)',
                 border: '1px solid var(--farghar-btn-border)',
@@ -114,12 +113,12 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onTo
               title="Change Theme"
             >
               {currentTheme?.icon}
-              <span className="hidden sm:inline text-sm">{currentTheme?.label}</span>
+              <span className="hidden min-[500px]:inline text-sm">{currentTheme?.label}</span>
               <FargharChevronDownIcon />
             </button>
 
             {showThemeMenu && (
-              <div className="absolute top-full mt-2 right-0 w-48 farghar-menu-panel farghar-fade-in">
+              <div className="absolute top-full mt-1.5 min-[360px]:mt-2 right-0 w-40 min-[360px]:w-48 farghar-menu-panel farghar-fade-in">
                 {themes.map(t => {
                   const isActive = theme === t.value;
                   return (
@@ -129,7 +128,7 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onTo
                         setTheme(t.value);
                         setShowThemeMenu(false);
                       }}
-                      className={`farghar-menu-item w-full flex items-center gap-3 px-4 py-3 text-sm text-right ${isActive ? 'bg-purple-500/20 text-purple-300' : ''}`}
+                      className={`farghar-menu-item w-full flex items-center gap-2 min-[360px]:gap-3 px-3 min-[360px]:px-4 py-2.5 min-[360px]:py-3 text-xs min-[360px]:text-sm text-right ${isActive ? 'bg-purple-500/20 text-purple-300' : ''}`}
                     >
                       {t.icon}
                       <span>{t.label}</span>
@@ -145,19 +144,19 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onTo
             )}
           </div>
 
-          {/* Center: Site Title (3-tier responsive layout) */}
+          {/* Center: Site Title */}
           <div className="flex-1 flex flex-col items-center justify-center min-w-0">
             {/* Desktop (>= 640px): single-line full title */}
             <h1 className="hidden sm:block text-2xl font-bold farghar-gradient-text truncate max-w-full">
               Farghar Tag Editor
             </h1>
-            {/* Mobile large (>= 380px): brand name on first line */}
-            <h1 className="sm:hidden text-base font-bold farghar-gradient-text leading-tight truncate max-w-full">
+            {/* Mobile: brand name on first line */}
+            <h1 className="sm:hidden text-sm min-[360px]:text-base font-bold farghar-gradient-text leading-tight truncate max-w-full">
               Farghar
             </h1>
-            {/* Mobile large (>= 380px): uppercase subtitle on second line */}
+            {/* Mobile (>= 360px): uppercase subtitle on second line */}
             <span
-              className="sm:hidden hidden min-[380px]:block text-[9px] font-medium tracking-[0.15em] uppercase leading-tight mt-0.5"
+              className="sm:hidden hidden min-[360px]:block text-[9px] font-medium tracking-[0.15em] uppercase leading-tight mt-0.5"
               style={{ color: 'var(--farghar-text-muted)' }}
             >
               Tag Editor
@@ -168,7 +167,7 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onTo
           <div className="flex-shrink-0">
             <button
               onClick={onToggleFullscreen}
-              className="p-2 farghar-icon-btn farghar-native-touch"
+              className="p-1.5 min-[360px]:p-2 farghar-icon-btn farghar-native-touch"
               title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
             >
               {isFullscreen ? <FargharCompressIcon /> : <FargharExpandIcon />}
