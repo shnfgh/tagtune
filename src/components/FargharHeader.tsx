@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React from 'react';
 
 interface FargharHeaderProps {
@@ -28,7 +28,7 @@ const FargharLockIcon: React.FC = () => (
 
 export const FargharHeader: React.FC<FargharHeaderProps> = ({ fileCount }) => {
   return (
-    <header className="sticky top-0 z-50 farghar-glass border-b border-white/5">
+    <header className="sticky top-0 z-50 farghar-glass border-b border-white/5 farghar-native-touch">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           <div className="flex items-center gap-3">
@@ -36,8 +36,8 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ fileCount }) => {
               <FargharLogoIcon />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold farghar-gradient-text">TagTune</h1>
-              <p className="text-xs text-gray-400 hidden sm:block">Tag it. Tune it. Done.</p>
+              <h1 className="text-xl sm:text-2xl font-bold farghar-gradient-text">Farghar Tag Editor</h1>
+              <p className="text-xs text-gray-400 hidden sm:block">Professional Music Tag Editor</p>
             </div>
           </div>
           <div className="flex items-center gap-4">

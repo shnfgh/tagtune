@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
@@ -81,7 +81,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                 <tr
                   key={file.id}
                   onClick={() => onSelectFile(file.id)}
-                  className={`border-b border-white/5 cursor-pointer transition-colors ${isSelected ? 'bg-purple-500/10' : 'hover:bg-white/5'}`}
+                  className={`border-b border-white/5 cursor-pointer transition-all duration-200 farghar-native-touch ${isSelected ? 'bg-purple-500/10' : 'hover:bg-white/5'}`}
                 >
                   <td className="py-3 px-2 text-sm text-gray-500">{index + 1}</td>
                   <td className="py-3 px-2">
@@ -118,7 +118,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                   <td className="py-3 px-2">
                     <button
                       onClick={(e) => { e.stopPropagation(); onRemoveFile(file.id); }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-500 hover:text-red-400 transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-gray-500 hover:text-red-400 transition-colors farghar-native-touch"
                     >
                       <FargharCloseIcon />
                     </button>
@@ -140,7 +140,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
               key={file.id}
               onClick={() => onSelectFile(file.id)}
               className={`
-                flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors
+                flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 farghar-native-touch
                 ${isSelected ? 'bg-purple-500/10 border border-purple-500/30' : 'bg-white/5 hover:bg-white/10'}
               `}
             >

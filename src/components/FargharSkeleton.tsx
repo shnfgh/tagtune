@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React from 'react';
 
 export const FargharSkeletonRow: React.FC = () => {

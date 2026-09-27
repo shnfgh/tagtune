@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React from 'react';
 
 const FargharMusicNoteIcon: React.FC = () => (
@@ -19,12 +19,12 @@ export const FargharFooter: React.FC = () => {
               <div className="w-8 h-8 farghar-gradient rounded-lg flex items-center justify-center text-white">
                 <FargharMusicNoteIcon />
               </div>
-              <span className="font-bold farghar-gradient-text">TagTune</span>
+              <span className="font-bold farghar-gradient-text">Farghar Tag Editor</span>
             </div>
             <p className="text-sm text-gray-400">
-              Online music tag and cover editor.
+              Professional online music tag editor.
               <br />
-              Tag it. Tune it. Done.
+              Designed & Architected by Farghar.
             </p>
           </div>
           <div>
@@ -52,7 +52,7 @@ export const FargharFooter: React.FC = () => {
             Designed & Architected by <span className="text-purple-400 font-medium">Farghar</span>
           </p>
           <p className="text-xs text-gray-500">
-            TagTune - Online MP3 Tag Editor {new Date().getFullYear()}
+            Farghar Tag Editor {new Date().getFullYear()}
           </p>
         </div>
       </div>

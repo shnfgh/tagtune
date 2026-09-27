@@ -1,5 +1,5 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
-// Tag it. Tune it. Done.
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Professional Music Tag Editor with Native App Experience
 import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import { Farghar } from './types';
 import { FargharTagProcessor } from './utils/tagProcessor';
@@ -79,13 +79,13 @@ function FargharApp() {
   const selectedFile = files.find(f => f.id === selectedFileId);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-950">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col bg-gray-950">
       {/* Background gradient */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
       </div>
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-screen min-h-[100dvh]">
         <FargharHeader fileCount={files.length} />
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <FargharHero hasFiles={files.length > 0} />
@@ -108,7 +108,7 @@ function FargharApp() {
                 <FargharDownloadSection files={files} />
               </Suspense>
               <div className="text-center">
-                <button onClick={handleClearAll} className="farghar-btn-danger text-sm flex items-center gap-2 mx-auto">
+                <button onClick={handleClearAll} className="farghar-btn-danger text-sm flex items-center gap-2 mx-auto farghar-native-touch">
                   <FargharTrashIcon />
                   Clear All Files
                 </button>

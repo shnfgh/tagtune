@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React, { useCallback, useRef, useState } from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
@@ -70,7 +70,7 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
       onDrop={handleDrop}
       className={`
         relative cursor-pointer rounded-2xl border-2 border-dashed p-8 sm:p-12
-        transition-all duration-300 text-center
+        transition-all duration-300 text-center farghar-native-touch
         ${isDragging ? 'border-purple-400 bg-purple-500/10 scale-[1.02]' : 'border-white/20 hover:border-purple-400/50 hover:bg-white/5'}
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `}
