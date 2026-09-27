@@ -12,15 +12,24 @@ interface FargharBatchEditorProps {
   onBatchUpdate: (updates: Partial<Farghar.AudioTag>) => void;
 }
 
+const BATCH_FIELDS: { key: keyof Farghar.AudioTag; label: string; icon: string }[] = [
+  { key: 'title', label: 'عنوان', icon: '🎵' },
+  { key: 'artist', label: 'هنرمند', icon: '🎤' },
+  { key: 'album', label: 'آلبوم', icon: '💿' },
+  { key: 'albumArtist', label: 'هنرمند آلبوم', icon: '👤' },
+  { key: 'year', label: 'سال', icon: '📅' },
+  { key: 'genre', label: 'ژانر', icon: '🎸' },
+  { key: 'composer', label: 'آهنگساز', icon: '🎼' },
+  { key: 'lyricist', label: 'ترانه‌سرا', icon: '✍️' },
+  { key: 'arranger', label: 'تنظیم‌کننده', icon: '🎹' },
+  { key: 'producer', label: 'تهیه‌کننده', icon: '🎧' },
+  { key: 'copyright', label: 'کپی‌رایت', icon: '©' },
+  { key: 'publisher', label: 'ناشر', icon: '🏢' },
+];
+
 export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, onBatchUpdate }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [batchTags, setBatchTags] = useState<Partial<Farghar.AudioTag>>({
-    title: '',
-    artist: '',
-    album: '',
-    year: '',
-    genre: '',
-  });
+  const [batchTags, setBatchTags] = useState<Partial<Farghar.AudioTag>>({});
   const [selectedFields, setSelectedFields] = useState<Set<string>>(new Set());
 
   const toggleField = (field: string) => {
@@ -36,13 +45,14 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
     const updates: Partial<Farghar.AudioTag> = {};
     selectedFields.forEach(field => {
       const key = field as keyof Farghar.AudioTag;
-      if (batchTags[key]) {
-        updates[key] = batchTags[key];
+      const value = batchTags[key];
+      if (value) {
+        updates[key] = value;
       }
     });
     if (Object.keys(updates).length > 0) {
       onBatchUpdate(updates);
-      setBatchTags({ title: '', artist: '', album: '', year: '', genre: '' });
+      setBatchTags({});
       setSelectedFields(new Set());
     }
   };
@@ -68,55 +78,45 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
       {isOpen && (
         <div className="mt-4 space-y-4 farghar-fade-in">
           <p className="text-xs text-gray-400">
-            فیلدهایی که می‌خواهید تغییر دهید را انتخاب کنید و مقدار جدید را وارد کنید:
+            فیلدهایی که می‌خواهید روی همه فایل‌ها اعمال شوند را انتخاب کنید:
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {(['title', 'artist', 'album', 'year', 'genre'] as const).map(field => {
-              const labels: Record<string, string> = {
-                title: 'عنوان',
-                artist: 'هنرمند',
-                album: 'آلبوم',
-                year: 'سال',
-                genre: 'ژانر',
-              };
-
-              return (
-                <div key={field} className="flex items-start gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedFields.has(field)}
-                    onChange={() => toggleField(field)}
-                    className="mt-3 w-4 h-4 rounded accent-purple-500"
-                  />
-                  <div className="flex-1">
-                    <label className="block text-xs text-gray-400 mb-1.5">{labels[field]}</label>
-                    {field === 'genre' ? (
-                      <select
-                        value={batchTags[field] || ''}
-                        onChange={(e) => setBatchTags(prev => ({ ...prev, [field]: e.target.value }))}
-                        disabled={!selectedFields.has(field)}
-                        className="farghar-input text-sm disabled:opacity-50"
-                      >
-                        <option value="">انتخاب...</option>
-                        {Farghar.GENRES.map(g => (
-                          <option key={g} value={g}>{g}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        type="text"
-                        value={batchTags[field] || ''}
-                        onChange={(e) => setBatchTags(prev => ({ ...prev, [field]: e.target.value }))}
-                        disabled={!selectedFields.has(field)}
-                        className="farghar-input text-sm disabled:opacity-50"
-                        placeholder={`مقدار جدید برای ${labels[field]}...`}
-                      />
-                    )}
-                  </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {BATCH_FIELDS.map(({ key, label, icon }) => (
+              <div key={key} className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedFields.has(key)}
+                  onChange={() => toggleField(key)}
+                  className="mt-3 w-4 h-4 rounded accent-purple-500"
+                />
+                <div className="flex-1">
+                  <label className="block text-xs text-gray-400 mb-1.5">{icon} {label}</label>
+                  {key === 'genre' ? (
+                    <select
+                      value={(batchTags as any)[key] || ''}
+                      onChange={(e) => setBatchTags(prev => ({ ...prev, [key]: e.target.value }))}
+                      disabled={!selectedFields.has(key)}
+                      className="farghar-input text-sm disabled:opacity-50"
+                    >
+                      <option value="">انتخاب...</option>
+                      {Farghar.GENRES.map(g => (
+                        <option key={g} value={g}>{g}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={(batchTags as any)[key] || ''}
+                      onChange={(e) => setBatchTags(prev => ({ ...prev, [key]: e.target.value }))}
+                      disabled={!selectedFields.has(key)}
+                      className="farghar-input text-sm disabled:opacity-50"
+                      placeholder={`مقدار جدید برای ${label}...`}
+                    />
+                  )}
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
           <button

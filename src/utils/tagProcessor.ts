@@ -29,12 +29,22 @@ export namespace FargharTagProcessor {
         title: common.title || '',
         artist: common.artist || '',
         album: common.album || '',
-        year: common.year ? String(common.year) : '',
+        albumArtist: common.albumartist || '',
+        trackNumber: common.track && common.track.no ? String(common.track.no) : '',
+        discNumber: common.disk && common.disk.no ? String(common.disk.no) : '',
         genre: common.genre ? (Array.isArray(common.genre) ? common.genre[0] : common.genre) : '',
-        track: common.track && common.track.no ? String(common.track.no) : '',
+        year: common.year ? String(common.year) : '',
         composer: common.composer ? (Array.isArray(common.composer) ? common.composer[0] : common.composer) : '',
+        lyricist: common.lyricist ? (Array.isArray(common.lyricist) ? common.lyricist[0] : common.lyricist) : '',
+        arranger: (common as any).arranger || '',
+        producer: (common as any).producer || '',
+        copyright: common.copyright || '',
+        publisher: (common as any).publisher || '',
         comment: common.comment ? (Array.isArray(common.comment) ? common.comment[0] : common.comment) : '',
+        lyrics: common.lyrics ? (Array.isArray(common.lyrics) ? common.lyrics[0] : common.lyrics) : '',
+        isrc: (common as any).isrc ? (Array.isArray((common as any).isrc) ? (common as any).isrc[0] : (common as any).isrc) : '',
         bpm: common.bpm ? String(common.bpm) : '',
+        key: (common as any).key || '',
       };
 
       let cover: Farghar.CoverArt | null = null;
@@ -56,10 +66,7 @@ export namespace FargharTagProcessor {
     } catch (error) {
       console.error('Error reading tags:', error);
       return {
-        tags: {
-          title: '', artist: '', album: '', year: '',
-          genre: '', track: '', composer: '', comment: '', bpm: ''
-        },
+        tags: { ...Farghar.EMPTY_TAG },
         cover: null,
         duration: 0,
       };
@@ -75,12 +82,22 @@ export namespace FargharTagProcessor {
     if (tags.title) writer.setFrame('TIT2', tags.title);
     if (tags.artist) writer.setFrame('TPE1', [tags.artist]);
     if (tags.album) writer.setFrame('TALB', tags.album);
+    if (tags.albumArtist) writer.setFrame('TPE2', [tags.albumArtist]);
     if (tags.year) writer.setFrame('TYER', tags.year);
     if (tags.genre) writer.setFrame('TCON', [tags.genre]);
-    if (tags.track) writer.setFrame('TRCK', tags.track);
+    if (tags.trackNumber) writer.setFrame('TRCK', tags.trackNumber);
+    if (tags.discNumber) writer.setFrame('TPOS', tags.discNumber);
     if (tags.composer) writer.setFrame('TCOM', [tags.composer]);
+    if (tags.lyricist) writer.setFrame('TEXT', [tags.lyricist]);
+    if (tags.arranger) writer.setFrame('TPE4', [tags.arranger]);
+    if (tags.producer) writer.setFrame('TPE3', [tags.producer]);
+    if (tags.copyright) writer.setFrame('TCOP', tags.copyright);
+    if (tags.publisher) writer.setFrame('TPUB', tags.publisher);
     if (tags.comment) writer.setFrame('COMM', { description: '', text: tags.comment });
+    if (tags.lyrics) writer.setFrame('USLT', { description: '', lyrics: tags.lyrics });
+    if (tags.isrc) writer.setFrame('TSRC', tags.isrc);
     if (tags.bpm) writer.setFrame('TBPM', tags.bpm);
+    if (tags.key) writer.setFrame('TKEY', tags.key);
 
     // Set cover art
     if (cover && cover.data) {

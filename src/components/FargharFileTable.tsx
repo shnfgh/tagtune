@@ -45,6 +45,8 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({
               <th className="text-right py-3 px-2">عنوان</th>
               <th className="text-right py-3 px-2">هنرمند</th>
               <th className="text-right py-3 px-2">آلبوم</th>
+              <th className="text-right py-3 px-2">هنرمند آلبوم</th>
+              <th className="text-right py-3 px-2">ترک</th>
               <th className="text-right py-3 px-2">فرمت</th>
               <th className="text-right py-3 px-2">مدت</th>
               <th className="text-right py-3 px-2">وضعیت</th>
@@ -88,6 +90,16 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({
                   <td className="py-3 px-2">
                     <span className="text-sm text-gray-300 truncate block max-w-[150px]">
                       {file.tags.album || '—'}
+                    </span>
+                  </td>
+                  <td className="py-3 px-2">
+                    <span className="text-sm text-gray-300 truncate block max-w-[150px]">
+                      {file.tags.albumArtist || '—'}
+                    </span>
+                  </td>
+                  <td className="py-3 px-2">
+                    <span className="text-sm text-gray-300 truncate block max-w-[100px]">
+                      {file.tags.trackNumber || '—'}
                     </span>
                   </td>
                   <td className="py-3 px-2">
