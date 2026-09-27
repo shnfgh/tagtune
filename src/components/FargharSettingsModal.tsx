@@ -1,6 +1,5 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React, { useState } from 'react';
-import { FargharConfirmModal } from './FargharConfirmModal';
 
 interface FargharSettingsModalProps {
   isOpen: boolean;
@@ -21,6 +20,19 @@ const FargharCloseIcon: React.FC = () => (
   </svg>
 );
 
+const FargharChevronDownIcon: React.FC = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
+const FargharTrashIcon: React.FC = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </svg>
+);
+
 export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOpen, onClose }) => {
   const [autoSave, setAutoSave] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState(true);
@@ -34,22 +46,28 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm farghar-fade-in" onClick={onClose} />
 
       {/* Modal */}
-      <div 
-        className="relative w-full max-w-2xl border rounded-2xl shadow-2xl farghar-slide-up overflow-hidden max-h-[90vh] flex flex-col"
+      <div
+        className="relative w-full max-w-2xl rounded-2xl shadow-2xl farghar-slide-up overflow-hidden max-h-[90vh] flex flex-col"
         style={{
           backgroundColor: 'var(--farghar-bg-secondary)',
-          borderColor: 'var(--farghar-glass-border)',
+          border: '1px solid var(--farghar-glass-border)',
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <div
+          className="flex items-center justify-between p-6"
+          style={{ borderBottom: '1px solid var(--farghar-glass-border)' }}
+        >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 farghar-gradient rounded-xl flex items-center justify-center text-white">
               <FargharSettingsIcon />
             </div>
-            <h2 className="text-xl font-bold text-white">Settings</h2>
+            <h2 className="text-xl font-bold" style={{ color: 'var(--farghar-text)' }}>Settings</h2>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors farghar-native-touch">
+          <button
+            onClick={onClose}
+            className="p-2 farghar-icon-btn farghar-native-touch"
+          >
             <FargharCloseIcon />
           </button>
         </div>
@@ -67,9 +85,13 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
                 </div>
                 <button
                   onClick={() => setAutoSave(!autoSave)}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${autoSave ? 'bg-purple-500' : 'bg-gray-600'}`}
+                  className="relative w-12 h-6 rounded-full transition-colors"
+                  style={{ backgroundColor: autoSave ? 'rgb(168, 85, 247)' : 'var(--farghar-bg-tertiary)' }}
                 >
-                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${autoSave ? 'translate-x-7' : 'translate-x-1'}`} />
+                  <div
+                    className="absolute top-1 w-4 h-4 rounded-full bg-white transition-transform"
+                    style={{ transform: autoSave ? 'translateX(1.75rem)' : 'translateX(0.25rem)' }}
+                  />
                 </button>
               </div>
 
@@ -80,9 +102,13 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
                 </div>
                 <button
                   onClick={() => setConfirmDelete(!confirmDelete)}
-                  className={`relative w-12 h-6 rounded-full transition-colors ${confirmDelete ? 'bg-purple-500' : 'bg-gray-600'}`}
+                  className="relative w-12 h-6 rounded-full transition-colors"
+                  style={{ backgroundColor: confirmDelete ? 'rgb(168, 85, 247)' : 'var(--farghar-bg-tertiary)' }}
                 >
-                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${confirmDelete ? 'translate-x-7' : 'translate-x-1'}`} />
+                  <div
+                    className="absolute top-1 w-4 h-4 rounded-full bg-white transition-transform"
+                    style={{ transform: confirmDelete ? 'translateX(1.75rem)' : 'translateX(0.25rem)' }}
+                  />
                 </button>
               </div>
             </div>
@@ -95,34 +121,45 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
               className="flex items-center justify-between w-full text-right"
             >
               <h3 className="text-sm font-semibold" style={{ color: 'var(--farghar-text)' }}>Advanced</h3>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className={`transition-transform ${showAdvanced ? 'rotate-180' : ''}`}
+              <span
+                className="transition-transform"
+                style={{
+                  color: 'var(--farghar-text-muted)',
+                  transform: showAdvanced ? 'rotate(180deg)' : 'rotate(0deg)',
+                }}
               >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
+                <FargharChevronDownIcon />
+              </span>
             </button>
 
             {showAdvanced && (
               <div className="mt-4 space-y-4 farghar-fade-in">
-                <div className="p-4 rounded-xl" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
+                <div
+                  className="p-4 rounded-xl"
+                  style={{
+                    backgroundColor: 'var(--farghar-glass-bg)',
+                    border: '1px solid var(--farghar-glass-border)',
+                  }}
+                >
                   <p className="text-sm mb-2" style={{ color: 'var(--farghar-text)' }}>Storage Usage</p>
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
-                      <div className="h-full bg-purple-500 rounded-full" style={{ width: '35%' }} />
+                    <div
+                      className="flex-1 h-2 rounded-full overflow-hidden"
+                      style={{ backgroundColor: 'var(--farghar-bg-tertiary)' }}
+                    >
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: '35%', backgroundColor: 'rgb(168, 85, 247)' }}
+                      />
                     </div>
                     <span className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>35% used</span>
                   </div>
                 </div>
 
-                <button className="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 rounded-xl text-red-400 text-sm transition-colors farghar-native-touch">
+                <button
+                  className="farghar-btn-danger w-full text-sm flex items-center justify-center gap-2 farghar-native-touch"
+                >
+                  <FargharTrashIcon />
                   Clear All Data
                 </button>
               </div>
@@ -132,7 +169,13 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
           {/* About */}
           <div>
             <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--farghar-text)' }}>About</h3>
-            <div className="p-4 rounded-xl space-y-2" style={{ backgroundColor: 'var(--farghar-glass-bg)', border: '1px solid var(--farghar-glass-border)' }}>
+            <div
+              className="p-4 rounded-xl space-y-2"
+              style={{
+                backgroundColor: 'var(--farghar-glass-bg)',
+                border: '1px solid var(--farghar-glass-border)',
+              }}
+            >
               <p className="text-sm" style={{ color: 'var(--farghar-text)' }}>Farghar Tag Editor</p>
               <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Version 1.0.0</p>
               <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Designed & Architected by Farghar</p>
@@ -141,7 +184,10 @@ export const FargharSettingsModal: React.FC<FargharSettingsModalProps> = ({ isOp
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-white/10">
+        <div
+          className="flex items-center justify-end gap-3 p-6"
+          style={{ borderTop: '1px solid var(--farghar-glass-border)' }}
+        >
           <button onClick={onClose} className="farghar-btn-secondary text-sm farghar-native-touch">
             Close
           </button>
