@@ -34,7 +34,7 @@ function FargharAppContent() {
   const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; fileId: string | null; fileName: string }>({ isOpen: false, fileId: null, fileName: '' });
   const [clearAllModal, setClearAllModal] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  
+
   // Keep File objects in memory (cannot be stored in localStorage)
   const fileObjectsMap = useRef<Map<string, File>>(new Map());
 
@@ -104,7 +104,7 @@ function FargharAppContent() {
         modified: !!savedFile?.modified,
       };
       setFiles(prev => [...prev, audioFile]);
-      
+
       // Store File object in memory for later download
       fileObjectsMap.current.set(id, file);
 
@@ -200,7 +200,7 @@ function FargharAppContent() {
   const selectedFile = files.find(f => f.id === selectedFileId);
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col bg-gray-950">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col transition-colors duration-300" style={{ backgroundColor: 'var(--farghar-bg)' }}>
       {/* Background gradient */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
