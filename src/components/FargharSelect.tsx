@@ -17,19 +17,19 @@ interface FargharSelectProps {
 }
 
 const FargharChevronDownIcon: React.FC = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="6 9 12 15 18 9" />
   </svg>
 );
 
 const FargharCheckIcon: React.FC = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12" />
   </svg>
 );
 
 const FargharPlusIcon: React.FC = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" y1="5" x2="12" y2="19" />
     <line x1="5" y1="12" x2="19" y2="12" />
   </svg>
@@ -174,14 +174,14 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
           onKeyDown={handleKeyDown}
           disabled={disabled}
           placeholder={placeholder}
-          className="farghar-input text-sm text-right pr-10"
+          className="farghar-input text-xs min-[360px]:text-sm text-right pr-8 min-[360px]:pr-10"
           style={{
             boxShadow: isOpen ? '0 0 0 2px rgba(168, 85, 247, 0.3)' : undefined,
             borderColor: isOpen ? 'rgba(168, 85, 247, 0.5)' : undefined,
           }}
         />
         <div
-          className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+          className="absolute left-2 min-[360px]:left-3 top-1/2 -translate-y-1/2 pointer-events-none"
           style={{ color: 'var(--farghar-text-muted)' }}
         >
           <FargharChevronDownIcon />
@@ -190,8 +190,8 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-full farghar-menu-panel farghar-fade-in">
-          <div className="max-h-60 overflow-y-auto py-1">
+        <div className="absolute z-50 mt-1.5 min-[360px]:mt-2 w-full farghar-menu-panel farghar-fade-in">
+          <div className="max-h-48 min-[360px]:max-h-60 overflow-y-auto py-1">
             {/* Clear option */}
             {value && (
               <button
@@ -200,7 +200,7 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                   e.preventDefault();
                   handleSelect('');
                 }}
-                className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-right"
+                className="w-full flex items-center justify-between px-2.5 min-[360px]:px-4 py-2 min-[360px]:py-2.5 text-xs min-[360px]:text-sm text-red-400 hover:bg-red-500/10 transition-colors text-right"
               >
                 <span>Clear selection</span>
               </button>
@@ -208,7 +208,7 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
 
             {filteredOptions.length === 0 && !isCustomValue ? (
               <div
-                className="px-4 py-3 text-sm text-center"
+                className="px-2.5 min-[360px]:px-4 py-2 min-[360px]:py-3 text-xs min-[360px]:text-sm text-center"
                 style={{ color: 'var(--farghar-text-muted)' }}
               >
                 No results found
@@ -226,12 +226,12 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                         e.preventDefault();
                         handleSelect(option.value);
                       }}
-                      className={`farghar-menu-item w-full flex items-center justify-between px-4 py-2.5 text-sm text-right ${isSelected ? 'bg-purple-500/20 text-purple-300' : ''}`}
+                      className={`farghar-menu-item w-full flex items-center justify-between px-2.5 min-[360px]:px-4 py-2 min-[360px]:py-2.5 text-xs min-[360px]:text-sm text-right ${isSelected ? 'bg-purple-500/20 text-purple-300' : ''}`}
                       style={!isSelected ? { color: isHighlighted ? 'var(--farghar-text)' : 'var(--farghar-text-secondary)' } : undefined}
                     >
                       <span className="truncate">{option.label}</span>
                       {isSelected && (
-                        <span className="flex-shrink-0 mr-2 text-purple-400">
+                        <span className="flex-shrink-0 mr-1.5 min-[360px]:mr-2 text-purple-400">
                           <FargharCheckIcon />
                         </span>
                       )}
@@ -252,11 +252,11 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                       setIsOpen(false);
                       setHighlightedIndex(-1);
                     }}
-                    className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm text-green-400 hover:bg-green-500/10 transition-colors text-right mt-1 ${highlightedIndex === filteredOptions.length ? 'bg-green-500/10' : ''}`}
+                    className={`w-full flex items-center gap-1.5 min-[360px]:gap-2 px-2.5 min-[360px]:px-4 py-2 min-[360px]:py-2.5 text-xs min-[360px]:text-sm text-green-400 hover:bg-green-500/10 transition-colors text-right mt-1 ${highlightedIndex === filteredOptions.length ? 'bg-green-500/10' : ''}`}
                     style={{ borderTop: '1px solid var(--farghar-glass-border)' }}
                   >
                     <FargharPlusIcon />
-                    <span>Add "{inputValue}" as custom value</span>
+                    <span className="truncate">Add "{inputValue}"</span>
                   </button>
                 )}
               </>
