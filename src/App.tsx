@@ -216,13 +216,13 @@ function FargharAppContent() {
   const selectedFile = files.find(f => f.id === selectedFileId);
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col bg-gray-950">
+    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
       {/* Background gradient */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, left: 0, pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: 0, left: '25%', width: '24rem', height: '24rem', background: 'rgba(168, 85, 247, 0.05)', borderRadius: '9999px', filter: 'blur(60px)' }} />
+        <div style={{ position: 'absolute', bottom: 0, right: '25%', width: '24rem', height: '24rem', background: 'rgba(59, 130, 246, 0.05)', borderRadius: '9999px', filter: 'blur(60px)' }} />
       </div>
-      <div className="relative z-10 flex flex-col min-h-screen min-h-[100dvh]">
+      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
         <FargharHeader fileCount={files.length} isFullscreen={isFullscreen} onToggleFullscreen={toggleFullscreen} />
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <FargharHero hasFiles={files.length > 0} />

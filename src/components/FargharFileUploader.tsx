@@ -86,11 +86,14 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
         disabled={disabled}
       />
       <div className="flex flex-col items-center gap-4">
-        <div className={`
-          w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white
-          transition-all duration-300
-          ${isDragging ? 'farghar-gradient scale-110' : 'bg-white/10'}
-        `}>
+        <div 
+          className={`
+            w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white
+            transition-all duration-300
+            ${isDragging ? 'farghar-gradient scale-110' : ''}
+          `}
+          style={!isDragging ? { backgroundColor: 'var(--farghar-glass-bg)' } : undefined}
+        >
           {isDragging ? <FargharUploadIcon size={40} /> : <FargharMusicIcon size={40} />}
         </div>
         <div>
