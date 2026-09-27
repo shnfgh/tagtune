@@ -31,7 +31,7 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
   isOpen, title, message, confirmLabel = 'Confirm', cancelLabel = 'Cancel',
   onConfirm, onCancel, variant = 'danger',
 }) => {
-  // Close on Escape key
+  // Close on Escape / Confirm on Enter
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -78,11 +78,17 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-gray-900 border border-white/10 rounded-2xl shadow-2xl shadow-black/50 farghar-slide-up overflow-hidden">
+      <div
+        className="relative w-full max-w-md rounded-2xl shadow-2xl farghar-slide-up overflow-hidden"
+        style={{
+          backgroundColor: 'var(--farghar-bg-secondary)',
+          border: '1px solid var(--farghar-glass-border)',
+        }}
+      >
         {/* Close button */}
         <button
           onClick={onCancel}
-          className="absolute top-4 left-4 p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors farghar-native-touch"
+          className="absolute top-4 left-4 p-1.5 farghar-icon-btn farghar-native-touch"
         >
           <FargharCloseIcon />
         </button>
@@ -95,10 +101,20 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-semibold text-center mb-2" style={{ color: 'var(--farghar-text)' }}>{title}</h3>
+          <h3
+            className="text-lg font-semibold text-center mb-2"
+            style={{ color: 'var(--farghar-text)' }}
+          >
+            {title}
+          </h3>
 
           {/* Message */}
-          <p className="text-sm text-center mb-6 leading-relaxed" style={{ color: 'var(--farghar-text-muted)' }}>{message}</p>
+          <p
+            className="text-sm text-center mb-6 leading-relaxed"
+            style={{ color: 'var(--farghar-text-muted)' }}
+          >
+            {message}
+          </p>
 
           {/* Actions */}
           <div className="flex gap-3">
