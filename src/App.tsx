@@ -42,7 +42,7 @@ function FargharApp() {
         size: f.size,
         format: f.format,
         tags: f.tags,
-        cover: f.cover ? { ...f.cover, pictureData: f.cover.pictureData ? Array.from(f.cover.pictureData) : null } : null,
+        covers: f.covers.map(c => ({ ...c, pictureData: c.pictureData ? Array.from(c.pictureData) : null })),
         duration: f.duration,
         modified: f.modified,
       }));
@@ -83,7 +83,7 @@ function FargharApp() {
       const audioFile: Farghar.AudioFile = {
         id, file, name: file.name, size: file.size, format,
         tags: savedFile ? { ...savedFile.tags } : { ...Farghar.EMPTY_TAG },
-        cover: savedFile?.cover ? { ...savedFile.cover, pictureData: savedFile.cover.pictureData ? new Uint8Array(savedFile.cover.pictureData) : null } : null,
+        covers: savedFile?.covers ? savedFile.covers.map((c: any) => ({ ...c, pictureData: c.pictureData ? new Uint8Array(c.pictureData) : null })) : [],
         duration: savedFile?.duration || 0,
         status: 'loading',
         modified: !!savedFile?.modified,
@@ -91,19 +91,19 @@ function FargharApp() {
       setFiles(prev => [...prev, audioFile]);
 
       try {
-        const { tags, cover, duration } = await FargharTagProcessor.readTags(file);
+        const { tags, covers, duration } = await FargharTagProcessor.readTags(file);
 
         // If file was previously edited, keep the edited tags; otherwise use original tags
         if (savedFile && savedFile.modified) {
           setFiles(prev => prev.map(f => f.id === id ? {
             ...f,
             tags: savedFile.tags,
-            cover: savedFile.cover ? { ...savedFile.cover, pictureData: savedFile.cover.pictureData ? new Uint8Array(savedFile.cover.pictureData) : null } : cover,
+            covers: savedFile.covers ? savedFile.covers.map((c: any) => ({ ...c, pictureData: c.pictureData ? new Uint8Array(c.pictureData) : null })) : covers,
             duration: duration,
             status: 'ready' as const,
           } : f));
         } else {
-          setFiles(prev => prev.map(f => f.id === id ? { ...f, tags, cover, duration, status: 'ready' as const } : f));
+          setFiles(prev => prev.map(f => f.id === id ? { ...f, tags, covers, duration, status: 'ready' as const } : f));
         }
       } catch (error) {
         console.error('Error processing file:', file.name, error);

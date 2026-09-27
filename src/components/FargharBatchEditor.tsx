@@ -94,6 +94,7 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
                       placeholder="Select..."
                       disabled={!selectedFields.has(key)}
                       searchable={true}
+                      allowCustom={true}
                     />
                   ) : (
                     <input
