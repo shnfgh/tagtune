@@ -69,7 +69,7 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`
-        relative cursor-pointer rounded-2xl border-2 border-dashed p-8 sm:p-12
+        relative cursor-pointer rounded-2xl border-2 border-dashed p-6 sm:p-12
         transition-all duration-300 text-center farghar-native-touch
         ${isDragging ? 'border-purple-400 bg-purple-500/10 scale-[1.02]' : ''}
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
@@ -85,10 +85,10 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
         className="hidden"
         disabled={disabled}
       />
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-3 sm:gap-4">
         <div
           className={`
-            w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center
+            w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center
             transition-all duration-300
             ${isDragging ? 'farghar-gradient scale-110 text-white' : ''}
           `}
@@ -97,18 +97,18 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
             color: 'var(--farghar-text)',
           } : undefined}
         >
-          {isDragging ? <FargharUploadIcon size={40} /> : <FargharMusicIcon size={40} />}
+          {isDragging ? <FargharUploadIcon size={32} /> : <FargharMusicIcon size={32} />}
         </div>
         <div>
-          <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'var(--farghar-text)' }}>
+          <h3 className="text-base sm:text-xl font-semibold mb-1.5 sm:mb-2" style={{ color: 'var(--farghar-text)' }}>
             {isDragging ? 'Drop files here!' : 'Drag & drop audio/video files'}
           </h3>
-          <p className="text-sm mb-4" style={{ color: 'var(--farghar-text-muted)' }}>Or click to select files</p>
-          <div className="flex flex-wrap justify-center gap-2">
+          <p className="text-xs sm:text-sm mb-3 sm:mb-4" style={{ color: 'var(--farghar-text-muted)' }}>Or click to select files</p>
+          <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
             {Farghar.SUPPORTED_FORMATS.map(format => (
               <span
                 key={format}
-                className="farghar-badge"
+                className="farghar-badge text-[10px] sm:text-xs"
                 style={{
                   backgroundColor: 'var(--farghar-glass-bg)',
                   color: 'var(--farghar-text-muted)',
@@ -121,9 +121,9 @@ export const FargharFileUploader: React.FC<FargharFileUploaderProps> = ({ onFile
           </div>
         </div>
       </div>
-      <div className="absolute top-4 left-4 w-2 h-2 rounded-full bg-purple-400/50 animate-pulse" />
-      <div className="absolute bottom-4 right-4 w-2 h-2 rounded-full bg-blue-400/50 animate-pulse" />
-      <div className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-pink-400/50 animate-pulse" />
+      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-2 h-2 rounded-full bg-purple-400/50 animate-pulse" />
+      <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-2 h-2 rounded-full bg-blue-400/50 animate-pulse" />
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-1.5 h-1.5 rounded-full bg-pink-400/50 animate-pulse" />
     </div>
   );
 };
