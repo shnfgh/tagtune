@@ -2,6 +2,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
+import { FargharSelect } from './FargharSelect';
 
 interface FargharTagEditorProps {
   file: Farghar.AudioFile;
@@ -138,10 +139,13 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
         </div>
         <div>
           <label className="block text-xs text-gray-400 mb-1.5">Genre</label>
-          <select value={tags.genre} onChange={(e) => handleTagChange('genre', e.target.value)} className="farghar-input text-sm">
-            <option value="">Select genre...</option>
-            {Farghar.GENRES.map(g => <option key={g} value={g}>{g}</option>)}
-          </select>
+          <FargharSelect
+            value={tags.genre}
+            onChange={(value) => handleTagChange('genre', value)}
+            options={Farghar.GENRES.map(g => ({ value: g, label: g }))}
+            placeholder="Select genre..."
+            searchable={true}
+          />
         </div>
         <div>
           <label className="block text-xs text-gray-400 mb-1.5">Year / Date</label>
@@ -191,10 +195,12 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
           </div>
           <div>
             <label className="block text-xs text-gray-400 mb-1.5">Key</label>
-            <select value={tags.key} onChange={(e) => handleTagChange('key', e.target.value)} className="farghar-input text-sm">
-              <option value="">Select key...</option>
-              {Farghar.MUSICAL_KEYS.map(k => <option key={k} value={k}>{k}</option>)}
-            </select>
+            <FargharSelect
+              value={tags.key}
+              onChange={(value) => handleTagChange('key', value)}
+              options={Farghar.MUSICAL_KEYS.map(k => ({ value: k, label: k }))}
+              placeholder="Select key..."
+            />
           </div>
         </div>
       )}

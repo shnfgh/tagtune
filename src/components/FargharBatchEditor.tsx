@@ -1,6 +1,7 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React, { useState } from 'react';
 import { Farghar } from '../types';
+import { FargharSelect } from './FargharSelect';
 
 interface FargharBatchEditorProps {
   files: Farghar.AudioFile[];
@@ -86,15 +87,14 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
                 <div className="flex-1">
                   <label className="block text-xs text-gray-400 mb-1.5">{label}</label>
                   {key === 'genre' ? (
-                    <select
+                    <FargharSelect
                       value={(batchTags as any)[key] || ''}
-                      onChange={(e) => setBatchTags(prev => ({ ...prev, [key]: e.target.value }))}
+                      onChange={(value) => setBatchTags(prev => ({ ...prev, [key]: value }))}
+                      options={Farghar.GENRES.map(g => ({ value: g, label: g }))}
+                      placeholder="Select..."
                       disabled={!selectedFields.has(key)}
-                      className="farghar-input text-sm disabled:opacity-50"
-                    >
-                      <option value="">Select...</option>
-                      {Farghar.GENRES.map(g => <option key={g} value={g}>{g}</option>)}
-                    </select>
+                      searchable={true}
+                    />
                   ) : (
                     <input
                       type="text"
