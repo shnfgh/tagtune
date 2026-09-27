@@ -87,7 +87,7 @@ export namespace FargharTagProcessor {
     if (cover && cover.pictureData) {
       writer.setFrame('APIC', {
         type: cover.type || 3,
-         cover.pictureData,
+        pictureData: cover.pictureData,
         description: cover.description || 'Cover',
       });
     }
@@ -127,8 +127,8 @@ export namespace FargharTagProcessor {
   }
 
   export function coverToDataUrl(cover: Farghar.CoverArt | null): string {
-    if (!cover || !cover.data) return '';
-    const blob = new Blob([cover.data as any], { type: cover.mimeType });
+    if (!cover || !cover.pictureData) return '';
+    const blob = new Blob([cover.pictureData as any], { type: cover.mimeType });
     return URL.createObjectURL(blob);
   }
 }

@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React, { useState } from 'react';
 import { Farghar } from '../types';
 
@@ -15,7 +15,7 @@ const FargharEditIcon: React.FC = () => (
 );
 
 const FargharChevronIcon: React.FC<{ open: boolean }> = ({ open }) => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.2s' }}>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)' }}>
     <polyline points="6 9 12 15 18 9" />
   </svg>
 );
@@ -67,7 +67,7 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
 
   return (
     <div className="farghar-card">
-      <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between text-right">
+      <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between text-right farghar-native-touch">
         <div className="flex items-center gap-2">
           <FargharEditIcon />
           <span className="text-sm font-medium text-white">Batch Edit</span>
@@ -109,7 +109,7 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
               </div>
             ))}
           </div>
-          <button onClick={handleApply} disabled={selectedFields.size === 0} className="farghar-btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm">
+          <button onClick={handleApply} disabled={selectedFields.size === 0} className="farghar-btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm farghar-native-touch">
             Apply changes to {files.length} files
           </button>
         </div>

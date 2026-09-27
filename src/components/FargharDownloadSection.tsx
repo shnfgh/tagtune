@@ -1,4 +1,4 @@
-// TagTune - Online MP3 Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
+// Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
 import React, { useState } from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
@@ -70,7 +70,7 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
         setProgress(Math.round(((i + 1) / modifiedFiles.length) * 100));
       }
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      saveAs(zipBlob, 'TagTune-Export.zip');
+      saveAs(zipBlob, 'FargharTagEditor-Export.zip');
     } catch (error) {
       console.error('ZIP download error:', error);
     } finally {
@@ -95,12 +95,12 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
         </div>
         <div className="flex flex-wrap gap-3">
           {modifiedFiles.length > 1 && (
-            <button onClick={handleDownloadAll} disabled={isDownloading || modifiedFiles.length === 0} className="farghar-btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center gap-2">
+            <button onClick={handleDownloadAll} disabled={isDownloading || modifiedFiles.length === 0} className="farghar-btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center gap-2 farghar-native-touch">
               {isDownloading ? <><FargharGearIcon /> {progress}%</> : <><FargharPackageIcon /> Download ZIP</>}
             </button>
           )}
           {modifiedFiles.map(file => (
-            <button key={file.id} onClick={() => handleDownloadSingle(file)} className="farghar-btn-secondary text-sm flex items-center gap-2">
+            <button key={file.id} onClick={() => handleDownloadSingle(file)} className="farghar-btn-secondary text-sm flex items-center gap-2 farghar-native-touch">
               <FargharDownloadIcon />
               <span className="truncate max-w-[100px]">{file.tags.title || file.name}</span>
             </button>
