@@ -75,9 +75,9 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
   if (files.length < 2) return null;
 
   return (
-    <div className="farghar-card">
+    <div className="farghar-card p-4 sm:p-6">
       <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between text-right farghar-native-touch">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <FargharEditIcon />
           <span className="text-sm font-medium" style={{ color: 'var(--farghar-text)' }}>Batch Edit</span>
           <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{files.length} files</span>
@@ -88,13 +88,18 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
       {isOpen && (
         <div className="mt-4 space-y-4 farghar-fade-in">
           <p className="text-xs" style={{ color: 'var(--farghar-text-muted)' }}>Select fields to apply to all files:</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {BATCH_FIELDS.map(({ key, label, type }) => {
               const isSelected = selectedFields.has(key);
               return (
-                <div key={key} className="flex items-start gap-2">
-                  <input type="checkbox" checked={isSelected} onChange={() => toggleField(key)} className="mt-3 w-4 h-4 rounded accent-purple-500" />
-                  <div className="flex-1">
+                <div key={key} className="flex items-start gap-2 p-2 sm:p-0 rounded-lg" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => toggleField(key)}
+                    className="mt-3 w-4 h-4 rounded accent-purple-500 flex-shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
                     <label className="block text-xs mb-1.5" style={{ color: 'var(--farghar-text-muted)' }}>{label}</label>
                     {type === 'select' && key === 'genre' && (
                       <FargharSelect
@@ -142,7 +147,11 @@ export const FargharBatchEditor: React.FC<FargharBatchEditorProps> = ({ files, o
               );
             })}
           </div>
-          <button onClick={handleApply} disabled={selectedFields.size === 0} className="farghar-btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm farghar-native-touch">
+          <button
+            onClick={handleApply}
+            disabled={selectedFields.size === 0}
+            className="farghar-btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm farghar-native-touch w-full sm:w-auto"
+          >
             Apply changes to {files.length} files
           </button>
         </div>
