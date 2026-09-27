@@ -10,6 +10,7 @@ import { FargharHero } from './components/FargharHero';
 import { FargharFooter } from './components/FargharFooter';
 import { FargharSkeletonLoader, FargharSkeletonCard } from './components/FargharSkeleton';
 import { FargharConfirmModal } from './components/FargharConfirmModal';
+import { FargharErrorBoundary } from './components/FargharErrorBoundary';
 import { FargharThemeProvider } from './context/FargharThemeContext';
 import { FargharSettingsProvider, useFargharSettings } from './context/FargharSettingsContext';
 
@@ -199,6 +200,7 @@ function FargharAppContent() {
       return;
     }
     // Direct clear without confirmation
+    FargharTagProcessor.revokeAllCoverUrls();
     setFiles([]);
     setSelectedFileId(null);
     clearStorage();
@@ -207,6 +209,7 @@ function FargharAppContent() {
 
   // Confirm clear all
   const handleClearAllConfirm = useCallback(() => {
+    FargharTagProcessor.revokeAllCoverUrls();
     setFiles([]);
     setSelectedFileId(null);
     clearStorage();
@@ -244,17 +247,23 @@ function FargharAppContent() {
           {files.length > 0 && (
             <div className="space-y-6">
               <FargharFileTable files={files} selectedFileId={selectedFileId} onSelectFile={setSelectedFileId} onRemoveFile={handleFileRemoveRequest} />
-              <Suspense fallback={<FargharSkeletonCard />}>
-                <FargharBatchEditor files={files} onBatchUpdate={handleBatchUpdate} />
-              </Suspense>
-              {selectedFile && (
+              <FargharErrorBoundary fallbackTitle="Batch editor failed">
                 <Suspense fallback={<FargharSkeletonCard />}>
-                  <FargharTagEditor file={selectedFile} onUpdate={handleFileUpdate} onRemove={handleFileRemoveRequest} />
+                  <FargharBatchEditor files={files} onBatchUpdate={handleBatchUpdate} />
                 </Suspense>
+              </FargharErrorBoundary>
+              {selectedFile && (
+                <FargharErrorBoundary fallbackTitle="Tag editor failed">
+                  <Suspense fallback={<FargharSkeletonCard />}>
+                    <FargharTagEditor file={selectedFile} onUpdate={handleFileUpdate} onRemove={handleFileRemoveRequest} />
+                  </Suspense>
+                </FargharErrorBoundary>
               )}
-              <Suspense fallback={<FargharSkeletonCard />}>
-                <FargharDownloadSection files={files} fileObjectsMap={fileObjectsMap} />
-              </Suspense>
+              <FargharErrorBoundary fallbackTitle="Download section failed">
+                <Suspense fallback={<FargharSkeletonCard />}>
+                  <FargharDownloadSection files={files} fileObjectsMap={fileObjectsMap} />
+                </Suspense>
+              </FargharErrorBoundary>
               <div className="text-center">
                 <button onClick={handleClearAllRequest} className="farghar-btn-danger text-sm flex items-center gap-2 mx-auto farghar-native-touch">
                   <FargharTrashIcon />
