@@ -111,8 +111,17 @@
 - **Dropdown های سفارشی (Combo Box)** با قابلیت Autocomplete و افزودن مقدار دلخواه
 - **تاییدیه حذف** برای جلوگیری از حذف تصادفی
 - **ذخیره‌سازی خودکار** در localStorage برای حفظ داده‌ها بعد از رفرش
-- **سیستم تم** با 4 حالت: Light, Dark, Warm, Cool
-- **هدر سه بخشی** با تغییر تم، نام پروژه و اطلاعات
+- **سیستم تم حرفه‌ای** با 4 حالت: Light, Dark, Warm, Cool (با CSS Variables)
+- **هدر سه بخشی** با border و shadow:
+  - سمت راست: تغییر تم با dropdown
+  - مرکز: لوگو و نام پروژه
+  - سمت چپ: منوی اطلاعات با badges قابل اسکرول
+- **فوتر نیتیو** با دکمه تنظیمات
+- **مودال تنظیمات** با قابلیت‌های:
+  - Auto-save toggle
+  - Confirm before delete toggle
+  - Storage usage monitoring
+  - Clear all data option
 
 ---
 

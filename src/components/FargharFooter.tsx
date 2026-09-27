@@ -1,61 +1,47 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
-import React from 'react';
+import React, { useState } from 'react';
+import { FargharSettingsModal } from './FargharSettingsModal';
 
-const FargharMusicNoteIcon: React.FC = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 18V5l12-2v13" />
-    <circle cx="6" cy="18" r="3" />
-    <circle cx="18" cy="16" r="3" />
+const FargharSettingsIcon: React.FC = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+  </svg>
+);
+
+const FargharHeartIcon: React.FC = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
   </svg>
 );
 
 export const FargharFooter: React.FC = () => {
+  const [showSettings, setShowSettings] = useState(false);
+
   return (
-    <footer className="border-t border-white/5 mt-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 farghar-gradient rounded-lg flex items-center justify-center text-white">
-                <FargharMusicNoteIcon />
-              </div>
-              <span className="font-bold farghar-gradient-text">Farghar Tag Editor</span>
+    <>
+      <footer className="border-t border-white/10 mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <span>Made with</span>
+              <span className="text-red-400"><FargharHeartIcon /></span>
+              <span>by</span>
+              <span className="font-semibold farghar-gradient-text">Farghar</span>
             </div>
-            <p className="text-sm text-gray-400">
-              Professional online music tag editor.
-              <br />
-              Designed & Architected by Farghar.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Features</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>ID3v1 & ID3v2 tag editing</li>
-              <li>Album cover management</li>
-              <li>Batch editing for multiple files</li>
-              <li>Single or ZIP download</li>
-              <li>Completely local processing</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-white mb-3">Security & Privacy</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>All processing happens in your browser</li>
-              <li>No files are sent to any server</li>
-              <li>Files are deleted after download</li>
-              <li>No registration required</li>
-            </ul>
+
+            <button
+              onClick={() => setShowSettings(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-sm text-gray-300 hover:text-white farghar-native-touch"
+            >
+              <FargharSettingsIcon />
+              <span>Settings</span>
+            </button>
           </div>
         </div>
-        <div className="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-500">
-            Designed & Architected by <span className="text-purple-400 font-medium">Farghar</span>
-          </p>
-          <p className="text-xs text-gray-500">
-            Farghar Tag Editor {new Date().getFullYear()}
-          </p>
-        </div>
-      </div>
-    </footer>
+      </footer>
+
+      <FargharSettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
+    </>
   );
 };
