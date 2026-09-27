@@ -28,6 +28,13 @@ const FargharCheckIcon: React.FC = () => (
   </svg>
 );
 
+const FargharPlusIcon: React.FC = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
 export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, options, placeholder = 'Select...', disabled = false, searchable = false, allowCustom = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -58,7 +65,7 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        // If there's a custom value and allowCustom is true, save it
+        // If there is a custom value and allowCustom is true, save it
         if (isCustomValue && allowCustom) {
           onChange(inputValue);
           if (!localOptions.some(opt => opt.value === inputValue)) {
@@ -124,10 +131,8 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
         e.preventDefault();
         if (highlightedIndex >= 0) {
           if (highlightedIndex < filteredOptions.length) {
-            // Select from filtered options
             handleSelect(filteredOptions[highlightedIndex].value);
           } else if (isCustomValue && allowCustom) {
-            // Add custom value
             onChange(inputValue);
             if (!localOptions.some(opt => opt.value === inputValue)) {
               setLocalOptions(prev => [...prev, { value: inputValue, label: inputValue }]);
@@ -136,7 +141,6 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
             setHighlightedIndex(-1);
           }
         } else if (isCustomValue && allowCustom) {
-          // Add custom value directly
           onChange(inputValue);
           if (!localOptions.some(opt => opt.value === inputValue)) {
             setLocalOptions(prev => [...prev, { value: inputValue, label: inputValue }]);
@@ -144,7 +148,6 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
           setIsOpen(false);
           setHighlightedIndex(-1);
         } else if (filteredOptions.length > 0) {
-          // Select first option
           handleSelect(filteredOptions[0].value);
         }
         break;
@@ -171,23 +174,23 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
           onKeyDown={handleKeyDown}
           disabled={disabled}
           placeholder={placeholder}
-          className={`
-            w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 text-right
-            ${disabled ? 'opacity-50 cursor-not-allowed bg-white/5 border-white/10 text-gray-500' : 'bg-white/5 border-white/10 text-white hover:border-purple-400/50'}
-            ${isOpen ? 'border-purple-500/50 shadow-[0_0_0_2px_rgba(168,85,247,0.3)]' : ''}
-          `}
+          className="farghar-input text-sm text-right pr-10"
+          style={{
+            boxShadow: isOpen ? '0 0 0 2px rgba(168, 85, 247, 0.3)' : undefined,
+            borderColor: isOpen ? 'rgba(168, 85, 247, 0.5)' : undefined,
+          }}
         />
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+        <div
+          className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+          style={{ color: 'var(--farghar-text-muted)' }}
+        >
           <FargharChevronDownIcon />
         </div>
       </div>
 
       {/* Dropdown */}
       {isOpen && (
-        <div 
-          className="absolute z-50 mt-2 w-full rounded-xl shadow-2xl overflow-hidden farghar-fade-in"
-          style={{ backgroundColor: 'var(--farghar-bg-secondary)', border: '1px solid var(--farghar-glass-border)' }}
-        >
+        <div className="absolute z-50 mt-2 w-full farghar-menu-panel farghar-fade-in">
           <div className="max-h-60 overflow-y-auto py-1">
             {/* Clear option */}
             {value && (
@@ -197,39 +200,44 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                   e.preventDefault();
                   handleSelect('');
                 }}
-                className={`w-full flex items-center justify-between px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-right ${highlightedIndex === -2 ? 'bg-red-500/10' : ''}`}
+                className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-right"
               >
                 <span>Clear selection</span>
               </button>
             )}
 
             {filteredOptions.length === 0 && !isCustomValue ? (
-              <div className="px-4 py-3 text-sm text-center" style={{ color: 'var(--farghar-text-muted)' }}>No results found</div>
+              <div
+                className="px-4 py-3 text-sm text-center"
+                style={{ color: 'var(--farghar-text-muted)' }}
+              >
+                No results found
+              </div>
             ) : (
               <>
-                {filteredOptions.map((option, index) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleSelect(option.value);
-                    }}
-                    className={`
-                      w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-right
-                      ${option.value === value
-                        ? 'bg-purple-500/20 text-purple-300'
-                        : ''
-                      }
-                    `}
-                    style={option.value !== value ? { color: highlightedIndex === index ? 'var(--farghar-text)' : 'var(--farghar-text-secondary)' } : undefined}
-                  >
-                    <span className="truncate">{option.label}</span>
-                    {option.value === value && (
-                      <span className="flex-shrink-0 mr-2 text-purple-400"><FargharCheckIcon /></span>
-                    )}
-                  </button>
-                ))}
+                {filteredOptions.map((option, index) => {
+                  const isSelected = option.value === value;
+                  const isHighlighted = highlightedIndex === index;
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleSelect(option.value);
+                      }}
+                      className={`farghar-menu-item w-full flex items-center justify-between px-4 py-2.5 text-sm text-right ${isSelected ? 'bg-purple-500/20 text-purple-300' : ''}`}
+                      style={!isSelected ? { color: isHighlighted ? 'var(--farghar-text)' : 'var(--farghar-text-secondary)' } : undefined}
+                    >
+                      <span className="truncate">{option.label}</span>
+                      {isSelected && (
+                        <span className="flex-shrink-0 mr-2 text-purple-400">
+                          <FargharCheckIcon />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
 
                 {/* Custom value option */}
                 {isCustomValue && (
@@ -244,15 +252,10 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
                       setIsOpen(false);
                       setHighlightedIndex(-1);
                     }}
-                    className={`
-                      w-full flex items-center gap-2 px-4 py-2.5 text-sm text-green-400 hover:bg-green-500/10 transition-colors text-right border-t border-white/10 mt-1
-                      ${highlightedIndex === filteredOptions.length ? 'bg-green-500/10' : ''}
-                    `}
+                    className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm text-green-400 hover:bg-green-500/10 transition-colors text-right mt-1 ${highlightedIndex === filteredOptions.length ? 'bg-green-500/10' : ''}`}
+                    style={{ borderTop: '1px solid var(--farghar-glass-border)' }}
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
+                    <FargharPlusIcon />
                     <span>Add "{inputValue}" as custom value</span>
                   </button>
                 )}
