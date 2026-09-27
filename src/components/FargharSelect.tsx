@@ -45,17 +45,23 @@ const FargharPlusIcon: React.FC = () => (
 export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, options, placeholder = 'Select...', disabled = false, searchable = false, allowCustom = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [localOptions, setLocalOptions] = useState<FargharSelectOption[]>(options);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedOption = options.find(opt => opt.value === value);
+  // Update localOptions when options prop changes
+  useEffect(() => {
+    setLocalOptions(options);
+  }, [options]);
+
+  const selectedOption = localOptions.find(opt => opt.value === value);
 
   const filteredOptions = searchable && searchQuery
-    ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
-    : options;
+    ? localOptions.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    : localOptions;
 
   // Check if search query is a custom value (not in options)
-  const isCustomValue = allowCustom && searchQuery && searchQuery.trim() && !options.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
+  const isCustomValue = allowCustom && searchQuery && searchQuery.trim() && !localOptions.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -89,16 +95,16 @@ export const FargharSelect: React.FC<FargharSelectProps> = ({ value, onChange, o
 
   const handleCustomAdd = useCallback(() => {
     if (searchQuery && searchQuery.trim()) {
-      // Add to options if not already exists
-      const exists = options.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
+      // Add to localOptions if not already exists
+      const exists = localOptions.some(opt => opt.value.toLowerCase() === searchQuery.toLowerCase());
       if (!exists) {
-        options.push({ value: searchQuery, label: searchQuery });
+        setLocalOptions(prev => [...prev, { value: searchQuery, label: searchQuery }]);
       }
       onChange(searchQuery);
       setIsOpen(false);
       setSearchQuery('');
     }
-  }, [searchQuery, onChange, options]);
+  }, [searchQuery, onChange, localOptions]);
 
   return (
     <div ref={containerRef} className="relative">
