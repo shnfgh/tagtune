@@ -107,7 +107,7 @@ export namespace FargharTagProcessor {
         if (cover.pictureData) {
           writer.setFrame('APIC', {
             type: cover.type || 3,
-            pictureData: cover.pictureData,
+            data: cover.pictureData,
             description: cover.description || 'Cover',
           });
         }
