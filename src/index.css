@@ -192,8 +192,8 @@
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
   }
 
   ::-webkit-scrollbar-track {
@@ -379,7 +379,7 @@
     font-weight: 500;
   }
 
-  /* Icon Button (used in modals and headers) */
+  /* Icon Button */
   .farghar-icon-btn {
     color: var(--farghar-text-muted);
     background-color: var(--farghar-btn-bg);
@@ -394,7 +394,7 @@
     color: var(--farghar-text);
   }
 
-  /* Menu Item (used in dropdowns and submenus) */
+  /* Menu Item */
   .farghar-menu-item {
     color: var(--farghar-text);
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -404,13 +404,22 @@
     background-color: var(--farghar-hover-bg);
   }
 
-  /* Menu Panel (dropdown container) */
+  /* Menu Panel */
   .farghar-menu-panel {
     background-color: var(--farghar-bg-secondary);
     border: 1px solid var(--farghar-glass-border);
     border-radius: 0.75rem;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Modal Panel - fullscreen on ultra-small screens */
+  .farghar-modal-panel {
+    background-color: var(--farghar-bg-secondary);
+    border: 1px solid var(--farghar-glass-border);
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
   }
 }
 
@@ -438,12 +447,8 @@
 }
 
 @keyframes farghar-fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes farghar-slideUp {
@@ -459,20 +464,46 @@
 
 @keyframes farghar-pulseGlow {
   0%,
-  100% {
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
-  }
+  100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
 }
 
 @keyframes pulse {
   0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
+  100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================================ */
+/* Ultra-Small Device Support                                   */
+/* Targets: smartwatches (~200px), Jio Phone 2 (240px),         */
+/* and small feature phones (<360px)                            */
+/* ============================================================ */
+
+/* Small phones: scale root font down slightly */
+@media (max-width: 359px) {
+  html { font-size: 14px; }
+}
+
+/* Jio Phone 2 and feature phones */
+@media (max-width: 279px) {
+  html { font-size: 13px; }
+}
+
+/* Smartwatches: minimum scale */
+@media (max-width: 239px) {
+  html { font-size: 12px; }
+}
+
+/* Fullscreen modals on ultra-small screens */
+@media (max-width: 400px) {
+  .farghar-modal-panel {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
   }
 }
