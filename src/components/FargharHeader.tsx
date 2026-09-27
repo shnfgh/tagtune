@@ -100,7 +100,7 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onTo
       }}
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-2">
+        <div className="flex items-center justify-between h-[68px] sm:h-20 gap-2">
           {/* Right: Theme Switcher */}
           <div className="relative flex-shrink-0">
             <button
@@ -145,11 +145,24 @@ export const FargharHeader: React.FC<FargharHeaderProps> = ({ isFullscreen, onTo
             )}
           </div>
 
-          {/* Center: Site Title (truncated on mobile) */}
-          <h1 className="flex-1 text-center text-lg sm:text-2xl font-bold farghar-gradient-text truncate">
-            <span className="hidden sm:inline">Farghar Tag Editor</span>
-            <span className="sm:hidden">Farghar</span>
-          </h1>
+          {/* Center: Site Title (3-tier responsive layout) */}
+          <div className="flex-1 flex flex-col items-center justify-center min-w-0">
+            {/* Desktop (>= 640px): single-line full title */}
+            <h1 className="hidden sm:block text-2xl font-bold farghar-gradient-text truncate max-w-full">
+              Farghar Tag Editor
+            </h1>
+            {/* Mobile large (>= 380px): brand name on first line */}
+            <h1 className="sm:hidden text-base font-bold farghar-gradient-text leading-tight truncate max-w-full">
+              Farghar
+            </h1>
+            {/* Mobile large (>= 380px): uppercase subtitle on second line */}
+            <span
+              className="sm:hidden hidden min-[380px]:block text-[9px] font-medium tracking-[0.15em] uppercase leading-tight mt-0.5"
+              style={{ color: 'var(--farghar-text-muted)' }}
+            >
+              Tag Editor
+            </span>
+          </div>
 
           {/* Left: Fullscreen Button only */}
           <div className="flex-shrink-0">
