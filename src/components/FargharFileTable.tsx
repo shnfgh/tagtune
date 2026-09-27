@@ -25,6 +25,15 @@ const FargharCloseIcon: React.FC = () => (
   </svg>
 );
 
+const FargharFileIcon: React.FC = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="16" y1="13" x2="8" y2="13" />
+    <line x1="16" y1="17" x2="8" y2="17" />
+  </svg>
+);
+
 const FargharStatusBadge: React.FC<{ status: Farghar.AudioFile['status']; modified: boolean }> = ({ status, modified }) => {
   const config = {
     loading: { bg: 'bg-yellow-500/20', text: 'text-yellow-300', label: 'Loading' },
@@ -34,22 +43,17 @@ const FargharStatusBadge: React.FC<{ status: Farghar.AudioFile['status']; modifi
     error: { bg: 'bg-red-500/20', text: 'text-red-300', label: 'Error' },
   };
   const c = modified ? { bg: 'bg-orange-500/20', text: 'text-orange-300', label: 'Modified' } : config[status];
-  return <span className={`farghar-badge ${c.bg} ${c.text} text-[10px]`}>{c.label}</span>;
+  return <span className={`farghar-badge ${c.bg} ${c.text} text-[10px] whitespace-nowrap`}>{c.label}</span>;
 };
 
 export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selectedFileId, onSelectFile, onRemoveFile }) => {
   if (files.length === 0) return null;
 
   return (
-    <div className="farghar-card overflow-hidden">
+    <div className="farghar-card p-4 sm:p-6 overflow-hidden">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold flex items-center gap-2" style={{ color: 'var(--farghar-text)' }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-          </svg>
+        <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2" style={{ color: 'var(--farghar-text)' }}>
+          <FargharFileIcon />
           File List
         </h2>
         <span className="farghar-badge" style={{ backgroundColor: 'var(--farghar-glass-bg)', color: 'var(--farghar-text-secondary)' }}>{files.length} files</span>
@@ -119,7 +123,7 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
                   <td className="py-3 px-2">
                     <button
                       onClick={(e) => { e.stopPropagation(); onRemoveFile(file.id); }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch"
+                      className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch min-h-[32px] min-w-[32px] flex items-center justify-center"
                       style={{ color: 'var(--farghar-text-muted)' }}
                     >
                       <FargharCloseIcon />
@@ -142,24 +146,45 @@ export const FargharFileTable: React.FC<FargharFileTableProps> = ({ files, selec
               key={file.id}
               onClick={() => onSelectFile(file.id)}
               className={`
-                flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 farghar-native-touch
+                p-3 rounded-xl cursor-pointer transition-all duration-200 farghar-native-touch
                 ${isSelected ? 'bg-purple-500/10 border border-purple-500/30' : ''}
               `}
               style={!isSelected ? { backgroundColor: 'var(--farghar-glass-bg)' } : undefined}
             >
-              <span className="text-xs w-5" style={{ color: 'var(--farghar-text-muted)' }}>{index + 1}</span>
-              <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
-                {coverUrl ? (
-                  <img src={coverUrl} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--farghar-text-muted)' }}><FargharMusicSmallIcon /></div>
-                )}
+              {/* Row 1: Index + Cover + Title/Artist + Status */}
+              <div className="flex items-center gap-3">
+                <span className="text-xs w-5 flex-shrink-0" style={{ color: 'var(--farghar-text-muted)' }}>{index + 1}</span>
+                <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--farghar-glass-bg)' }}>
+                  {coverUrl ? (
+                    <img src={coverUrl} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--farghar-text-muted)' }}><FargharMusicSmallIcon /></div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm truncate" style={{ color: 'var(--farghar-text)' }}>{file.tags.title || file.name}</p>
+                  <p className="text-xs truncate" style={{ color: 'var(--farghar-text-muted)' }}>{file.tags.artist || '-'}</p>
+                </div>
+                <FargharStatusBadge status={file.status} modified={file.modified} />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm truncate" style={{ color: 'var(--farghar-text)' }}>{file.tags.title || file.name}</p>
-                <p className="text-xs truncate" style={{ color: 'var(--farghar-text-muted)' }}>{file.tags.artist || '-'}</p>
+
+              {/* Row 2: Format + Duration + Remove */}
+              <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: '1px solid var(--farghar-glass-border)' }}>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[10px]">{file.format.toUpperCase()}</span>
+                  <span className="text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
+                  {file.covers.length > 0 && (
+                    <span className="farghar-badge bg-purple-500/20 text-purple-300 text-[10px]">{file.covers.length} cover</span>
+                  )}
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onRemoveFile(file.id); }}
+                  className="p-2 rounded-lg hover:bg-red-500/20 transition-colors farghar-native-touch min-h-[36px] min-w-[36px] flex items-center justify-center flex-shrink-0"
+                  style={{ color: 'var(--farghar-text-muted)' }}
+                >
+                  <FargharCloseIcon />
+                </button>
               </div>
-              <FargharStatusBadge status={file.status} modified={file.modified} />
             </div>
           );
         })}
