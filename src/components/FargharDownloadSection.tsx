@@ -1,5 +1,5 @@
 // Farghar Tag Editor | Designed & Architected by Farghar | Namespace: Farghar
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
 import JSZip from 'jszip';
@@ -45,7 +45,15 @@ const FargharGearIcon: React.FC = () => (
 export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ files, fileObjectsMap }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const mountedRef = useRef(true);
+
   const modifiedFiles = files.filter(f => f.modified);
+
+  // Track mount status to avoid setState after unmount
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   // Get the original File object from memory map or from the audio file
   const getOriginalFile = (audioFile: Farghar.AudioFile): File | null => {
@@ -77,6 +85,9 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
     try {
       const zip = new JSZip();
       for (let i = 0; i < modifiedFiles.length; i++) {
+        // Stop if component unmounted
+        if (!mountedRef.current) return;
+
         const audioFile = modifiedFiles[i];
         const originalFile = getOriginalFile(audioFile);
         if (!originalFile) {
@@ -86,15 +97,22 @@ export const FargharDownloadSection: React.FC<FargharDownloadSectionProps> = ({ 
         const blob = await FargharTagProcessor.writeTags(originalFile, audioFile.tags, audioFile.covers);
         const fileName = audioFile.name.endsWith('.mp3') ? audioFile.name : audioFile.name.replace(/\.[^.]+$/, '.mp3');
         zip.file(fileName, blob);
-        setProgress(Math.round(((i + 1) / modifiedFiles.length) * 100));
+
+        if (mountedRef.current) {
+          setProgress(Math.round(((i + 1) / modifiedFiles.length) * 100));
+        }
       }
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      saveAs(zipBlob, 'FargharTagEditor-Export.zip');
+      if (mountedRef.current) {
+        saveAs(zipBlob, 'FargharTagEditor-Export.zip');
+      }
     } catch (error) {
       console.error('ZIP download error:', error);
     } finally {
-      setIsDownloading(false);
-      setProgress(0);
+      if (mountedRef.current) {
+        setIsDownloading(false);
+        setProgress(0);
+      }
     }
   };
 
