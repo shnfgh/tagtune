@@ -70,7 +70,7 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
   const styles = variantStyles[variant];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 min-[400px]:p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm farghar-fade-in"
@@ -78,31 +78,25 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
       />
 
       {/* Modal */}
-      <div
-        className="relative w-full max-w-md rounded-2xl shadow-2xl farghar-slide-up overflow-hidden"
-        style={{
-          backgroundColor: 'var(--farghar-bg-secondary)',
-          border: '1px solid var(--farghar-glass-border)',
-        }}
-      >
+      <div className="relative w-full h-full min-[400px]:w-auto min-[400px]:h-auto min-[400px]:max-w-md farghar-modal-panel farghar-slide-up flex flex-col">
         {/* Close button */}
         <button
           onClick={onCancel}
-          className="absolute top-4 left-4 p-1.5 farghar-icon-btn farghar-native-touch"
+          className="absolute top-3 min-[400px]:top-4 left-3 min-[400px]:left-4 p-1.5 farghar-icon-btn farghar-native-touch z-10"
         >
           <FargharCloseIcon />
         </button>
 
-        {/* Content */}
-        <div className="p-6">
+        {/* Content - centered vertically */}
+        <div className="flex-1 flex flex-col items-center justify-center p-6">
           {/* Icon */}
-          <div className={`w-14 h-14 rounded-2xl ${styles.iconBg} flex items-center justify-center ${styles.iconColor} mx-auto mb-4`}>
+          <div className={`w-12 min-[400px]:w-14 h-12 min-[400px]:h-14 rounded-2xl ${styles.iconBg} flex items-center justify-center ${styles.iconColor} mb-4`}>
             <FargharAlertIcon />
           </div>
 
           {/* Title */}
           <h3
-            className="text-lg font-semibold text-center mb-2"
+            className="text-base min-[400px]:text-lg font-semibold text-center mb-2 px-4"
             style={{ color: 'var(--farghar-text)' }}
           >
             {title}
@@ -110,23 +104,23 @@ export const FargharConfirmModal: React.FC<FargharConfirmModalProps> = ({
 
           {/* Message */}
           <p
-            className="text-sm text-center mb-6 leading-relaxed"
+            className="text-xs min-[400px]:text-sm text-center mb-6 leading-relaxed max-w-md px-4"
             style={{ color: 'var(--farghar-text-muted)' }}
           >
             {message}
           </p>
 
           {/* Actions */}
-          <div className="flex gap-3">
+          <div className="flex gap-2 min-[400px]:gap-3 w-full max-w-md px-4">
             <button
               onClick={onCancel}
-              className="farghar-btn-secondary flex-1 text-sm farghar-native-touch"
+              className="farghar-btn-secondary flex-1 text-xs min-[400px]:text-sm farghar-native-touch"
             >
               {cancelLabel}
             </button>
             <button
               onClick={onConfirm}
-              className={`${styles.confirmBtn} flex-1 text-sm farghar-native-touch`}
+              className={`${styles.confirmBtn} flex-1 text-xs min-[400px]:text-sm farghar-native-touch`}
             >
               {confirmLabel}
             </button>
