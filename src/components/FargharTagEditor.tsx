@@ -4,6 +4,7 @@ import { Farghar } from '../types';
 import { FargharTagProcessor } from '../utils/tagProcessor';
 import { FargharSelect } from './FargharSelect';
 import { FargharConfirmModal } from './FargharConfirmModal';
+import { useFargharSettings } from '../context/FargharSettingsContext';
 
 interface FargharTagEditorProps {
   file: Farghar.AudioFile;
@@ -73,11 +74,13 @@ const FargharImageIcon: React.FC = () => (
 );
 
 export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpdate, onRemove }) => {
+  const { settings } = useFargharSettings();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showLyrics, setShowLyrics] = useState(false);
   const [showCovers, setShowCovers] = useState(true);
   const [deleteCoverModal, setDeleteCoverModal] = useState<{ isOpen: boolean; index: number }>({ isOpen: false, index: -1 });
-  const [newCoverType, setNewCoverType] = useState<Farghar.CoverType>('front');
+  // Initialize new cover type from user settings default
+  const [newCoverType, setNewCoverType] = useState<Farghar.CoverType>(settings.defaultCoverType);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   const tags = file.tags;
@@ -181,8 +184,10 @@ export const FargharTagEditor: React.FC<FargharTagEditorProps> = ({ file, onUpda
           </h3>
           <div className="flex flex-wrap items-center gap-1 min-[360px]:gap-1.5 sm:gap-2 mt-0.5 min-[360px]:mt-1">
             <span className="farghar-badge bg-blue-500/20 text-blue-300 text-[8px] min-[360px]:text-[10px]">{file.format.toUpperCase()}</span>
-            {/* File size hidden on smartwatch */}
-            <span className="hidden min-[360px]:inline text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatFileSize(file.size)}</span>
+            {/* File size — respects showFileSizes setting */}
+            {settings.showFileSizes && (
+              <span className="hidden min-[360px]:inline text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatFileSize(file.size)}</span>
+            )}
             <span className="text-[9px] min-[360px]:text-xs whitespace-nowrap" style={{ color: 'var(--farghar-text-muted)' }}>{FargharTagProcessor.formatDuration(file.duration)}</span>
             {/* Cover count badge hidden on smartwatch */}
             {covers.length > 0 && (
