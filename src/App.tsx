@@ -30,7 +30,7 @@ const FargharTrashIcon: React.FC = () => (
 const FARGHAR_STORAGE_KEY = 'farghar_tag_editor_data';
 
 function FargharAppContent() {
-  const { autoSave, confirmDelete, refreshStorageUsage } = useFargharSettings();
+  const { settings, refreshStorageUsage } = useFargharSettings();
   const [files, setFiles] = useState<Farghar.AudioFile[]>([]);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -140,17 +140,17 @@ function FargharAppContent() {
   const handleFileUpdate = useCallback((updatedFile: Farghar.AudioFile) => {
     setFiles(prev => {
       const newFiles = prev.map(f => f.id === updatedFile.id ? updatedFile : f);
-      if (autoSave) saveToStorage(newFiles);
+      if (settings.autoSave) saveToStorage(newFiles);
       return newFiles;
     });
-  }, [autoSave, saveToStorage]);
+  }, [settings.autoSave, saveToStorage]);
 
   // Request file removal (respects confirmDelete setting)
   const handleFileRemoveRequest = useCallback((id: string) => {
     const file = files.find(f => f.id === id);
     if (!file) return;
 
-    if (confirmDelete) {
+    if (settings.confirmDelete) {
       setDeleteModal({ isOpen: true, fileId: id, fileName: file.name });
       return;
     }
@@ -158,26 +158,26 @@ function FargharAppContent() {
     // Direct removal without confirmation
     setFiles(prev => {
       const newFiles = prev.filter(f => f.id !== id);
-      if (autoSave) saveToStorage(newFiles);
+      if (settings.autoSave) saveToStorage(newFiles);
       return newFiles;
     });
     if (selectedFileId === id) setSelectedFileId(null);
     fileObjectsMap.current.delete(id);
-  }, [files, confirmDelete, autoSave, selectedFileId, saveToStorage]);
+  }, [files, settings.confirmDelete, settings.autoSave, selectedFileId, saveToStorage]);
 
   // Confirm file removal
   const handleFileRemoveConfirm = useCallback(() => {
     if (deleteModal.fileId) {
       setFiles(prev => {
         const newFiles = prev.filter(f => f.id !== deleteModal.fileId);
-        if (autoSave) saveToStorage(newFiles);
+        if (settings.autoSave) saveToStorage(newFiles);
         return newFiles;
       });
       if (selectedFileId === deleteModal.fileId) setSelectedFileId(null);
       fileObjectsMap.current.delete(deleteModal.fileId);
     }
     setDeleteModal({ isOpen: false, fileId: null, fileName: '' });
-  }, [deleteModal.fileId, selectedFileId, autoSave, saveToStorage]);
+  }, [deleteModal.fileId, selectedFileId, settings.autoSave, saveToStorage]);
 
   // Cancel file removal
   const handleFileRemoveCancel = useCallback(() => {
@@ -188,14 +188,14 @@ function FargharAppContent() {
   const handleBatchUpdate = useCallback((updates: Partial<Farghar.AudioTag>) => {
     setFiles(prev => {
       const newFiles = prev.map(f => ({ ...f, tags: { ...f.tags, ...updates }, modified: true, status: 'editing' as const }));
-      if (autoSave) saveToStorage(newFiles);
+      if (settings.autoSave) saveToStorage(newFiles);
       return newFiles;
     });
-  }, [autoSave, saveToStorage]);
+  }, [settings.autoSave, saveToStorage]);
 
-  // Request clear all (respects confirmDelete setting)
+  // Request clear all (respects confirmClearAll setting)
   const handleClearAllRequest = useCallback(() => {
-    if (confirmDelete) {
+    if (settings.confirmClearAll) {
       setClearAllModal(true);
       return;
     }
@@ -205,7 +205,7 @@ function FargharAppContent() {
     setSelectedFileId(null);
     clearStorage();
     fileObjectsMap.current.clear();
-  }, [confirmDelete, clearStorage]);
+  }, [settings.confirmClearAll, clearStorage]);
 
   // Confirm clear all
   const handleClearAllConfirm = useCallback(() => {
